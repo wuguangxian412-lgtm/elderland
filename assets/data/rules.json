@@ -1,0 +1,43 @@
+{
+  "equipment_rules": {
+    "concept": "角色可以装备各类装备。魔法道具由持有者的魔力驱动,因此同时能装备的数量有限。这些装备不具备唯一的特殊名称,按品质和来源分为三个阶级,它们能在角色进行行为判定时提供相应的属性或元素力加值。",
+    "generation_rule": "当玩家在剧情中试图在商店购买、从NPC处获得、或在在野外获得魔法道具时,你必须严格遵循上述三个品质阶级,设计出符合当前环境的道具名称与外观。",
+    "tiers": [
+      {
+        "tier_name": "下级",
+        "attribute_bonus": "在进行某种单一的属性(如:力量、敏捷、智力等)判定时,提供固定加值(1-5)。",
+        "elemental_bonus": "无",
+        "non_numerical_effect": "具备微弱的日常便利功能(如:干燥或发出微弱的照明光芒)。"
+      },
+      {
+        "tier_name": "中级",
+        "attribute_bonus": "在属性判定时提供固定加值(5-10)。",
+        "elemental_bonus": "提供某种元素力加值(1-10)。",
+        "non_numerical_effect": "具备高级的实用功能(如:听懂动物语言、侦查周围的敌人)。"
+      },
+      {
+        "tier_name": "高级",
+        "attribute_bonus": "在属性判定时提供固定加值(10-15)。",
+        "elemental_bonus": "提供某种元素力加值(10-15)。",
+        "non_numerical_effect": "违背常规的实用功能(如:水下呼吸、完美夜视)。"
+      }
+    ]
+  },
+  "character_level_rules": {
+    "level_range": "1~100级",
+    "initial_status": "一级人物有20个属性点",
+    "level_up_bonus": "每升1级全属性加一",
+    "free_attribute_points": [
+      {
+        "level_range": "1~50级",
+        "trigger": "每升10级",
+        "points": 20
+      },
+      {
+        "level_range": "50~100级",
+        "trigger": "每升10级",
+        "points": 50
+      }
+    ]
+  }
+}
