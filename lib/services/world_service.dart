@@ -49,7 +49,7 @@ class WorldService {
       for (final npc in npcs) {
         debugPrint(
           '[WorldService] NPC: id=${npc.id}  name=${npc.name}  '
-          'locationId=${npc.locationId}  state=${npc.state}',
+          'locationId=${npc.locationId}  buildingId=${npc.buildingId}  state=${npc.state}',
         );
       }
     } catch (e) {
@@ -72,6 +72,15 @@ class WorldService {
   /// 按所在地查找 NPC 列表
   List<Npc> findNpcsByLocation(String locationId) {
     return npcs.where((n) => n.locationId == locationId).toList();
+  }
+
+  /// 按地点和建筑查找 NPC 列表
+  List<Npc> findNpcsByBuilding(String locationId, String buildingId) {
+    final buildingNpcs = npcs
+        .where((n) => n.locationId == locationId && n.buildingId == buildingId)
+        .toList();
+    debugPrint('[Building] 当前建筑 NPC 数量: ${buildingNpcs.length}');
+    return buildingNpcs;
   }
 
   /// 更新指定 NPC 的状态
@@ -183,7 +192,7 @@ class WorldService {
     debugPrint('[WorldService] advanceDay()');
     for (final npc in npcs) {
       debugPrint(
-        '[WorldService]  NPC ${npc.name}: location=${npc.locationId} state=${npc.state}',
+        '[WorldService]  NPC ${npc.name}: location=${npc.locationId} building=${npc.buildingId} state=${npc.state}',
       );
     }
   }
