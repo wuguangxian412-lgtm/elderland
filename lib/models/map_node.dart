@@ -37,12 +37,18 @@ class MapNode {
       type: json['type'] as String? ?? '',
       description: json['description'] as String? ?? '',
       country: json['country'] as String? ?? '',
-      coordinates: ((json['coordinates'] as List<dynamic>?) ?? [])
-          .map((e) => (e as num).toInt())
-          .toList(),
-      connectedNodes: ((json['connected_nodes'] as List<dynamic>?) ?? [])
-          .map((e) => e as String)
-          .toList(),
+      coordinates: _parseCoordinates(json['coordinates']),
+      connectedNodes: _parseStringList(json['connected_nodes']),
     );
+  }
+
+  static List<int> _parseCoordinates(dynamic raw) {
+    if (raw is! List) return [];
+    return raw.whereType<num>().map((e) => e.toInt()).toList();
+  }
+
+  static List<String> _parseStringList(dynamic raw) {
+    if (raw is! List) return [];
+    return raw.whereType<String>().toList();
   }
 }

@@ -404,7 +404,7 @@ class _CreateRolePageState extends State<CreateRolePage> {
                           agility: agility,
                           charm: charm,
                           location: '银叶村',
-                          locationId: 'node_silver_leaf_village',
+                          locationId: 'silver_leaf_village',
                           country: '圣山王国',
                           year: 276,
                           season: '春',

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../data/flavor_text.dart';
 import '../models/map_node.dart';
-import '../services/world_service.dart';
 
 /// 地点详情对话框
 class LocationDetailDialog {
-  static Future<void> show(
+  static Future<bool?> show(
     BuildContext context,
     MapNode node, {
     bool isCurrentLocation = false,
@@ -14,7 +13,7 @@ class LocationDetailDialog {
     Future<void> Function()? onMoveHere,
     String? moveHintText,
   }) {
-    return showDialog(
+    return showDialog<bool>(
       context: context,
       builder: (ctx) => _LocationDetailContent(
         node: node,
@@ -130,9 +129,6 @@ class _LocationDetailContent extends StatelessWidget {
                 ),
               ),
             ],
-            // 当地 NPC
-            _buildNpcSection(),
-            const SizedBox(height: 16),
             // 移动区域
             _buildMoveSection(context),
             const SizedBox(height: 16),
@@ -150,76 +146,13 @@ class _LocationDetailContent extends StatelessWidget {
     );
   }
 
-  Widget _buildNpcSection() {
-    final npcs = WorldService().findNpcsByLocation(node.id);
-    debugPrint('地点 ${node.id} 当前 NPC 数量: ${npcs.length}');
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          '当地 NPC',
-          style: TextStyle(
-            fontSize: 13,
-            color: _textSecondary,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 6),
-        if (npcs.isEmpty)
-          const Text(
-            '当前地点暂无可见 NPC',
-            style: TextStyle(fontSize: 14, color: _textSecondary, height: 1.6),
-          )
-        else
-          ...npcs.map(
-            (npc) => Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.person_outline,
-                    size: 16,
-                    color: _textSecondary,
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      npc.name,
-                      style: const TextStyle(fontSize: 14, color: _text),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF7BAE7F).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      npc.state,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF7BAE7F),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
   Widget _buildMoveSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (isCurrentLocation) ...[
           const Text(
-            '移动',
+            '当前位置',
             style: TextStyle(
               fontSize: 13,
               color: _textSecondary,
@@ -257,7 +190,7 @@ class _LocationDetailContent extends StatelessWidget {
               key: const ValueKey('move_here_button'),
               onPressed: () async {
                 await onMoveHere?.call();
-                if (context.mounted) Navigator.of(context).pop();
+                if (context.mounted) Navigator.of(context).pop(true);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF7BAE7F),
@@ -268,7 +201,7 @@ class _LocationDetailContent extends StatelessWidget {
                 ),
               ),
               child: Text(
-                moveHintText ?? '移动到这里',
+                moveHintText ?? '进入城市',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,

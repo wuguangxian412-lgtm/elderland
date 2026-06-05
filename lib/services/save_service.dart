@@ -8,6 +8,7 @@ import '../models/player.dart';
 
 class SaveService {
   static const String _fileName = 'player_save.json';
+  static const int _saveVersion = 1;
 
   /// 存档目录获取
   Future<String> get _localPath async {
@@ -22,33 +23,50 @@ class SaveService {
   }
 
   Future<void> savePlayer(Player player) async {
-    debugPrint('SAVE START');
     final file = await _localFile;
-    final data = {'version': 1, 'data': player.toJson()};
-    debugPrint('SAVE DATA: $data');
-    await file.writeAsString(jsonEncode(data));
-    debugPrint('SAVE SUCCESS');
+    final data = {'version': _saveVersion, 'data': player.toJson()};
+    await file.writeAsString(jsonEncode(data), flush: true);
+    debugPrint('SAVE SUCCESS: ${file.path}');
   }
 
   Future<Player?> loadPlayer() async {
-    debugPrint('LOAD START');
     try {
       final file = await _localFile;
-      debugPrint('CHECK FILE EXISTS');
       if (!await file.exists()) {
         debugPrint('FILE NOT EXISTS');
         return null;
       }
+
       final content = await file.readAsString();
-      debugPrint('RAW CONTENT: $content');
-      final data = jsonDecode(content) as Map<String, dynamic>;
-      debugPrint('PARSED DATA: $data');
-      final playerData = data['data'] as Map<String, dynamic>;
-      debugPrint('PLAYER DATA: $playerData');
+      final decoded = jsonDecode(content);
+      if (decoded is! Map<String, dynamic>) {
+        debugPrint('LOAD ERROR: invalid save root');
+        return null;
+      }
+
+      final version = (decoded['version'] as num?)?.toInt();
+      if (version != _saveVersion) {
+        debugPrint('LOAD ERROR: unsupported save version $version');
+        return null;
+      }
+
+      final rawPlayerData = decoded['data'];
+      if (rawPlayerData is! Map<String, dynamic>) {
+        debugPrint('LOAD ERROR: invalid player data');
+        return null;
+      }
+
+      final playerData = Map<String, dynamic>.from(rawPlayerData);
       final player = Player.fromJson(playerData);
       debugPrint('locationId: ${player.locationId}');
       debugPrint('LOAD SUCCESS');
       return player;
+    } on FormatException catch (e) {
+      debugPrint('LOAD ERROR: invalid JSON: $e');
+      return null;
+    } on FileSystemException catch (e) {
+      debugPrint('LOAD ERROR: file system: $e');
+      return null;
     } catch (e) {
       debugPrint('LOAD ERROR: $e');
       return null;

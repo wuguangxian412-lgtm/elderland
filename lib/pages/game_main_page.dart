@@ -30,9 +30,15 @@ class _GameMainPageState extends State<GameMainPage> {
     super.initState();
     _player = widget.player;
     debugPrint('[GameMainPage] 正在初始化WorldService');
-    WorldService().initialize().then((_) {
-      debugPrint('[GameMainPage] WorldService初始化完成');
-    });
+    WorldService()
+        .initialize()
+        .then((_) {
+          debugPrint('[GameMainPage] WorldService初始化完成');
+          if (mounted) setState(() {});
+        })
+        .catchError((Object e) {
+          debugPrint('[GameMainPage] WorldService初始化失败: $e');
+        });
     // 首次进入时检查当前时间是否有未触发的时代事件
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkTimelineEvent());
   }
@@ -159,6 +165,7 @@ class _GameMainPageState extends State<GameMainPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final locationNpcs = WorldService().findNpcsByLocation(_player.locationId);
 
     return Scaffold(
       backgroundColor: _bg,
@@ -303,13 +310,13 @@ class _GameMainPageState extends State<GameMainPage> {
                     ),
                   ),
                   const Divider(height: 14),
-                  // NPC 列表标题 + 数量
+                  // 当前地点 NPC
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
                       children: [
                         const Text(
-                          'NPC列表（测试）',
+                          '当前城市 NPC',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -318,7 +325,7 @@ class _GameMainPageState extends State<GameMainPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '数量: ${WorldService().npcs.length}',
+                          '数量: ${locationNpcs.length}',
                           style: const TextStyle(
                             fontSize: 13,
                             color: _textSecondary,
@@ -328,12 +335,11 @@ class _GameMainPageState extends State<GameMainPage> {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  // NPC 列表
                   Expanded(
-                    child: WorldService().npcs.isEmpty
+                    child: locationNpcs.isEmpty
                         ? const Center(
                             child: Text(
-                              '暂无NPC数据',
+                              '当前城市暂无可见 NPC',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: _textSecondary,
@@ -342,11 +348,11 @@ class _GameMainPageState extends State<GameMainPage> {
                           )
                         : ListView.separated(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
-                            itemCount: WorldService().npcs.length,
+                            itemCount: locationNpcs.length,
                             separatorBuilder: (_, _) =>
                                 const Divider(height: 1),
                             itemBuilder: (context, index) {
-                              final npc = WorldService().npcs[index];
+                              final npc = locationNpcs[index];
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 6,
@@ -364,7 +370,7 @@ class _GameMainPageState extends State<GameMainPage> {
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      npc.locationId,
+                                      _player.location,
                                       style: const TextStyle(
                                         fontSize: 12,
                                         color: _textSecondary,

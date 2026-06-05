@@ -19,10 +19,14 @@ class TimelineService {
 
     final jsonStr = await rootBundle.loadString(_assetPath);
     final decoded = jsonDecode(jsonStr) as Map<String, dynamic>;
-    final timelineList = decoded['timeline'] as List<dynamic>;
+    final timelineList = decoded['timeline'];
+    if (timelineList is! List) {
+      throw Exception('timeline.json 缺少 timeline 字段');
+    }
 
     final result = timelineList
-        .map((e) => TimelineEntry.fromJson(e as Map<String, dynamic>))
+        .whereType<Map<String, dynamic>>()
+        .map(TimelineEntry.fromJson)
         .toList();
     _cached = result;
     return result;

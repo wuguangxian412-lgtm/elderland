@@ -18,12 +18,24 @@ class WorldService {
 
   /// 是否已完成初始化
   bool _initialized = false;
+  Future<void>? _initializing;
 
   /// 从 assets 加载 NPC 数据
   Future<void> initialize() async {
     debugPrint('[WorldService] initialize() 被调用');
     if (_initialized) return;
+    if (_initializing != null) return _initializing!;
 
+    _initializing = _loadInitialNpcs();
+    try {
+      await _initializing;
+      _initialized = true;
+    } finally {
+      _initializing = null;
+    }
+  }
+
+  Future<void> _loadInitialNpcs() async {
     try {
       final jsonStr = await rootBundle.loadString(_npcAssetPath);
       final data = json.decode(jsonStr) as Map<String, dynamic>;
@@ -40,9 +52,9 @@ class WorldService {
           'locationId=${npc.locationId}  state=${npc.state}',
         );
       }
-      _initialized = true;
     } catch (e) {
       debugPrint('[WorldService] 加载 NPC 数据失败: $e');
+      rethrow;
     }
   }
 
@@ -69,7 +81,10 @@ class WorldService {
   }
 
   /// 清除所有 NPC（测试用）
-  void clearNpcs() => npcs.clear();
+  void clearNpcs() {
+    npcs.clear();
+    _initialized = false;
+  }
 
   // === AI 指令执行系统 ===
 
@@ -134,17 +149,17 @@ class WorldService {
     final actions = <Action>[
       Action(
         type: 'move_npc',
-        targetId: 'npc_silver_village_chief',
-        payload: {'locationId': 'node_holy_light_city'},
+        targetId: 'npc_village_elder_001',
+        payload: {'locationId': 'holy_light_city'},
       ),
       Action(
         type: 'change_state',
-        targetId: 'npc_silver_village_chief',
+        targetId: 'npc_village_elder_001',
         payload: {'state': 'working'},
       ),
       Action(
         type: 'update_memory',
-        targetId: 'npc_silver_village_chief',
+        targetId: 'npc_village_elder_001',
         payload: {'lastAction': '前往圣光城汇报', 'day': 1},
       ),
       Action(
@@ -152,7 +167,7 @@ class WorldService {
         payload: {
           'id': 'npc_test_${DateTime.now().millisecondsSinceEpoch}',
           'name': '测试NPC_生成',
-          'locationId': 'node_silver_leaf_village',
+          'locationId': 'silver_leaf_village',
           'state': 'idle',
         },
       ),

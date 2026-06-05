@@ -45,16 +45,17 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   final List<MapNode> _dynamicNodes = [];
   String? _error;
 
-  static Matrix4? _lastTransform;
-  static double _lastScale = 1.0;
-
   double _currentScale = 1.0;
   final TransformationController _controller = TransformationController();
   final GlobalKey _mapContentKey = GlobalKey();
 
   static const double _minScale = 0.3;
-  static const double _maxScale = 10.0;
+  static const double _maxScale = 1.5;
   static const double _zoomStep = 0.1;
+  static const double _initialScale = 1.0;
+  static const double _mapCanvasSize = 1600.0;
+  static const double _mapCanvasPadding = 300.0;
+  static const double _mapBoundaryMargin = 1200.0;
 
   /// 地图节点按钮的固定视觉尺寸。
   /// 这样“看得见的按钮区域”和“点击判定区域”可以保持一致。
@@ -106,10 +107,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     '荒野': Color(0xFFE65100),
   };
 
-  /// 缩放级别阈值：当前 scale >= 该值时，对应层级的节点才可见
-  /// 层级 0(村庄) → scale ≥ 3.0  层级 1(城市) → scale ≥ 1.5  层级 2(其他) → scale ≥ 0.0
-  static const List<double> _tierThresholds = [3.0, 1.5, 0.0];
-
+  /// 地图节点始终可见，缩放只改变阅读尺度，不再改变节点显隐。
   /// 节点 Map 缓存（性能优化：避免每次 build 重新遍历 _allNodes）
   Map<String, MapNode>? _nodeMapCache;
 
@@ -121,9 +119,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   List<MapNode> get _allNodes => [...?_nodes, ..._dynamicNodes];
 
   List<MapNode> get _visibleNodes {
-    final result = _allNodes
-        .where((n) => _currentScale >= _tierThresholds[n.typeTier])
-        .toList();
+    final result = _allNodes;
     if (kMapDebugMode) {
       debugPrint(
         '[Map] scale=$_currentScale  visible=${result.length}: ${result.map((n) => n.name).join("  ")}  dynamic=${_dynamicNodes.length}',
@@ -195,8 +191,6 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   void dispose() {
     _cancelZoomTimersOnly();
     _controller.removeListener(_onTransformChanged);
-    _lastTransform = _controller.value.clone();
-    _lastScale = _currentScale;
     _controller.dispose();
     super.dispose();
   }
@@ -254,14 +248,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
           _nodes = nodes;
           _nodeMapCache = null;
         });
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_lastTransform != null) {
-            _controller.value = _lastTransform!;
-            _currentScale = _lastScale;
-          } else {
-            _centerMap(nodes);
-          }
-        });
+        WidgetsBinding.instance.addPostFrameCallback((_) => _centerMap(nodes));
       }
     } catch (e) {
       if (kMapDebugMode) debugPrint('[WorldMap] 加载地图数据失败: $e');
@@ -284,9 +271,9 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final viewH = renderBox.size.height;
     if (viewW <= 0 || viewH <= 0) return;
 
-    const initialScale = 5.0;
-    final cx = target.coordinates[0].toDouble();
-    final cy = target.coordinates[1].toDouble();
+    const initialScale = _initialScale;
+    final cx = target.coordinates[0].toDouble() + _mapCanvasPadding;
+    final cy = target.coordinates[1].toDouble() + _mapCanvasPadding;
     final tx = -cx * initialScale + viewW / 2;
     final ty = -cy * initialScale + viewH / 2;
 
@@ -370,8 +357,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     for (final node in nodes.reversed) {
       if (node.coordinates.length < 2) continue;
 
-      final x = node.coordinates[0].toDouble();
-      final y = node.coordinates[1].toDouble();
+      final x = node.coordinates[0].toDouble() + _mapCanvasPadding;
+      final y = node.coordinates[1].toDouble() + _mapCanvasPadding;
       final labelOffset = _lastLabelOffsets[node.id] ?? Offset.zero;
 
       final rect = Rect.fromCenter(
@@ -388,11 +375,11 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     return null;
   }
 
-  void _openLocationDetail(MapNode node) {
+  Future<void> _openLocationDetail(MapNode node) async {
     debugPrint('[MapNode] 准备打开地点详情: ${node.id} / ${node.name}');
     final isCurrent = node.id == _player.locationId;
     final canMove = _isAdjacentToCurrentLocation(node);
-    LocationDetailDialog.show(
+    final entered = await LocationDetailDialog.show(
       context,
       node,
       isCurrentLocation: isCurrent,
@@ -403,6 +390,9 @@ class _WorldMapContentState extends State<_WorldMapContent> {
             }
           : null,
     );
+    if (entered == true && mounted) {
+      Navigator.of(context).pop(_player);
+    }
   }
 
   // ──────────────────────────────────────────────
@@ -580,13 +570,17 @@ class _WorldMapContentState extends State<_WorldMapContent> {
             transformationController: _controller,
             minScale: _minScale,
             maxScale: _maxScale,
-            boundaryMargin: const EdgeInsets.all(300),
+            constrained: false,
+            boundaryMargin: const EdgeInsets.all(_mapBoundaryMargin),
             child: RepaintBoundary(
               child: SizedBox(
-                width: 1000,
-                height: 1000,
+                width: _mapCanvasSize,
+                height: _mapCanvasSize,
                 child: CustomPaint(
-                  painter: _LinePainter(nodes: visibleNodes),
+                  painter: _LinePainter(
+                    nodes: visibleNodes,
+                    canvasPadding: _mapCanvasPadding,
+                  ),
                   // 连线在底层，节点在上层
                   child: RepaintBoundary(
                     child: Stack(
@@ -617,8 +611,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     for (final n in nodes) {
       if (n.coordinates.length >= 2) {
         positions[n.id] = Offset(
-          n.coordinates[0].toDouble(),
-          n.coordinates[1].toDouble(),
+          n.coordinates[0].toDouble() + _mapCanvasPadding,
+          n.coordinates[1].toDouble() + _mapCanvasPadding,
         );
       }
     }
@@ -650,8 +644,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   Widget _buildNodeWidget(MapNode node, {Offset? labelOffset}) {
     if (node.coordinates.length < 2) return const SizedBox.shrink();
 
-    final x = node.coordinates[0].toDouble();
-    final y = node.coordinates[1].toDouble();
+    final x = node.coordinates[0].toDouble() + _mapCanvasPadding;
+    final y = node.coordinates[1].toDouble() + _mapCanvasPadding;
     final isCurrent = node.id == _player.locationId;
     final bgColor = isCurrent
         ? const Color(0xFFE8F5E9)
@@ -672,7 +666,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     }
 
     return Positioned(
-      key: ValueKey('map_node_${node.id}'),
+      key: ValueKey('map_location_${node.id}'),
       left: x - _nodeButtonWidth / 2 + leftOffset,
       top: y - _nodeButtonHeight / 2 + topOffset,
       width: _nodeButtonWidth,
@@ -687,6 +681,13 @@ class _WorldMapContentState extends State<_WorldMapContent> {
             color: bgColor,
             border: Border.all(color: borderColor, width: isCurrent ? 2 : 1),
             borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isCurrent ? 0.10 : 0.05),
+                blurRadius: isCurrent ? 8 : 4,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
           child: Center(
             child: Row(
@@ -825,8 +826,9 @@ class _WorldMapContentState extends State<_WorldMapContent> {
 /// 连线绘制器 — 根据国家关系使用不同样式
 class _LinePainter extends CustomPainter {
   final List<MapNode> nodes;
+  final double canvasPadding;
 
-  _LinePainter({required this.nodes});
+  _LinePainter({required this.nodes, required this.canvasPadding});
 
   static const _neutralCountries = ['中立地域'];
 
@@ -837,16 +839,16 @@ class _LinePainter extends CustomPainter {
     for (final node in nodes) {
       if (node.coordinates.length < 2) continue;
       final from = Offset(
-        node.coordinates[0].toDouble(),
-        node.coordinates[1].toDouble(),
+        node.coordinates[0].toDouble() + canvasPadding,
+        node.coordinates[1].toDouble() + canvasPadding,
       );
 
       for (final targetId in node.connectedNodes) {
         final target = nodeMap[targetId];
         if (target == null || target.coordinates.length < 2) continue;
         final to = Offset(
-          target.coordinates[0].toDouble(),
-          target.coordinates[1].toDouble(),
+          target.coordinates[0].toDouble() + canvasPadding,
+          target.coordinates[1].toDouble() + canvasPadding,
         );
 
         final paint = _linePaintFor(node, target);
@@ -906,6 +908,7 @@ class _LinePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _LinePainter oldDelegate) {
     if (identical(oldDelegate.nodes, nodes)) return false;
+    if (oldDelegate.canvasPadding != canvasPadding) return true;
     if (oldDelegate.nodes.length != nodes.length) return true;
     for (int i = 0; i < nodes.length; i++) {
       if (oldDelegate.nodes[i].id != nodes[i].id) return true;

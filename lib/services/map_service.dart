@@ -24,14 +24,14 @@ class MapService {
     final decoded = jsonDecode(jsonStr) as Map<String, dynamic>;
 
     final mapDatas = decoded['map_datas'];
-    if (mapDatas == null) {
+    if (mapDatas is! List) {
       throw Exception('map_data.json 缺少 map_datas 字段');
     }
 
-    final result = (mapDatas as List<dynamic>)
-        .map(
-          (e) => MapNode.fromJson(e['id'] as String, e as Map<String, dynamic>),
-        )
+    final result = mapDatas
+        .whereType<Map<String, dynamic>>()
+        .where((e) => e['id'] is String)
+        .map((e) => MapNode.fromJson(e['id'] as String, e))
         .toList();
 
     debugPrint('[MapService] 地图节点数量: ${result.length}');

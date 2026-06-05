@@ -10,16 +10,25 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  Timer? _redirectTimer;
+
   @override
   void initState() {
     super.initState();
     // 3秒后跳转到游戏开始界面
-    Timer(const Duration(seconds: 3), () {
+    _redirectTimer = Timer(const Duration(seconds: 3), () {
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const StartPage()),
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _redirectTimer?.cancel();
+    super.dispose();
   }
 
   @override

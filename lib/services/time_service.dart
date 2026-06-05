@@ -1,9 +1,8 @@
 import '../models/player.dart';
-import 'save_service.dart';
 
 /// 时间推进系统
 ///
-/// 管理游戏内时间推进逻辑，每次推进一天并自动存档。
+/// 管理游戏内时间推进逻辑。
 class TimeService {
   /// 春/夏/秋/冬 各季节天数上限
   static const int _daysPerSeason = 90;
@@ -11,7 +10,7 @@ class TimeService {
   /// 季节轮转顺序
   static const List<String> _seasonCycle = ['春', '夏', '秋', '冬'];
 
-  /// 推进一天，返回新的 Player 状态并自动存档
+  /// 推进一天，返回新的 Player 状态。
   static Player advanceOneDay(Player player) {
     var newDay = player.day + 1;
     var newSeason = player.season;
@@ -30,15 +29,10 @@ class TimeService {
       }
     }
 
-    final updated = player.copyWith(
+    return player.copyWith(
       day: newDay,
       season: newSeason,
       year: newYear,
     );
-
-    // 推进后自动存档
-    SaveService().autoSave(updated);
-
-    return updated;
   }
 }
