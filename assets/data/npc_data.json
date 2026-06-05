@@ -4,6 +4,7 @@
       "id": "npc_village_elder_001",
       "name": "村长",
       "locationId": "silver_leaf_village",
+      "buildingId": "silver_leaf_village_elder_house",
       "state": "idle",
       "personality": {
         "type": "温和"
@@ -15,6 +16,7 @@
       "id": "npc_blacksmith_001",
       "name": "铁匠",
       "locationId": "silver_leaf_village",
+      "buildingId": "silver_leaf_village_blacksmith",
       "state": "idle",
       "personality": {
         "type": "豪爽"
@@ -26,6 +28,7 @@
       "id": "npc_traveler_001",
       "name": "流浪商人",
       "locationId": "border_fortress",
+      "buildingId": "",
       "state": "idle",
       "personality": {
         "type": "精明"
