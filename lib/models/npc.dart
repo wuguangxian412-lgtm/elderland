@@ -3,6 +3,7 @@ class Npc {
   final String id;
   final String name;
   String locationId;
+  String buildingId;
   String state;
   final Map<String, dynamic> personality;
   final Map<String, dynamic> memory;
@@ -12,6 +13,7 @@ class Npc {
     required this.id,
     required this.name,
     required this.locationId,
+    this.buildingId = '',
     this.state = 'idle',
     this.personality = const {},
     this.memory = const {},
@@ -36,6 +38,7 @@ class Npc {
       id: (json['id'] as String?)?.trim() ?? '',
       name: (json['name'] as String?)?.trim() ?? '',
       locationId: (json['locationId'] as String?)?.trim() ?? '',
+      buildingId: (json['buildingId'] as String?)?.trim() ?? '',
       state: (json['state'] as String?)?.trim() ?? 'idle',
       personality: json['personality'] is Map
           ? Map<String, dynamic>.from(
@@ -57,6 +60,7 @@ class Npc {
     'id': id,
     'name': name,
     'locationId': locationId,
+    'buildingId': buildingId,
     'state': state,
     'personality': personality,
     'memory': memory,
@@ -64,5 +68,5 @@ class Npc {
   };
 
   @override
-  String toString() => 'Npc($id: $name @ $locationId [$state])';
+  String toString() => 'Npc($id: $name @ $locationId/$buildingId [$state])';
 }
