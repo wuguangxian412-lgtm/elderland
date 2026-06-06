@@ -191,32 +191,52 @@ class WorldService {
     }
   }
 
-  /// 模拟 AI 每日决策 — 返回测试用 Action 列表
+  /// 模拟村内人物行动 — 返回测试用 Action 列表
+  ///
+  /// 注意：这是开发阶段的本地模拟，不是真正 AI。
+  /// 目前只允许 NPC 在银叶村已有建筑之间移动，避免 NPC 被移动到
+  /// 尚未配置建筑的地点后从 UI 中消失。
   List<Action> simulateAIDay() {
     debugPrint('[WorldService] simulateAIDay()');
     final actions = <Action>[
       Action(
         type: 'move_npc',
         targetId: 'npc_village_elder_001',
-        payload: {'locationId': 'holy_light_city'},
+        payload: {
+          'locationId': 'silver_leaf_village',
+          'buildingId': 'silver_leaf_village_square',
+        },
       ),
       Action(
         type: 'change_state',
         targetId: 'npc_village_elder_001',
-        payload: {'state': 'working'},
+        payload: {'state': 'busy'},
       ),
       Action(
         type: 'update_memory',
         targetId: 'npc_village_elder_001',
-        payload: {'lastAction': '前往圣光城汇报', 'day': 1},
+        payload: {
+          'lastAction': '在村口广场处理村务',
+          'attitudeToPlayer': 'neutral',
+          'day': 1,
+        },
+      ),
+      Action(
+        type: 'change_state',
+        targetId: 'npc_blacksmith_001',
+        payload: {'state': 'working'},
       ),
       Action(
         type: 'spawn_npc',
         payload: {
           'id': 'npc_test_${DateTime.now().millisecondsSinceEpoch}',
-          'name': '测试NPC_生成',
+          'name': '测试旅人',
           'locationId': 'silver_leaf_village',
+          'buildingId': 'silver_leaf_village_inn',
           'state': 'idle',
+          'personality': {'type': '普通'},
+          'memory': {'source': 'simulateAIDay'},
+          'history': [],
         },
       ),
     ];
