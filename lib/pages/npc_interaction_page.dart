@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../dialogs/bag_dialog.dart';
 import '../models/building.dart';
+import '../models/dialogue_message.dart';
+import '../models/interaction_record.dart';
 import '../models/npc.dart';
 import '../models/player.dart';
 
@@ -23,7 +25,8 @@ class NpcInteractionPage extends StatefulWidget {
 
 class _NpcInteractionPageState extends State<NpcInteractionPage> {
   final TextEditingController _inputController = TextEditingController();
-  final List<Map<String, String>> _messages = [];
+  final List<DialogueMessage> _messages = [];
+  bool _isLeaving = false;
 
   static const Color _bg = Color(0xFFF7F5F2);
   static const Color _card = Color(0xFFFFFFFF);
@@ -36,7 +39,9 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
   void initState() {
     super.initState();
     debugPrint('[NpcInteraction] 进入互动页面 npc=${widget.npc.id}');
-    _messages.add({'speaker': '系统', 'text': '你正在与【${widget.npc.name}】互动。'});
+    _messages.add(
+      DialogueMessage(speaker: '系统', text: '你正在与【${widget.npc.name}】互动。'),
+    );
   }
 
   @override
@@ -46,8 +51,11 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
   }
 
   void _leavePage() {
+    if (_isLeaving) return;
+    _isLeaving = true;
     debugPrint('[NpcInteraction] 离开互动页面 npc=${widget.npc.id}');
-    Navigator.pop(context);
+    final record = _buildInteractionRecord();
+    Navigator.pop(context, record);
   }
 
   void _sendMessage() {
@@ -55,11 +63,38 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     if (text.isEmpty) return;
 
     debugPrint('[NpcInteraction] 玩家输入: $text');
+    final reply = _mockNpcReply();
     setState(() {
-      _messages.add({'speaker': '你', 'text': text});
-      _messages.add({'speaker': widget.npc.name, 'text': _mockNpcReply()});
+      _messages.add(DialogueMessage(speaker: '你', text: text));
+      _messages.add(DialogueMessage(speaker: widget.npc.name, text: reply));
     });
     _inputController.clear();
+  }
+
+  InteractionRecord? _buildInteractionRecord() {
+    final hasPlayerMessage = _messages.any((m) => m.speaker == '你');
+    if (!hasPlayerMessage) {
+      debugPrint('[NpcInteraction] 无玩家消息，不保存互动记录');
+      return null;
+    }
+
+    final record = InteractionRecord(
+      npcId: widget.npc.id,
+      npcName: widget.npc.name,
+      locationId: widget.player.locationId,
+      locationName: widget.player.location,
+      buildingId: widget.building.id,
+      buildingName: widget.building.name,
+      year: widget.player.year,
+      season: widget.player.season,
+      day: widget.player.day,
+      summary: '你与【${widget.npc.name}】进行了一次交谈，共记录 ${_messages.length} 条消息。',
+      messages: _messages,
+    );
+    debugPrint(
+      '[NpcInteraction] 生成互动记录 npc=${widget.npc.id} messageCount=${_messages.length}',
+    );
+    return record;
   }
 
   String _mockNpcReply() {
@@ -89,16 +124,23 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            Expanded(child: _buildMessageList()),
-            _buildInputArea(),
-            _buildPlayerBar(),
-          ],
+    return PopScope<InteractionRecord?>(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        _leavePage();
+      },
+      child: Scaffold(
+        backgroundColor: _bg,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(),
+              Expanded(child: _buildMessageList()),
+              _buildInputArea(),
+              _buildPlayerBar(),
+            ],
+          ),
         ),
       ),
     );
@@ -235,9 +277,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
         separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (context, index) {
           final message = _messages[index];
-          final speaker = message['speaker'] ?? '';
-          final text = message['text'] ?? '';
-          return _buildMessageRow(speaker, text);
+          return _buildMessageRow(message.speaker, message.text);
         },
       ),
     );

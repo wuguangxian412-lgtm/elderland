@@ -1,3 +1,5 @@
+import 'interaction_record.dart';
+
 /// 玩家数据模型
 class Player {
   final String name;
@@ -17,6 +19,7 @@ class Player {
   final int money;
   final String country;
   final List<String> triggeredTimelineEvents;
+  final List<InteractionRecord> interactionRecords;
 
   const Player({
     required this.name,
@@ -36,6 +39,7 @@ class Player {
     required this.money,
     this.country = '圣山王国',
     this.triggeredTimelineEvents = const [],
+    this.interactionRecords = const [],
   });
 
   /// 从 JSON 创建 Player
@@ -62,6 +66,7 @@ class Player {
               ?.map((e) => e as String)
               .toList() ??
           [],
+      interactionRecords: _parseInteractionRecords(json['interactionRecords']),
     );
   }
 
@@ -85,6 +90,7 @@ class Player {
       'day': day,
       'money': money,
       'triggeredTimelineEvents': triggeredTimelineEvents,
+      'interactionRecords': interactionRecords.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -107,6 +113,7 @@ class Player {
     int? day,
     int? money,
     List<String>? triggeredTimelineEvents,
+    List<InteractionRecord>? interactionRecords,
   }) {
     return Player(
       name: name ?? this.name,
@@ -127,6 +134,19 @@ class Player {
       money: money ?? this.money,
       triggeredTimelineEvents:
           triggeredTimelineEvents ?? this.triggeredTimelineEvents,
+      interactionRecords: interactionRecords ?? this.interactionRecords,
     );
+  }
+
+  static List<InteractionRecord> _parseInteractionRecords(dynamic raw) {
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map<dynamic, dynamic>>()
+        .map(
+          (item) => InteractionRecord.fromJson(
+            item.map((key, value) => MapEntry(key.toString(), value)),
+          ),
+        )
+        .toList();
   }
 }

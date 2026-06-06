@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import '../models/npc.dart';
 import '../models/action.dart';
+import 'world_save_service.dart';
 
 /// 世界状态服务 — 管理全局 NPC 和世界模拟数据
 class WorldService {
@@ -37,6 +38,7 @@ class WorldService {
 
   Future<void> _loadInitialNpcs() async {
     try {
+      npcs.clear();
       final jsonStr = await rootBundle.loadString(_npcAssetPath);
       final data = json.decode(jsonStr) as Map<String, dynamic>;
       final npcList = data['npcs'] as List<dynamic>? ?? [];
@@ -45,7 +47,19 @@ class WorldService {
         npcs.add(Npc.fromJson(item as Map<String, dynamic>));
       }
 
-      debugPrint('[WorldService] 已加载 ${npcs.length} 个 NPC');
+      debugPrint('[WorldService] 已加载初始 NPC 数量: ${npcs.length}');
+
+      final savedNpcs = await WorldSaveService().loadWorldNpcs();
+      if (savedNpcs != null && savedNpcs.isNotEmpty) {
+        npcs
+          ..clear()
+          ..addAll(savedNpcs);
+        debugPrint('[WorldService] 已使用 world_save 覆盖 NPC 状态');
+      } else {
+        debugPrint('[WorldService] 使用初始 NPC 数据');
+      }
+
+      debugPrint('[WorldService] 当前 NPC 数量: ${npcs.length}');
       for (final npc in npcs) {
         debugPrint(
           '[WorldService] NPC: id=${npc.id}  name=${npc.name}  '
@@ -84,9 +98,17 @@ class WorldService {
   }
 
   /// 更新指定 NPC 的状态
-  void updateNpcState(String id, String newState) {
+  Future<void> updateNpcState(String id, String newState) async {
     final npc = findNpcById(id);
-    if (npc != null) npc.state = newState;
+    if (npc != null) {
+      npc.state = newState;
+      await saveWorldState();
+    }
+  }
+
+  Future<void> saveWorldState() async {
+    await WorldSaveService().saveWorldNpcs(npcs);
+    debugPrint('[WorldService] 世界状态已保存');
   }
 
   /// 清除所有 NPC（测试用）
@@ -98,14 +120,16 @@ class WorldService {
   // === AI 指令执行系统 ===
 
   /// 执行 AI 行动指令
-  void executeAction(Action action) {
+  Future<void> executeAction(Action action) async {
     debugPrint(
       '[WorldService] executeAction: ${action.type} target=${action.targetId}',
     );
+    var didChange = false;
     switch (action.type) {
       case 'spawn_npc':
         final npc = Npc.fromJson(action.payload);
         npcs.add(npc);
+        didChange = true;
         debugPrint('[WorldService]  spawned NPC: ${npc.id} ${npc.name}');
         break;
 
@@ -117,6 +141,7 @@ class WorldService {
             '[WorldService]  move NPC ${npc.name}: ${npc.locationId} -> $newLocation',
           );
           npc.locationId = newLocation;
+          didChange = true;
         } else {
           debugPrint('[WorldService]  move_npc 未找到: ${action.targetId}');
         }
@@ -130,6 +155,7 @@ class WorldService {
             '[WorldService]  change_state NPC ${npc.name}: ${npc.state} -> $newState',
           );
           npc.state = newState;
+          didChange = true;
         } else {
           debugPrint('[WorldService]  change_state 未找到: ${action.targetId}');
         }
@@ -142,6 +168,7 @@ class WorldService {
             '[WorldService]  update_memory NPC ${npc.name}: ${action.payload}',
           );
           npc.memory.addAll(action.payload);
+          didChange = true;
         } else {
           debugPrint('[WorldService]  update_memory 未找到: ${action.targetId}');
         }
@@ -149,6 +176,10 @@ class WorldService {
 
       default:
         debugPrint('[WorldService]  未知 action type: ${action.type}');
+    }
+
+    if (didChange) {
+      await saveWorldState();
     }
   }
 

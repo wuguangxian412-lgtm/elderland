@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/building.dart';
+import '../models/interaction_record.dart';
 import '../models/player.dart';
 import '../models/npc.dart';
 import '../models/timeline_entry.dart';
@@ -67,11 +68,11 @@ class _GameMainPageState extends State<GameMainPage> {
     setState(() {});
   }
 
-  void _simulateAi() {
+  Future<void> _simulateAi() async {
     debugPrint('[GameMainPage] 模拟AI运行');
     final actions = WorldService().simulateAIDay();
     for (final action in actions) {
-      WorldService().executeAction(action);
+      await WorldService().executeAction(action);
     }
     setState(() {});
   }
@@ -204,14 +205,32 @@ class _GameMainPageState extends State<GameMainPage> {
   }
 
   Future<void> _openNpcInteraction(Building building, Npc npc) async {
-    await Navigator.push(
+    final record = await Navigator.push<InteractionRecord?>(
       context,
       MaterialPageRoute(
         builder: (_) =>
             NpcInteractionPage(player: _player, npc: npc, building: building),
       ),
     );
-    if (mounted) setState(() {});
+    if (!mounted) return;
+
+    if (record == null) {
+      debugPrint('[Interaction] 本次互动没有生成记录');
+      setState(() {});
+      return;
+    }
+
+    setState(() {
+      _player = _player.copyWith(
+        interactionRecords: [..._player.interactionRecords, record],
+      );
+    });
+    await SaveService().autoSave(_player);
+    debugPrint('[Interaction] 已保存互动记录: ${record.id}');
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('互动记录已保存')));
   }
 
   String _npcStateText(String state) {
@@ -867,7 +886,7 @@ class _GameMainPageState extends State<GameMainPage> {
                       Icons.history_outlined,
                       "经历",
                       2,
-                      () => HistoryDialog.show(context),
+                      () => HistoryDialog.show(context, _player),
                       key: const ValueKey('open_history_button'),
                     ),
                     _navDivider(),
