@@ -123,7 +123,9 @@ class _GameMainPageState extends State<GameMainPage> {
                 title: const Text('进入'),
                 onTap: () {
                   Navigator.of(ctx).pop();
-                  debugPrint('[Building] 进入建筑: ${building.id} ${building.name}');
+                  debugPrint(
+                    '[Building] 进入建筑: ${building.id} ${building.name}',
+                  );
                   setState(() => _selectedBuilding = building);
                 },
               ),
@@ -132,10 +134,12 @@ class _GameMainPageState extends State<GameMainPage> {
                 title: const Text('观察'),
                 onTap: () {
                   Navigator.of(ctx).pop();
-                  debugPrint('[Building] 观察建筑: ${building.id} ${building.name}');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('观察功能后续开放')),
+                  debugPrint(
+                    '[Building] 观察建筑: ${building.id} ${building.name}',
                   );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('观察功能后续开放')));
                 },
               ),
               ListTile(
@@ -157,9 +161,9 @@ class _GameMainPageState extends State<GameMainPage> {
 
   void _showNpcComingSoon(Npc npc) {
     debugPrint('[NPC] 点击NPC: ${npc.id} ${npc.name}');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('NPC互动功能后续开放')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('NPC互动功能后续开放')));
   }
 
   Future<void> _checkTimelineEvent() async {
@@ -178,7 +182,10 @@ class _GameMainPageState extends State<GameMainPage> {
     debugPrint('[TIMELINE] 触发事件：$eventName');
     setState(() {
       _player = _player.copyWith(
-        triggeredTimelineEvents: [..._player.triggeredTimelineEvents, eventName],
+        triggeredTimelineEvents: [
+          ..._player.triggeredTimelineEvents,
+          eventName,
+        ],
       );
     });
     await SaveService().autoSave(_player);
@@ -251,7 +258,7 @@ class _GameMainPageState extends State<GameMainPage> {
           child: Row(
             children: [
               const Text(
-                '当前地点建筑',
+                '周围建筑',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
@@ -266,13 +273,7 @@ class _GameMainPageState extends State<GameMainPage> {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
-          child: Text(
-            '当前位置：${_player.location}',
-            style: const TextStyle(fontSize: 13, color: _textSecondary),
-          ),
-        ),
+        const SizedBox(height: 8),
         if (_buildingError != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -285,7 +286,7 @@ class _GameMainPageState extends State<GameMainPage> {
           child: _currentBuildings.isEmpty
               ? const Center(
                   child: Text(
-                    '当前地点暂无可进入建筑',
+                    '附近暂时没有可进入的建筑',
                     style: TextStyle(fontSize: 14, color: _textSecondary),
                   ),
                 )
@@ -381,7 +382,7 @@ class _GameMainPageState extends State<GameMainPage> {
           child: TextButton.icon(
             onPressed: _returnToBuildingList,
             icon: const Icon(Icons.arrow_back, size: 18),
-            label: Text('返回${_player.location}'),
+            label: const Text('离开'),
             style: TextButton.styleFrom(
               foregroundColor: _textSecondary,
               padding: EdgeInsets.zero,
@@ -392,40 +393,49 @@ class _GameMainPageState extends State<GameMainPage> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                building.name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: _text,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFAFAFA),
+              border: Border.all(color: _border),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  building.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: _text,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '建筑类型：${building.type}',
-                style: const TextStyle(fontSize: 13, color: _textSecondary),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                building.description,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: _text,
-                  height: 1.5,
+                const SizedBox(height: 10),
+                Text(
+                  '建筑类型：${building.type}',
+                  style: const TextStyle(fontSize: 13, color: _textSecondary),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                Text(
+                  building.description,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: _text,
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 12),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
+        const SizedBox(height: 18),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
-            '当前建筑 NPC',
-            style: TextStyle(
+            building.isPublic ? '周围人物' : '房间人物',
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
               color: _text,
@@ -437,37 +447,59 @@ class _GameMainPageState extends State<GameMainPage> {
           child: buildingNpcs.isEmpty
               ? const Center(
                   child: Text(
-                    '当前建筑暂无可见 NPC',
+                    '这里暂时没有可见人物',
                     style: TextStyle(fontSize: 14, color: _textSecondary),
                   ),
                 )
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                   itemCount: buildingNpcs.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final npc = buildingNpcs[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        npc.name,
-                        style: const TextStyle(fontSize: 14, color: _text),
-                      ),
-                      trailing: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _accent.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          npc.state,
-                          style: const TextStyle(fontSize: 12, color: _accent),
-                        ),
-                      ),
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(12),
                       onTap: () => _showNpcComingSoon(npc),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFAFAFA),
+                          border: Border.all(color: _border),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    npc.name,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: _text,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    '状态：${npc.state}',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: _textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(
+                              Icons.chevron_right,
+                              size: 18,
+                              color: _textSecondary,
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -596,22 +628,21 @@ class _GameMainPageState extends State<GameMainPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          key: const ValueKey('current_time_text'),
-                          '神圣历${_player.year}年 ${_player.season} Day ${_player.day}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: _textSecondary,
+                        Expanded(
+                          child: _statusChip(
+                            key: const ValueKey('current_time_text'),
+                            text:
+                                '神圣历${_player.year}年 ${_player.season} Day ${_player.day}',
+                            icon: Icons.calendar_today_outlined,
                           ),
                         ),
-                        Text(
-                          key: const ValueKey('current_location_text'),
-                          _player.location,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: _textSecondary,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _statusChip(
+                            key: const ValueKey('current_location_text'),
+                            text: _player.location,
+                            icon: Icons.place_outlined,
                           ),
                         ),
                       ],
@@ -825,5 +856,41 @@ class _GameMainPageState extends State<GameMainPage> {
 
   Widget _navDivider() {
     return Container(width: 0.5, height: 28, color: _border);
+  }
+
+  Widget _statusChip({
+    required Key key,
+    required String text,
+    required IconData icon,
+  }) {
+    return Container(
+      key: key,
+      constraints: const BoxConstraints(minHeight: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAFAFA),
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(9),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: _textSecondary),
+          const SizedBox(width: 5),
+          Expanded(
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: _text,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
