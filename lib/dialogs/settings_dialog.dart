@@ -4,16 +4,41 @@ import 'package:flutter/services.dart';
 import '../models/player.dart';
 import '../pages/start_page.dart';
 import '../services/save_service.dart';
+import 'developer_panel_dialog.dart';
 
 class SettingsDialog extends StatelessWidget {
   final Player player;
+  final Future<void> Function()? onAdvancePlayerDay;
+  final Future<void> Function()? onInspectNpcStatus;
+  final Future<void> Function()? onSimulateVillageActions;
+  final Future<void> Function()? onOpenWorldMap;
 
-  const SettingsDialog({super.key, required this.player});
+  const SettingsDialog({
+    super.key,
+    required this.player,
+    this.onAdvancePlayerDay,
+    this.onInspectNpcStatus,
+    this.onSimulateVillageActions,
+    this.onOpenWorldMap,
+  });
 
-  static Future<void> show(BuildContext context, Player player) {
+  static Future<void> show(
+    BuildContext context,
+    Player player, {
+    Future<void> Function()? onAdvancePlayerDay,
+    Future<void> Function()? onInspectNpcStatus,
+    Future<void> Function()? onSimulateVillageActions,
+    Future<void> Function()? onOpenWorldMap,
+  }) {
     return showDialog(
       context: context,
-      builder: (_) => SettingsDialog(player: player),
+      builder: (_) => SettingsDialog(
+        player: player,
+        onAdvancePlayerDay: onAdvancePlayerDay,
+        onInspectNpcStatus: onInspectNpcStatus,
+        onSimulateVillageActions: onSimulateVillageActions,
+        onOpenWorldMap: onOpenWorldMap,
+      ),
     );
   }
 
@@ -57,6 +82,16 @@ class SettingsDialog extends StatelessWidget {
     );
   }
 
+  void _showDeveloperPanel(BuildContext context) {
+    DeveloperPanelDialog.show(
+      context,
+      onAdvancePlayerDay: onAdvancePlayerDay,
+      onInspectNpcStatus: onInspectNpcStatus,
+      onSimulateVillageActions: onSimulateVillageActions,
+      onOpenWorldMap: onOpenWorldMap,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -82,15 +117,57 @@ class SettingsDialog extends StatelessWidget {
                 ),
               ),
             ),
-            const Expanded(
-              child: Center(
-                child: Text(
-                  "设置界面",
-                  style: TextStyle(fontSize: 18, color: Color(0xFF777777)),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.settings_outlined,
+                      size: 42,
+                      color: Color(0xFF777777),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "设置界面",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      "这里保留正式设置入口；开发阶段测试功能统一放进开发者面板。",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 1.5,
+                        color: Color(0xFF777777),
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      width: 180,
+                      child: OutlinedButton.icon(
+                        onPressed: () => _showDeveloperPanel(context),
+                        icon: const Icon(Icons.bug_report_outlined, size: 18),
+                        label: const Text("开发者面板"),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF333333),
+                          side: const BorderSide(color: Color(0xFFCCCCCC)),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 11,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            // 存档按钮
             Padding(
               padding: EdgeInsets.only(bottom: size.height * 0.02),
               child: Center(
