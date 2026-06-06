@@ -136,11 +136,19 @@ class WorldService {
       case 'move_npc':
         final npc = findNpcById(action.targetId ?? '');
         if (npc != null) {
+          final oldLocation = npc.locationId;
+          final oldBuilding = npc.buildingId;
           final newLocation = action.payload['locationId'] as String? ?? '';
+          final hasBuildingPayload = action.payload.containsKey('buildingId');
+          final newBuilding = hasBuildingPayload
+              ? (action.payload['buildingId'] as String? ?? '')
+              : (newLocation == oldLocation ? oldBuilding : '');
           debugPrint(
-            '[WorldService]  move NPC ${npc.name}: ${npc.locationId} -> $newLocation',
+            '[WorldService]  move NPC ${npc.name}: '
+            '$oldLocation/$oldBuilding -> $newLocation/$newBuilding',
           );
           npc.locationId = newLocation;
+          npc.buildingId = newBuilding;
           didChange = true;
         } else {
           debugPrint('[WorldService]  move_npc 未找到: ${action.targetId}');
