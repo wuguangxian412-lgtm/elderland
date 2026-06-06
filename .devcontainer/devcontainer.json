@@ -4,6 +4,7 @@
     "dockerfile": "Dockerfile"
   },
   "postCreateCommand": "flutter doctor -v || true && flutter pub get || true",
+  "postStartCommand": "cd /workspaces/elderland && nohup flutter run -d web-server --web-port 8080 --release > /tmp/flutter_web.log 2>&1 &",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -21,7 +22,7 @@
     "8080": {
       "label": "Flutter Web",
       "description": "Flutter Web 预览",
-      "onAutoForward": "notify"
+      "onAutoForward": "openBrowser"
     }
   }
 }
