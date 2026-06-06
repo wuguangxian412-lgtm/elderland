@@ -34,20 +34,23 @@ class _GameMainPageState extends State<GameMainPage> {
   bool _buildingLoading = false;
   String? _buildingError;
 
+  static const Color _bg = Color(0xFFF7F5F2);
+  static const Color _card = Color(0xFFFFFFFF);
+  static const Color _border = Color(0xFFE5E5E5);
+  static const Color _text = Color(0xFF333333);
+  static const Color _textSecondary = Color(0xFF777777);
+  static const Color _accent = Color(0xFF7BAE7F);
+
   @override
   void initState() {
     super.initState();
     _player = widget.player;
-    debugPrint('[GameMainPage] 正在初始化WorldService');
-    WorldService()
-        .initialize()
-        .then((_) {
-          debugPrint('[GameMainPage] WorldService初始化完成');
-          if (mounted) setState(() {});
-        })
-        .catchError((Object e) {
-          debugPrint('[GameMainPage] WorldService初始化失败: $e');
-        });
+    WorldService().initialize().then((_) {
+      debugPrint('[GameMainPage] WorldService初始化完成');
+      if (mounted) setState(() {});
+    }).catchError((Object e) {
+      debugPrint('[GameMainPage] WorldService初始化失败: $e');
+    });
     _loadBuildingsForCurrentLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkTimelineEvent());
   }
@@ -55,17 +58,23 @@ class _GameMainPageState extends State<GameMainPage> {
   Future<void> _advanceDay() async {
     final updated = TimeService.advanceOneDay(_player);
     debugPrint('[TIME] ${updated.year}年${updated.season} Day ${updated.day}');
-    setState(() {
-      _player = updated;
-    });
+    setState(() => _player = updated);
     await SaveService().autoSave(_player);
     _checkTimelineEvent();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('玩家时间已推进一天')),
+    );
   }
 
-  void _advanceNpcDay() {
-    debugPrint('[GameMainPage] 推进NPC一天');
+  Future<void> _inspectNpcStatus() async {
+    debugPrint('[GameMainPage] 查看人物状态');
     WorldService().advanceDay();
     setState(() {});
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('人物状态已输出到调试日志')),
+    );
   }
 
   Future<void> _simulateAi() async {
@@ -75,17 +84,30 @@ class _GameMainPageState extends State<GameMainPage> {
       await WorldService().executeAction(action);
     }
     setState(() {});
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('村内人物行动已模拟')),
+    );
+  }
+
+  Future<void> _openWorldMap() async {
+    final updated = await WorldMapDialog.show(context, _player);
+    if (!mounted) return;
+    if (updated != null) {
+      setState(() {
+        _player = updated;
+        _selectedBuilding = null;
+      });
+      _loadBuildingsForCurrentLocation();
+    }
   }
 
   Future<void> _loadBuildingsForCurrentLocation() async {
     debugPrint('[Building] 开始加载当前地点建筑: ${_player.locationId}');
-    if (mounted) {
-      setState(() {
-        _buildingLoading = true;
-        _buildingError = null;
-      });
-    }
-
+    setState(() {
+      _buildingLoading = true;
+      _buildingError = null;
+    });
     try {
       final buildings = await BuildingService().loadBuildingsByLocation(
         _player.locationId,
@@ -115,42 +137,35 @@ class _GameMainPageState extends State<GameMainPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.meeting_room_outlined),
-                title: const Text('进入'),
-                onTap: () {
-                  Navigator.of(ctx).pop();
-                  debugPrint(
-                    '[Building] 进入建筑: ${building.id} ${building.name}',
-                  );
-                  setState(() => _selectedBuilding = building);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.visibility_outlined),
-                title: const Text('观察'),
-                onTap: () {
-                  Navigator.of(ctx).pop();
-                  debugPrint(
-                    '[Building] 观察建筑: ${building.id} ${building.name}',
-                  );
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text('观察功能后续开放')));
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.close),
-                title: const Text('取消'),
-                onTap: () => Navigator.of(ctx).pop(),
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.meeting_room_outlined),
+              title: const Text('进入'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                debugPrint('[Building] 进入建筑: ${building.id} ${building.name}');
+                setState(() => _selectedBuilding = building);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.visibility_outlined),
+              title: const Text('观察'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                debugPrint('[Building] 观察建筑: ${building.id} ${building.name}');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('观察功能后续开放')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.close),
+              title: const Text('取消'),
+              onTap: () => Navigator.of(ctx).pop(),
+            ),
+          ],
         ),
       ),
     );
@@ -169,36 +184,33 @@ class _GameMainPageState extends State<GameMainPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.chat_bubble_outline),
-                title: const Text('对话'),
-                onTap: () {
-                  Navigator.of(ctx).pop();
-                  _openNpcInteraction(building, npc);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.dangerous_outlined),
-                title: const Text('杀害'),
-                onTap: () {
-                  Navigator.of(ctx).pop();
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text('杀害功能后续开放')));
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.close),
-                title: const Text('取消'),
-                onTap: () => Navigator.of(ctx).pop(),
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.chat_bubble_outline),
+              title: const Text('对话'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                _openNpcInteraction(building, npc);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.more_horiz),
+              title: const Text('更多行动'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('更多行动功能后续开放')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.close),
+              title: const Text('取消'),
+              onTap: () => Navigator.of(ctx).pop(),
+            ),
+          ],
         ),
       ),
     );
@@ -208,18 +220,19 @@ class _GameMainPageState extends State<GameMainPage> {
     final record = await Navigator.push<InteractionRecord?>(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            NpcInteractionPage(player: _player, npc: npc, building: building),
+        builder: (_) => NpcInteractionPage(
+          player: _player,
+          npc: npc,
+          building: building,
+        ),
       ),
     );
     if (!mounted) return;
-
     if (record == null) {
       debugPrint('[Interaction] 本次互动没有生成记录');
       setState(() {});
       return;
     }
-
     setState(() {
       _player = _player.copyWith(
         interactionRecords: [..._player.interactionRecords, record],
@@ -228,15 +241,21 @@ class _GameMainPageState extends State<GameMainPage> {
     await SaveService().autoSave(_player);
     debugPrint('[Interaction] 已保存互动记录: ${record.id}');
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('互动记录已保存')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('互动记录已保存')),
+    );
   }
 
   String _npcStateText(String state) {
     switch (state) {
       case 'idle':
         return '空闲';
+      case 'busy':
+        return '忙碌';
+      case 'working':
+        return '工作中';
+      case 'resting':
+        return '休息中';
       default:
         return state;
     }
@@ -248,20 +267,12 @@ class _GameMainPageState extends State<GameMainPage> {
       _player.season,
     );
     if (event == null) return;
-
     final eventName = event.title;
-    if (_player.triggeredTimelineEvents.contains(eventName)) {
-      debugPrint('[TIMELINE] 已触发过，跳过：$eventName');
-      return;
-    }
-
+    if (_player.triggeredTimelineEvents.contains(eventName)) return;
     debugPrint('[TIMELINE] 触发事件：$eventName');
     setState(() {
       _player = _player.copyWith(
-        triggeredTimelineEvents: [
-          ..._player.triggeredTimelineEvents,
-          eventName,
-        ],
+        triggeredTimelineEvents: [..._player.triggeredTimelineEvents, eventName],
       );
     });
     await SaveService().autoSave(_player);
@@ -272,46 +283,15 @@ class _GameMainPageState extends State<GameMainPage> {
   void _showTimelineEventDialog(TimelineEntry event) {
     showDialog(
       context: context,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '时代事件',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Text(
-                    event.content,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Color(0xFF555555),
-                      height: 1.6,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => Navigator.of(ctx).pop(),
-                  child: const Text('知道了'),
-                ),
-              ),
-            ],
+      builder: (ctx) => AlertDialog(
+        title: const Text('时代事件'),
+        content: SingleChildScrollView(child: Text(event.content)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('知道了'),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -325,7 +305,6 @@ class _GameMainPageState extends State<GameMainPage> {
         ),
       );
     }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -370,77 +349,57 @@ class _GameMainPageState extends State<GameMainPage> {
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                   itemCount: _currentBuildings.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    final building = _currentBuildings[index];
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () => _showBuildingActionSheet(building),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFAFAFA),
-                          border: Border.all(color: _border),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    building.name,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: _text,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _accent.withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    building.isPublic ? '公共区域' : '私人区域',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: _accent,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              building.type,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: _textSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              building.description,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: _text,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                  itemBuilder: (context, index) => _buildingCard(
+                    _currentBuildings[index],
+                  ),
                 ),
         ),
       ],
+    );
+  }
+
+  Widget _buildingCard(Building building) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => _showBuildingActionSheet(building),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAFAFA),
+          border: Border.all(color: _border),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    building.name,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: _text,
+                    ),
+                  ),
+                ),
+                _tag(building.isPublic ? '公共区域' : '私人区域'),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              building.type,
+              style: const TextStyle(fontSize: 12, color: _textSecondary),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              building.description,
+              style: const TextStyle(fontSize: 13, color: _text, height: 1.4),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -449,7 +408,6 @@ class _GameMainPageState extends State<GameMainPage> {
       _player.locationId,
       building.id,
     );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -496,11 +454,7 @@ class _GameMainPageState extends State<GameMainPage> {
                 const SizedBox(height: 12),
                 Text(
                   building.description,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: _text,
-                    height: 1.5,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: _text, height: 1.5),
                 ),
               ],
             ),
@@ -531,388 +485,261 @@ class _GameMainPageState extends State<GameMainPage> {
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                   itemCount: buildingNpcs.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    final npc = buildingNpcs[index];
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () => _showNpcActionSheet(building, npc),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFAFAFA),
-                          border: Border.all(color: _border),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    npc.name,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: _text,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    '状态：${_npcStateText(npc.state)}',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: _textSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Icon(
-                              Icons.chevron_right,
-                              size: 18,
-                              color: _textSecondary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                  itemBuilder: (context, index) => _npcCard(
+                    building,
+                    buildingNpcs[index],
+                  ),
                 ),
         ),
       ],
     );
   }
 
-  static const Color _bg = Color(0xFFF7F5F2);
-  static const Color _card = Color(0xFFFFFFFF);
-  static const Color _border = Color(0xFFE5E5E5);
-  static const Color _text = Color(0xFF333333);
-  static const Color _textSecondary = Color(0xFF777777);
-  static const Color _accent = Color(0xFF7BAE7F);
+  Widget _npcCard(Building building, Npc npc) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => _showNpcActionSheet(building, npc),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAFAFA),
+          border: Border.all(color: _border),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    npc.name,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: _text,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    '状态：${_npcStateText(npc.state)}',
+                    style: const TextStyle(fontSize: 12, color: _textSecondary),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, size: 18, color: _textSecondary),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _tag(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: _accent.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(text, style: const TextStyle(fontSize: 12, color: _accent)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: _bg,
       body: Column(
         children: [
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                size.width * 0.04,
-                size.height * 0.015,
-                size.width * 0.04,
-                0,
-              ),
+          SafeArea(bottom: false, child: _topPlayerCard(size)),
+          SizedBox(height: size.height * 0.015),
+          Expanded(child: _mainContentCard(size)),
+          SizedBox(height: size.height * 0.015),
+          _bottomNav(),
+        ],
+      ),
+    );
+  }
+
+  Widget _topPlayerCard(Size size) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        size.width * 0.04,
+        size.height * 0.015,
+        size.width * 0.04,
+        0,
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.03,
+          vertical: size.height * 0.012,
+        ),
+        decoration: BoxDecoration(
+          color: _card,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () => CharacterInfoDialog.show(context, _player),
+              key: const ValueKey('open_character_info_button'),
               child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.03,
-                  vertical: size.height * 0.012,
-                ),
+                width: size.width * 0.15,
+                height: size.width * 0.15,
                 decoration: BoxDecoration(
-                  color: _card,
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.06),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  color: const Color(0xFFE8E5E0),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _border, width: 2),
                 ),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => CharacterInfoDialog.show(context, _player),
-                      key: const ValueKey('open_character_info_button'),
-                      child: Container(
-                        width: size.width * 0.15,
-                        height: size.width * 0.15,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE8E5E0),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: _border, width: 2),
-                        ),
-                        child: const Icon(
-                          Icons.person,
-                          size: 30,
-                          color: _textSecondary,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: size.width * 0.04),
-                    Container(
-                      width: 1,
-                      height: size.width * 0.1,
-                      color: _border,
-                    ),
-                    SizedBox(width: size.width * 0.04),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _player.name,
-                            style: TextStyle(
-                              color: _text,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "血量 HP: ${_player.hp}/${_player.maxHp}",
-                            style: TextStyle(
-                              color: _accent,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                child: const Icon(Icons.person, size: 30, color: _textSecondary),
               ),
             ),
-          ),
-          SizedBox(height: size.height * 0.015),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-              decoration: BoxDecoration(
-                color: _card,
-                border: Border.all(color: _border),
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
+            SizedBox(width: size.width * 0.04),
+            Container(width: 1, height: size.width * 0.1, color: _border),
+            SizedBox(width: size.width * 0.04),
+            Expanded(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: _statusChip(
-                            key: const ValueKey('current_time_text'),
-                            text:
-                                '神圣历${_player.year}年 ${_player.season} Day ${_player.day}',
-                            icon: Icons.calendar_today_outlined,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          flex: 2,
-                          child: _statusChip(
-                            key: const ValueKey('current_location_text'),
-                            text: _player.location,
-                            icon: Icons.place_outlined,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    _player.name,
+                    style: const TextStyle(
+                      color: _text,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const Divider(height: 14),
-                  Expanded(
-                    child: _selectedBuilding == null
-                        ? _buildLocationBuildingsView()
-                        : _buildBuildingInteriorView(_selectedBuilding!),
-                  ),
-                  const Divider(height: 1),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 38,
-                                child: ElevatedButton(
-                                  key: const ValueKey('advance_one_day_button'),
-                                  onPressed: _advanceDay,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xffaac8dc),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    '推进一天（测试）',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: SizedBox(
-                                height: 38,
-                                child: ElevatedButton(
-                                  onPressed: _advanceNpcDay,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF8B9D83),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    '推进一天（测试NPC）',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 38,
-                                child: ElevatedButton(
-                                  onPressed: _simulateAi,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFD87C7C),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    '模拟AI运行',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: SizedBox(
-                                height: 38,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    final updated = await WorldMapDialog.show(
-                                      context,
-                                      _player,
-                                    );
-                                    if (!mounted) return;
-                                    if (updated != null) {
-                                      setState(() {
-                                        _player = updated;
-                                        _selectedBuilding = null;
-                                      });
-                                      _loadBuildingsForCurrentLocation();
-                                    }
-                                  },
-                                  key: const ValueKey('open_world_map_button'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF6B7F8D),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    '世界地图',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                  const SizedBox(height: 4),
+                  Text(
+                    '血量 HP: ${_player.hp}/${_player.maxHp}',
+                    style: const TextStyle(
+                      color: _accent,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _mainContentCard(Size size) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+      decoration: BoxDecoration(
+        color: _card,
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 1),
           ),
-          SizedBox(height: size.height * 0.015),
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: _card,
-              border: Border(top: BorderSide(color: _border, width: 0.5)),
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                height: 64,
-                child: Row(
-                  children: [
-                    _navItem(
-                      Icons.backpack_outlined,
-                      "背包",
-                      0,
-                      () => BagDialog.show(context),
-                      key: const ValueKey('open_bag_button'),
-                    ),
-                    _navDivider(),
-                    _navItem(
-                      Icons.people_outlined,
-                      "人脉",
-                      1,
-                      () => RelationshipDialog.show(context),
-                    ),
-                    _navDivider(),
-                    _navItem(
-                      Icons.history_outlined,
-                      "经历",
-                      2,
-                      () => HistoryDialog.show(context, _player),
-                      key: const ValueKey('open_history_button'),
-                    ),
-                    _navDivider(),
-                    _navItem(
-                      Icons.settings_outlined,
-                      "设置",
-                      3,
-                      () => SettingsDialog.show(context, _player),
-                    ),
-                  ],
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: _statusChip(
+                    key: const ValueKey('current_time_text'),
+                    text: '神圣历${_player.year}年 ${_player.season} Day ${_player.day}',
+                    icon: Icons.calendar_today_outlined,
+                  ),
                 ),
-              ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: _statusChip(
+                    key: const ValueKey('current_location_text'),
+                    text: _player.location,
+                    icon: Icons.place_outlined,
+                  ),
+                ),
+              ],
             ),
+          ),
+          const Divider(height: 14),
+          Expanded(
+            child: _selectedBuilding == null
+                ? _buildLocationBuildingsView()
+                : _buildBuildingInteriorView(_selectedBuilding!),
           ),
         ],
       ),
     );
   }
 
-  Widget _navItem(
-    IconData icon,
-    String label,
-    int index,
-    VoidCallback onTap, {
-    Key? key,
-  }) {
+  Widget _bottomNav() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: _card,
+        border: Border(top: BorderSide(color: _border, width: 0.5)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64,
+          child: Row(
+            children: [
+              _navItem(
+                Icons.backpack_outlined,
+                '背包',
+                () => BagDialog.show(context),
+                key: const ValueKey('open_bag_button'),
+              ),
+              _navDivider(),
+              _navItem(Icons.people_outlined, '人脉', () => RelationshipDialog.show(context)),
+              _navDivider(),
+              _navItem(
+                Icons.history_outlined,
+                '经历',
+                () => HistoryDialog.show(context, _player),
+                key: const ValueKey('open_history_button'),
+              ),
+              _navDivider(),
+              _navItem(
+                Icons.settings_outlined,
+                '设置',
+                () => SettingsDialog.show(
+                  context,
+                  _player,
+                  onAdvancePlayerDay: _advanceDay,
+                  onInspectNpcStatus: _inspectNpcStatus,
+                  onSimulateVillageActions: _simulateAi,
+                  onOpenWorldMap: _openWorldMap,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem(IconData icon, String label, VoidCallback onTap, {Key? key}) {
     return Expanded(
       child: GestureDetector(
         key: key,
@@ -932,9 +759,7 @@ class _GameMainPageState extends State<GameMainPage> {
     );
   }
 
-  Widget _navDivider() {
-    return Container(width: 0.5, height: 28, color: _border);
-  }
+  Widget _navDivider() => Container(width: 0.5, height: 28, color: _border);
 
   Widget _statusChip({
     required Key key,
@@ -951,7 +776,6 @@ class _GameMainPageState extends State<GameMainPage> {
         borderRadius: BorderRadius.circular(9),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 13, color: _textSecondary),
           const SizedBox(width: 4),
