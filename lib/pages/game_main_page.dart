@@ -9,6 +9,7 @@ import '../dialogs/bag_dialog.dart';
 import '../dialogs/relationship_dialog.dart';
 import '../dialogs/history_dialog.dart';
 import '../dialogs/settings_dialog.dart';
+import '../pages/npc_interaction_page.dart';
 import '../services/time_service.dart';
 import '../services/save_service.dart';
 import '../services/timeline_service.dart';
@@ -159,11 +160,67 @@ class _GameMainPageState extends State<GameMainPage> {
     setState(() => _selectedBuilding = null);
   }
 
-  void _showNpcComingSoon(Npc npc) {
+  void _showNpcActionSheet(Building building, Npc npc) {
     debugPrint('[NPC] 点击NPC: ${npc.id} ${npc.name}');
-    ScaffoldMessenger.of(
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.chat_bubble_outline),
+                title: const Text('对话'),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _openNpcInteraction(building, npc);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.dangerous_outlined),
+                title: const Text('杀害'),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('杀害功能后续开放')));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.close),
+                title: const Text('取消'),
+                onTap: () => Navigator.of(ctx).pop(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openNpcInteraction(Building building, Npc npc) async {
+    await Navigator.push(
       context,
-    ).showSnackBar(const SnackBar(content: Text('NPC互动功能后续开放')));
+      MaterialPageRoute(
+        builder: (_) =>
+            NpcInteractionPage(player: _player, npc: npc, building: building),
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
+  String _npcStateText(String state) {
+    switch (state) {
+      case 'idle':
+        return '空闲';
+      default:
+        return state;
+    }
   }
 
   Future<void> _checkTimelineEvent() async {
@@ -459,7 +516,7 @@ class _GameMainPageState extends State<GameMainPage> {
                     final npc = buildingNpcs[index];
                     return InkWell(
                       borderRadius: BorderRadius.circular(12),
-                      onTap: () => _showNpcComingSoon(npc),
+                      onTap: () => _showNpcActionSheet(building, npc),
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -483,7 +540,7 @@ class _GameMainPageState extends State<GameMainPage> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    '状态：${npc.state}',
+                                    '状态：${_npcStateText(npc.state)}',
                                     style: const TextStyle(
                                       fontSize: 12,
                                       color: _textSecondary,
@@ -630,6 +687,7 @@ class _GameMainPageState extends State<GameMainPage> {
                     child: Row(
                       children: [
                         Expanded(
+                          flex: 3,
                           child: _statusChip(
                             key: const ValueKey('current_time_text'),
                             text:
@@ -639,6 +697,7 @@ class _GameMainPageState extends State<GameMainPage> {
                         ),
                         const SizedBox(width: 8),
                         Expanded(
+                          flex: 2,
                           child: _statusChip(
                             key: const ValueKey('current_location_text'),
                             text: _player.location,
@@ -866,7 +925,7 @@ class _GameMainPageState extends State<GameMainPage> {
     return Container(
       key: key,
       constraints: const BoxConstraints(minHeight: 30),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         border: Border.all(color: _border),
@@ -875,15 +934,15 @@ class _GameMainPageState extends State<GameMainPage> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: _textSecondary),
-          const SizedBox(width: 5),
+          Icon(icon, size: 13, color: _textSecondary),
+          const SizedBox(width: 4),
           Expanded(
             child: Text(
               text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: _text,
               ),
