@@ -106,6 +106,39 @@ class WorldService {
     }
   }
 
+  /// 更新 NPC 对玩家的记忆摘要。
+  ///
+  /// 这里不保存完整对话，只保存摘要，避免 NPC 记忆无限膨胀。
+  Future<void> updateNpcPlayerMemory({
+    required String npcId,
+    required String playerName,
+    required String summary,
+    required int affinityDelta,
+    required int interactionCount,
+  }) async {
+    final npc = findNpcById(npcId);
+    if (npc == null) {
+      debugPrint('[WorldService] updateNpcPlayerMemory 未找到 NPC: $npcId');
+      return;
+    }
+
+    final playerMemory = npc.memory['player'] is Map
+        ? Map<String, dynamic>.from(
+            (npc.memory['player'] as Map).map((k, v) => MapEntry(k.toString(), v)),
+          )
+        : <String, dynamic>{};
+
+    playerMemory['name'] = playerName;
+    playerMemory['summary'] = summary;
+    playerMemory['lastAffinityDelta'] = affinityDelta;
+    playerMemory['interactionCount'] = interactionCount;
+    playerMemory['updatedAt'] = DateTime.now().toIso8601String();
+    npc.memory['player'] = playerMemory;
+
+    await saveWorldState();
+    debugPrint('[WorldService] 已更新 NPC 对玩家记忆: ${npc.name}');
+  }
+
   Future<void> saveWorldState() async {
     await WorldSaveService().saveWorldNpcs(npcs);
     debugPrint('[WorldService] 世界状态已保存');
