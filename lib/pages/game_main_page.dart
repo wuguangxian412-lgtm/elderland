@@ -17,6 +17,7 @@ import '../services/timeline_service.dart';
 import '../dialogs/world_map_dialog.dart';
 import '../services/world_service.dart';
 import '../services/building_service.dart';
+import '../services/interaction_result_service.dart';
 
 class GameMainPage extends StatefulWidget {
   final Player player;
@@ -217,13 +218,55 @@ class _GameMainPageState extends State<GameMainPage> {
       setState(() {});
       return;
     }
+
+    final resultService = const InteractionResultService();
+    final affinityDelta = resultService.estimateAffinityDelta(record);
+    final dialogueEvent = resultService.buildDialogueEvent(record);
+    final relationshipEvent = resultService.buildRelationshipEvent(record, affinityDelta);
+    final memorySummary = resultService.buildNpcMemorySummary(record, affinityDelta);
+    final relationships = resultService.upsertRelationship(
+      player: _player,
+      npc: npc,
+      building: building,
+      record: record,
+      affinityDelta: affinityDelta,
+      memorySummary: memorySummary,
+    );
+
+    final updatedEvents = [
+      ..._player.eventRecords,
+      dialogueEvent,
+      if (relationshipEvent != null) relationshipEvent,
+    ];
+
+    final updatedImportantEvents = [
+      ..._player.importantEventRecords,
+      if (relationshipEvent != null && affinityDelta.abs() >= 10) relationshipEvent,
+    ];
+
     setState(() {
-      _player = _player.copyWith(interactionRecords: [..._player.interactionRecords, record]);
+      _player = _player.copyWith(
+        interactionRecords: [..._player.interactionRecords, record],
+        eventRecords: updatedEvents,
+        importantEventRecords: updatedImportantEvents,
+        relationships: relationships,
+      );
     });
+
+    await WorldService().updateNpcPlayerMemory(
+      npcId: npc.id,
+      playerName: _player.name,
+      summary: memorySummary,
+      affinityDelta: affinityDelta,
+      interactionCount: relationships.firstWhere((r) => r.npcId == npc.id).interactionCount,
+    );
     await SaveService().autoSave(_player);
+
     debugPrint('[Interaction] 已保存互动记录: ${record.id}');
+    debugPrint('[Interaction] 已写入统一经历: ${dialogueEvent.id}');
+    debugPrint('[Interaction] 好感变化: $affinityDelta');
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('互动记录已保存')));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('互动、经历、人脉与NPC记忆已保存')));
   }
 
   String _npcStateText(String state) {
@@ -507,7 +550,7 @@ class _GameMainPageState extends State<GameMainPage> {
             children: [
               _navItem(Icons.backpack_outlined, '背包', () => BagDialog.show(context), key: const ValueKey('open_bag_button')),
               _navDivider(),
-              _navItem(Icons.people_outlined, '人脉', () => RelationshipDialog.show(context)),
+              _navItem(Icons.people_outlined, '人脉', () => RelationshipDialog.show(context, _player)),
               _navDivider(),
               _navItem(Icons.history_outlined, '经历', () => HistoryDialog.show(context, _player), key: const ValueKey('open_history_button')),
               _navDivider(),
