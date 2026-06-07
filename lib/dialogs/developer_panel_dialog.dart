@@ -4,7 +4,6 @@ class DeveloperPanelDialog extends StatelessWidget {
   final Future<void> Function()? onAdvancePlayerDay;
   final Future<void> Function()? onInspectNpcStatus;
   final Future<void> Function()? onSimulateVillageActions;
-  final Future<void> Function()? onOpenWorldMap;
   final Future<void> Function()? onClearAllSaves;
 
   const DeveloperPanelDialog({
@@ -12,7 +11,6 @@ class DeveloperPanelDialog extends StatelessWidget {
     this.onAdvancePlayerDay,
     this.onInspectNpcStatus,
     this.onSimulateVillageActions,
-    this.onOpenWorldMap,
     this.onClearAllSaves,
   });
 
@@ -21,7 +19,6 @@ class DeveloperPanelDialog extends StatelessWidget {
     Future<void> Function()? onAdvancePlayerDay,
     Future<void> Function()? onInspectNpcStatus,
     Future<void> Function()? onSimulateVillageActions,
-    Future<void> Function()? onOpenWorldMap,
     Future<void> Function()? onClearAllSaves,
   }) {
     return showDialog(
@@ -30,7 +27,6 @@ class DeveloperPanelDialog extends StatelessWidget {
         onAdvancePlayerDay: onAdvancePlayerDay,
         onInspectNpcStatus: onInspectNpcStatus,
         onSimulateVillageActions: onSimulateVillageActions,
-        onOpenWorldMap: onOpenWorldMap,
         onClearAllSaves: onClearAllSaves,
       ),
     );
@@ -121,16 +117,6 @@ class DeveloperPanelDialog extends StatelessWidget {
                     subtitle: '只在银叶村已有建筑内移动或修改人物状态，并保存 world_save。',
                     onTap: () => _runAction(context, onSimulateVillageActions),
                     accentColor: _danger,
-                  ),
-                  _panelButton(
-                    icon: Icons.map_outlined,
-                    title: '打开世界地图',
-                    subtitle: '临时保留在开发者面板中的地图入口，方便测试移动。',
-                    onTap: () => _runAction(
-                      context,
-                      onOpenWorldMap,
-                      closePanelFirst: true,
-                    ),
                   ),
                   _panelButton(
                     icon: Icons.delete_forever_outlined,

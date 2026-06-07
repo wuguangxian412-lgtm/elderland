@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../models/building.dart';
+import '../models/game_event_record.dart';
 import '../models/interaction_record.dart';
 import '../models/player.dart';
 import '../models/npc.dart';
+import '../models/quest.dart';
 import '../models/timeline_entry.dart';
 import '../dialogs/character_info_dialog.dart';
 import '../dialogs/bag_dialog.dart';
 import '../dialogs/relationship_dialog.dart';
 import '../dialogs/history_dialog.dart';
+import '../dialogs/quest_offer_dialog.dart';
 import '../dialogs/settings_dialog.dart';
 import '../pages/npc_interaction_page.dart';
 import '../services/time_service.dart';
@@ -17,7 +20,9 @@ import '../services/timeline_service.dart';
 import '../dialogs/world_map_dialog.dart';
 import '../services/world_service.dart';
 import '../services/building_service.dart';
+import '../services/exploration_event_service.dart';
 import '../services/interaction_result_service.dart';
+import '../services/quest_service.dart';
 
 class GameMainPage extends StatefulWidget {
   final Player player;
@@ -36,6 +41,9 @@ class _GameMainPageState extends State<GameMainPage> {
   bool _isWorldMapOpen = false;
   String? _buildingError;
   DateTime? _lastTipTime;
+  final ExplorationEventService _explorationEventService =
+      ExplorationEventService();
+  final QuestService _questService = const QuestService();
 
   static const Color _bg = Color(0xFFF7F5F2);
   static const Color _card = Color(0xFFFFFFFF);
@@ -105,15 +113,45 @@ class _GameMainPageState extends State<GameMainPage> {
   Future<void> _openWorldMap() async {
     if (_isWorldMapOpen) return;
     _isWorldMapOpen = true;
+    final oldPlayer = _player;
     try {
       final updated = await WorldMapDialog.show(context, _player);
       if (!mounted) return;
       if (updated != null) {
+        var nextPlayer = updated;
+        if (oldPlayer.locationId != updated.locationId) {
+          final movementEvent = GameEventRecord(
+            type: GameEventRecord.typeMovement,
+            title: '前往${updated.location}',
+            summary: '你从${oldPlayer.location}出发，前往${updated.location}。',
+            year: updated.year,
+            season: updated.season,
+            day: updated.day,
+            locationId: updated.locationId,
+            locationName: updated.location,
+            result: 'movement_completed',
+            metadata: {
+              'fromLocationId': oldPlayer.locationId,
+              'fromLocationName': oldPlayer.location,
+              'toLocationId': updated.locationId,
+              'toLocationName': updated.location,
+            },
+          );
+          nextPlayer = updated.copyWith(
+            eventRecords: [...updated.eventRecords, movementEvent],
+          );
+          debugPrint(
+            '[Movement] 已记录移动经历: 从${oldPlayer.location}到${updated.location}',
+          );
+        }
         setState(() {
-          _player = updated;
+          _player = nextPlayer;
           _selectedBuilding = null;
         });
         _loadBuildingsForCurrentLocation();
+        if (oldPlayer.locationId != updated.locationId) {
+          await SaveService().autoSave(nextPlayer);
+        }
       }
     } finally {
       _isWorldMapOpen = false;
@@ -170,10 +208,10 @@ class _GameMainPageState extends State<GameMainPage> {
             ListTile(
               leading: const Icon(Icons.visibility_outlined),
               title: const Text('观察'),
-              onTap: () {
+              onTap: () async {
                 Navigator.of(ctx).pop();
                 debugPrint('[Building] 观察建筑: ${building.id} ${building.name}');
-                _showTip('观察功能后续开放');
+                await _recordBuildingObservation(building);
               },
             ),
             ListTile(
@@ -183,6 +221,49 @@ class _GameMainPageState extends State<GameMainPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> _recordBuildingObservation(Building building) async {
+    final event = _explorationEventService.buildBuildingObservationEvent(
+      player: _player,
+      building: building,
+    );
+    final updatedPlayer = _player.copyWith(
+      eventRecords: [..._player.eventRecords, event],
+    );
+    setState(() => _player = updatedPlayer);
+    await SaveService().autoSave(updatedPlayer);
+    debugPrint('[Exploration] 已记录建筑观察事件: ${event.id}');
+    if (!mounted) return;
+    _showExplorationEventDialog(event);
+  }
+
+  Future<void> _recordWanderEvent() async {
+    final event = _explorationEventService.buildWanderEvent(player: _player);
+    final updatedPlayer = _player.copyWith(
+      eventRecords: [..._player.eventRecords, event],
+    );
+    setState(() => _player = updatedPlayer);
+    await SaveService().autoSave(updatedPlayer);
+    debugPrint('[Exploration] 已记录随便逛逛事件: ${event.id}');
+    if (!mounted) return;
+    _showExplorationEventDialog(event);
+  }
+
+  void _showExplorationEventDialog(GameEventRecord event) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(event.title.isEmpty ? '探索记录' : event.title),
+        content: SingleChildScrollView(child: Text(event.summary)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('知道了'),
+          ),
+        ],
       ),
     );
   }
@@ -212,11 +293,11 @@ class _GameMainPageState extends State<GameMainPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.more_horiz),
-              title: const Text('更多行动'),
-              onTap: () {
+              leading: const Icon(Icons.assignment_outlined),
+              title: const Text('查看委托'),
+              onTap: () async {
                 Navigator.of(ctx).pop();
-                _showTip('更多行动功能后续开放');
+                await _openQuestOffer(building, npc);
               },
             ),
             ListTile(
@@ -228,6 +309,61 @@ class _GameMainPageState extends State<GameMainPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _openQuestOffer(Building building, Npc npc) async {
+    final quests = _questService.getAvailableQuestsForNpc(
+      player: _player,
+      npc: npc,
+      building: building,
+    );
+    final acceptedQuest = await QuestOfferDialog.show(
+      context,
+      player: _player,
+      npc: npc,
+      building: building,
+      quests: quests,
+    );
+    if (!mounted || acceptedQuest == null) return;
+    await _acceptQuest(building: building, npc: npc, quest: acceptedQuest);
+  }
+
+  Future<void> _acceptQuest({
+    required Building building,
+    required Npc npc,
+    required Quest quest,
+  }) async {
+    final alreadyActive = _player.activeQuests.any(
+      (activeQuest) => activeQuest.id == quest.id,
+    );
+    if (alreadyActive) return;
+
+    final questEvent = GameEventRecord(
+      type: GameEventRecord.typeTask,
+      title: '接受委托：${quest.title}',
+      summary: '你接受了 ${npc.name} 的委托：${quest.title}。',
+      year: _player.year,
+      season: _player.season,
+      day: _player.day,
+      locationId: _player.locationId,
+      locationName: _player.location,
+      buildingId: building.id,
+      buildingName: building.name,
+      npcIds: [npc.id],
+      npcNames: [npc.name],
+      result: 'quest_accepted',
+      metadata: {'questId': quest.id, 'issuerNpcId': npc.id},
+    );
+    final updatedPlayer = _player.copyWith(
+      activeQuests: [..._player.activeQuests, quest],
+      eventRecords: [..._player.eventRecords, questEvent],
+    );
+
+    setState(() => _player = updatedPlayer);
+    await SaveService().autoSave(updatedPlayer);
+    debugPrint('[Quest] 已接受委托: ${quest.id}');
+    if (!mounted) return;
+    _showTip('已接受委托');
   }
 
   Future<void> _openNpcInteraction(Building building, Npc npc) async {
@@ -391,7 +527,30 @@ class _GameMainPageState extends State<GameMainPage> {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+          child: SizedBox(
+            width: double.infinity,
+            height: 36,
+            child: OutlinedButton.icon(
+              onPressed: _recordWanderEvent,
+              icon: const Icon(Icons.explore_outlined, size: 17),
+              label: const Text('随便逛逛'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: _text,
+                side: const BorderSide(color: _border),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                textStyle: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
+          ),
+        ),
         if (_buildingError != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
@@ -804,7 +963,6 @@ class _GameMainPageState extends State<GameMainPage> {
                   onAdvancePlayerDay: _advanceDay,
                   onInspectNpcStatus: _inspectNpcStatus,
                   onSimulateVillageActions: _simulateAi,
-                  onOpenWorldMap: _openWorldMap,
                 ),
               ),
             ],

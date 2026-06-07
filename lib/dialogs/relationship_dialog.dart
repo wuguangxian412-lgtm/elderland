@@ -64,22 +64,11 @@ class RelationshipDialog extends StatelessWidget {
               ),
             ),
             const Divider(height: 1, color: _border),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
-              child: Text(
-                '只显示你实际互动过的人物；不会显示对方当前所在位置。',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: _textSecondary,
-                  height: 1.35,
-                ),
-              ),
-            ),
             Expanded(
               child: relationships.isEmpty
                   ? const Center(
                       child: Text(
-                        '暂无人脉记录\n与 NPC 对话后会自动加入这里',
+                        '暂无人脉记录',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,

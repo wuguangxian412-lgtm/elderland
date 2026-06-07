@@ -13,7 +13,6 @@ class SettingsDialog extends StatelessWidget {
   final Future<void> Function()? onAdvancePlayerDay;
   final Future<void> Function()? onInspectNpcStatus;
   final Future<void> Function()? onSimulateVillageActions;
-  final Future<void> Function()? onOpenWorldMap;
   final Future<void> Function()? onClearAllSaves;
 
   const SettingsDialog({
@@ -22,7 +21,6 @@ class SettingsDialog extends StatelessWidget {
     this.onAdvancePlayerDay,
     this.onInspectNpcStatus,
     this.onSimulateVillageActions,
-    this.onOpenWorldMap,
     this.onClearAllSaves,
   });
 
@@ -32,7 +30,6 @@ class SettingsDialog extends StatelessWidget {
     Future<void> Function()? onAdvancePlayerDay,
     Future<void> Function()? onInspectNpcStatus,
     Future<void> Function()? onSimulateVillageActions,
-    Future<void> Function()? onOpenWorldMap,
     Future<void> Function()? onClearAllSaves,
   }) {
     return showDialog(
@@ -42,7 +39,6 @@ class SettingsDialog extends StatelessWidget {
         onAdvancePlayerDay: onAdvancePlayerDay,
         onInspectNpcStatus: onInspectNpcStatus,
         onSimulateVillageActions: onSimulateVillageActions,
-        onOpenWorldMap: onOpenWorldMap,
         onClearAllSaves: onClearAllSaves,
       ),
     );
@@ -108,7 +104,6 @@ class SettingsDialog extends StatelessWidget {
       onAdvancePlayerDay: onAdvancePlayerDay,
       onInspectNpcStatus: onInspectNpcStatus,
       onSimulateVillageActions: onSimulateVillageActions,
-      onOpenWorldMap: onOpenWorldMap,
       onClearAllSaves: onClearAllSaves ?? () => _clearAllSaves(context),
     );
   }

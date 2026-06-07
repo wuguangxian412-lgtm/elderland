@@ -1,6 +1,7 @@
 import 'game_event_record.dart';
 import 'interaction_record.dart';
 import 'npc_relationship.dart';
+import 'quest.dart';
 
 /// 玩家数据模型
 class Player {
@@ -43,6 +44,9 @@ class Player {
   /// 注意：这里不保存 NPC 实时位置，只保存玩家合理知道的信息。
   final List<NpcRelationship> relationships;
 
+  /// 当前已接取但尚未完成的委托。
+  final List<Quest> activeQuests;
+
   const Player({
     required this.name,
     required this.gender,
@@ -65,6 +69,7 @@ class Player {
     this.eventRecords = const [],
     this.importantEventRecords = const [],
     this.relationships = const [],
+    this.activeQuests = const [],
   });
 
   /// 从 JSON 创建 Player
@@ -95,6 +100,7 @@ class Player {
       eventRecords: _parseEventRecords(json['eventRecords']),
       importantEventRecords: _parseEventRecords(json['importantEventRecords']),
       relationships: _parseRelationships(json['relationships']),
+      activeQuests: _parseQuests(json['activeQuests']),
     );
   }
 
@@ -120,8 +126,11 @@ class Player {
       'triggeredTimelineEvents': triggeredTimelineEvents,
       'interactionRecords': interactionRecords.map((e) => e.toJson()).toList(),
       'eventRecords': eventRecords.map((e) => e.toJson()).toList(),
-      'importantEventRecords': importantEventRecords.map((e) => e.toJson()).toList(),
+      'importantEventRecords': importantEventRecords
+          .map((e) => e.toJson())
+          .toList(),
       'relationships': relationships.map((e) => e.toJson()).toList(),
+      'activeQuests': activeQuests.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -148,6 +157,7 @@ class Player {
     List<GameEventRecord>? eventRecords,
     List<GameEventRecord>? importantEventRecords,
     List<NpcRelationship>? relationships,
+    List<Quest>? activeQuests,
   }) {
     return Player(
       name: name ?? this.name,
@@ -170,8 +180,10 @@ class Player {
           triggeredTimelineEvents ?? this.triggeredTimelineEvents,
       interactionRecords: interactionRecords ?? this.interactionRecords,
       eventRecords: eventRecords ?? this.eventRecords,
-      importantEventRecords: importantEventRecords ?? this.importantEventRecords,
+      importantEventRecords:
+          importantEventRecords ?? this.importantEventRecords,
       relationships: relationships ?? this.relationships,
+      activeQuests: activeQuests ?? this.activeQuests,
     );
   }
 
@@ -205,6 +217,18 @@ class Player {
         .whereType<Map<dynamic, dynamic>>()
         .map(
           (item) => NpcRelationship.fromJson(
+            item.map((key, value) => MapEntry(key.toString(), value)),
+          ),
+        )
+        .toList();
+  }
+
+  static List<Quest> _parseQuests(dynamic raw) {
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map<dynamic, dynamic>>()
+        .map(
+          (item) => Quest.fromJson(
             item.map((key, value) => MapEntry(key.toString(), value)),
           ),
         )
