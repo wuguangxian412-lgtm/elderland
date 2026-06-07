@@ -25,8 +25,7 @@ class RelationshipDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final relationships = [...player.relationships]
-      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    final relationships = _visibleRelationships();
 
     return Dialog(
       backgroundColor: _card,
@@ -68,7 +67,7 @@ class RelationshipDialog extends StatelessWidget {
               child: relationships.isEmpty
                   ? const Center(
                       child: Text(
-                        '暂无人脉记录',
+                        '暂无人脉记录\n与 NPC 互动，或接受 NPC 的委托后会出现在这里。',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -89,6 +88,45 @@ class RelationshipDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// 人脉列表的显示规则：
+  /// 1. 与 NPC 有过有效互动，会显示已保存的 NpcRelationship；
+  /// 2. 即使没有对话，只要接过这个 NPC 的委托，也会显示；
+  /// 3. 任务建立的人脉允许好感度为 0，表示“已认识但暂无关系变化”。
+  List<NpcRelationship> _visibleRelationships() {
+    final resultByNpcId = <String, NpcRelationship>{};
+
+    for (final relationship in player.relationships) {
+      if (relationship.npcId.isEmpty) continue;
+      resultByNpcId[relationship.npcId] = relationship;
+    }
+
+    for (final quest in player.activeQuests) {
+      final npcId = quest.issuerNpcId.trim();
+      if (npcId.isEmpty || resultByNpcId.containsKey(npcId)) continue;
+
+      resultByNpcId[npcId] = NpcRelationship(
+        npcId: npcId,
+        npcName: quest.issuerNpcName.trim().isEmpty ? '未知人物' : quest.issuerNpcName,
+        knownIdentity: '委托发布人',
+        affinity: 0,
+        interactionCount: 0,
+        year: quest.acceptedYear,
+        season: quest.acceptedSeason,
+        day: quest.acceptedDay,
+        lastMetLocationName: '通过委托建立联系',
+        lastMetBuildingName: '',
+        lastInteractionSummary: '已接受委托：${quest.title}',
+        memorySummary: '你尚未与对方进行有效对话，但已经接受了对方的委托。',
+        createdAt: quest.createdAt,
+        updatedAt: quest.createdAt,
+      );
+    }
+
+    final relationships = resultByNpcId.values.toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return relationships;
   }
 
   Widget _relationshipCard(BuildContext context, NpcRelationship relationship) {
@@ -128,7 +166,7 @@ class RelationshipDialog extends StatelessWidget {
             ),
             _metaText('互动次数：${relationship.interactionCount}'),
             _metaText(
-              '上次见面：${relationship.lastMetLocationName}${relationship.lastMetBuildingName.isEmpty ? '' : ' / ${relationship.lastMetBuildingName}'}',
+              '上次联系：${relationship.lastMetLocationName}${relationship.lastMetBuildingName.isEmpty ? '' : ' / ${relationship.lastMetBuildingName}'}',
             ),
             if (relationship.canSendLetter)
               const Padding(
@@ -230,9 +268,9 @@ class RelationshipDialog extends StatelessWidget {
                           '上次互动时间',
                           '神圣历${relationship.year}年 ${relationship.season} Day ${relationship.day}',
                         ),
-                        _detailLine('上次见面地点', relationship.lastMetLocationName),
+                        _detailLine('上次联系地点', relationship.lastMetLocationName),
                         _detailLine(
-                          '上次见面建筑',
+                          '上次联系建筑',
                           relationship.lastMetBuildingName.isEmpty
                               ? '无'
                               : relationship.lastMetBuildingName,
@@ -267,15 +305,9 @@ class RelationshipDialog extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, color: _textSecondary),
-          ),
+          Text(label, style: const TextStyle(fontSize: 12, color: _textSecondary)),
           const SizedBox(height: 2),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 14, color: _text, height: 1.4),
-          ),
+          Text(value, style: const TextStyle(fontSize: 14, color: _text, height: 1.4)),
         ],
       ),
     );
