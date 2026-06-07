@@ -1,4 +1,6 @@
+import 'game_event_record.dart';
 import 'interaction_record.dart';
+import 'npc_relationship.dart';
 
 /// 玩家数据模型
 class Player {
@@ -19,7 +21,27 @@ class Player {
   final int money;
   final String country;
   final List<String> triggeredTimelineEvents;
+
+  /// 旧版 NPC 对话详情记录。
+  ///
+  /// 暂时保留，用来查看完整对话内容；后续统一经历系统稳定后，
+  /// 可以考虑只保留摘要或迁移成详情数据。
   final List<InteractionRecord> interactionRecords;
+
+  /// 统一经历记录。
+  ///
+  /// 用于记录对话、探索、移动、任务、物品、成长、关系等事件。
+  final List<GameEventRecord> eventRecords;
+
+  /// 重要经历记录。
+  ///
+  /// 只记录影响玩家人生轨迹或世界状态的重要事件。
+  final List<GameEventRecord> importantEventRecords;
+
+  /// 玩家已建立的人脉关系。
+  ///
+  /// 注意：这里不保存 NPC 实时位置，只保存玩家合理知道的信息。
+  final List<NpcRelationship> relationships;
 
   const Player({
     required this.name,
@@ -40,6 +62,9 @@ class Player {
     this.country = '圣山王国',
     this.triggeredTimelineEvents = const [],
     this.interactionRecords = const [],
+    this.eventRecords = const [],
+    this.importantEventRecords = const [],
+    this.relationships = const [],
   });
 
   /// 从 JSON 创建 Player
@@ -67,6 +92,9 @@ class Player {
               .toList() ??
           [],
       interactionRecords: _parseInteractionRecords(json['interactionRecords']),
+      eventRecords: _parseEventRecords(json['eventRecords']),
+      importantEventRecords: _parseEventRecords(json['importantEventRecords']),
+      relationships: _parseRelationships(json['relationships']),
     );
   }
 
@@ -91,6 +119,9 @@ class Player {
       'money': money,
       'triggeredTimelineEvents': triggeredTimelineEvents,
       'interactionRecords': interactionRecords.map((e) => e.toJson()).toList(),
+      'eventRecords': eventRecords.map((e) => e.toJson()).toList(),
+      'importantEventRecords': importantEventRecords.map((e) => e.toJson()).toList(),
+      'relationships': relationships.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -114,6 +145,9 @@ class Player {
     int? money,
     List<String>? triggeredTimelineEvents,
     List<InteractionRecord>? interactionRecords,
+    List<GameEventRecord>? eventRecords,
+    List<GameEventRecord>? importantEventRecords,
+    List<NpcRelationship>? relationships,
   }) {
     return Player(
       name: name ?? this.name,
@@ -135,6 +169,9 @@ class Player {
       triggeredTimelineEvents:
           triggeredTimelineEvents ?? this.triggeredTimelineEvents,
       interactionRecords: interactionRecords ?? this.interactionRecords,
+      eventRecords: eventRecords ?? this.eventRecords,
+      importantEventRecords: importantEventRecords ?? this.importantEventRecords,
+      relationships: relationships ?? this.relationships,
     );
   }
 
@@ -144,6 +181,30 @@ class Player {
         .whereType<Map<dynamic, dynamic>>()
         .map(
           (item) => InteractionRecord.fromJson(
+            item.map((key, value) => MapEntry(key.toString(), value)),
+          ),
+        )
+        .toList();
+  }
+
+  static List<GameEventRecord> _parseEventRecords(dynamic raw) {
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map<dynamic, dynamic>>()
+        .map(
+          (item) => GameEventRecord.fromJson(
+            item.map((key, value) => MapEntry(key.toString(), value)),
+          ),
+        )
+        .toList();
+  }
+
+  static List<NpcRelationship> _parseRelationships(dynamic raw) {
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map<dynamic, dynamic>>()
+        .map(
+          (item) => NpcRelationship.fromJson(
             item.map((key, value) => MapEntry(key.toString(), value)),
           ),
         )
