@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/npc_relationship.dart';
 import '../models/player.dart';
+import '../models/quest.dart';
 
 class RelationshipDialog extends StatelessWidget {
   final Player player;
@@ -102,7 +103,7 @@ class RelationshipDialog extends StatelessWidget {
       resultByNpcId[relationship.npcId] = relationship;
     }
 
-    for (final quest in player.activeQuests) {
+    for (final Quest quest in player.activeQuests) {
       final npcId = quest.issuerNpcId.trim();
       if (npcId.isEmpty || resultByNpcId.containsKey(npcId)) continue;
 
