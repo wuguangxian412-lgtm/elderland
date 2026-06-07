@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/game_event_record.dart';
 import '../models/interaction_record.dart';
 import '../models/player.dart';
 
@@ -20,11 +21,14 @@ class HistoryDialog extends StatelessWidget {
   static const Color _text = Color(0xFF333333);
   static const Color _textSecondary = Color(0xFF777777);
   static const Color _bgSoft = Color(0xFFFAFAFA);
+  static const Color _accent = Color(0xFF7BAE7F);
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final records = player.interactionRecords.reversed.toList();
+    final records = player.eventRecords.isNotEmpty
+        ? player.eventRecords.reversed.toList()
+        : _legacyEventsFromInteractions().reversed.toList();
 
     return Dialog(
       backgroundColor: _card,
@@ -37,47 +41,25 @@ class HistoryDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(
-                size.width * 0.05,
-                size.height * 0.02,
-                size.width * 0.03,
-                8,
-              ),
+              padding: EdgeInsets.fromLTRB(size.width * 0.05, size.height * 0.02, size.width * 0.03, 8),
               child: Row(
                 children: [
-                  const Text(
-                    '经历',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: _text,
-                    ),
-                  ),
+                  const Text('经历', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: _text)),
                   const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                  IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(context).pop()),
                 ],
               ),
             ),
             const Divider(height: 1, color: _border),
+            if (player.importantEventRecords.isNotEmpty) _importantSummary(),
             Expanded(
               child: records.isEmpty
-                  ? const Center(
-                      child: Text(
-                        '暂无经历记录',
-                        style: TextStyle(fontSize: 16, color: _textSecondary),
-                      ),
-                    )
+                  ? const Center(child: Text('暂无经历记录', style: TextStyle(fontSize: 16, color: _textSecondary)))
                   : ListView.separated(
                       padding: const EdgeInsets.all(14),
                       itemCount: records.length,
                       separatorBuilder: (_, _) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) {
-                        final record = records[index];
-                        return _recordCard(context, record);
-                      },
+                      itemBuilder: (context, index) => _eventCard(context, records[index]),
                     ),
             ),
           ],
@@ -86,52 +68,76 @@ class HistoryDialog extends StatelessWidget {
     );
   }
 
-  Widget _recordCard(BuildContext context, InteractionRecord record) {
+  Widget _importantSummary() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(14, 10, 14, 0),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: _accent.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: _accent.withValues(alpha: 0.25)),
+      ),
+      child: Text(
+        '重要经历：${player.importantEventRecords.length} 条',
+        style: const TextStyle(fontSize: 13, color: _accent, fontWeight: FontWeight.w700),
+      ),
+    );
+  }
+
+  Widget _eventCard(BuildContext context, GameEventRecord record) {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
-      onTap: () => _showRecordDetail(context, record),
+      onTap: () => _showEventDetail(context, record),
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: _bgSoft,
-          border: Border.all(color: _border),
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(color: _bgSoft, border: Border.all(color: _border), borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              record.summary.isEmpty ? '一次未命名互动' : record.summary,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: _text,
-                height: 1.4,
-              ),
+            Row(
+              children: [
+                _typePill(record.typeLabel),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    record.title.isEmpty ? '未命名经历' : record.title,
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: _text, height: 1.4),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
-            _metaText(
-              '时间：神圣历${record.year}年 ${record.season} Day ${record.day}',
+            Text(
+              record.summary.isEmpty ? '暂无摘要' : record.summary,
+              style: const TextStyle(fontSize: 13, color: _text, height: 1.45),
             ),
-            _metaText('地点：${record.locationName} / ${record.buildingName}'),
-            _metaText('人物：${record.npcName}'),
+            const SizedBox(height: 8),
+            _metaText('时间：${record.timeLabel}'),
+            if (record.locationName.isNotEmpty) _metaText('地点：${record.locationName}${record.buildingName.isEmpty ? '' : ' / ${record.buildingName}'}'),
+            if (record.npcNames.isNotEmpty) _metaText('人物：${record.npcNames.join('、')}'),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _typePill(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(color: _accent.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6)),
+      child: Text(label, style: const TextStyle(fontSize: 12, color: _accent, fontWeight: FontWeight.w700)),
     );
   }
 
   Widget _metaText(String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 3),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 12, color: _textSecondary),
-      ),
+      child: Text(text, style: const TextStyle(fontSize: 12, color: _textSecondary)),
     );
   }
 
-  void _showRecordDetail(BuildContext context, InteractionRecord record) {
+  void _showEventDetail(BuildContext context, GameEventRecord record) {
     showDialog<void>(
       context: context,
       builder: (ctx) => Dialog(
@@ -139,53 +145,76 @@ class HistoryDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420, maxHeight: 560),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(18, 16, 8, 8),
-                child: Row(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
                   children: [
                     Expanded(
                       child: Text(
-                        record.npcName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: _text,
-                        ),
+                        record.title.isEmpty ? '经历详情' : record.title,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _text),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.of(ctx).pop(),
-                    ),
+                    IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(ctx).pop()),
                   ],
                 ),
-              ),
-              const Divider(height: 1, color: _border),
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(14),
-                  itemCount: record.messages.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    final message = record.messages[index];
-                    return Text(
-                      '${message.speaker}：${message.text}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: _text,
-                        height: 1.5,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+                const Divider(height: 1, color: _border),
+                const SizedBox(height: 12),
+                _detailLine('类型', record.typeLabel),
+                _detailLine('时间', record.timeLabel),
+                _detailLine('地点', record.locationName.isEmpty ? '未知' : record.locationName),
+                _detailLine('建筑', record.buildingName.isEmpty ? '无' : record.buildingName),
+                _detailLine('相关人物', record.npcNames.isEmpty ? '无' : record.npcNames.join('、')),
+                _detailLine('结果', record.result.isEmpty ? '无' : record.result),
+                _detailLine('摘要', record.summary.isEmpty ? '暂无摘要' : record.summary),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _detailLine(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 12, color: _textSecondary)),
+          const SizedBox(height: 2),
+          Text(value, style: const TextStyle(fontSize: 14, color: _text, height: 1.4)),
+        ],
+      ),
+    );
+  }
+
+  List<GameEventRecord> _legacyEventsFromInteractions() {
+    return player.interactionRecords.map(_legacyEventFromInteraction).toList();
+  }
+
+  GameEventRecord _legacyEventFromInteraction(InteractionRecord record) {
+    return GameEventRecord(
+      id: 'legacy_${record.id}',
+      type: GameEventRecord.typeDialogue,
+      title: '与${record.npcName}交谈',
+      summary: record.summary,
+      year: record.year,
+      season: record.season,
+      day: record.day,
+      locationId: record.locationId,
+      locationName: record.locationName,
+      buildingId: record.buildingId,
+      buildingName: record.buildingName,
+      npcIds: [record.npcId],
+      npcNames: [record.npcName],
+      result: 'legacy_interaction',
+      metadata: {'interactionRecordId': record.id},
+      createdAt: record.createdAt,
     );
   }
 }
