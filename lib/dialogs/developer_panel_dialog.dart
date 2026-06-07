@@ -5,6 +5,7 @@ class DeveloperPanelDialog extends StatelessWidget {
   final Future<void> Function()? onInspectNpcStatus;
   final Future<void> Function()? onSimulateVillageActions;
   final Future<void> Function()? onOpenWorldMap;
+  final Future<void> Function()? onClearAllSaves;
 
   const DeveloperPanelDialog({
     super.key,
@@ -12,6 +13,7 @@ class DeveloperPanelDialog extends StatelessWidget {
     this.onInspectNpcStatus,
     this.onSimulateVillageActions,
     this.onOpenWorldMap,
+    this.onClearAllSaves,
   });
 
   static Future<void> show(
@@ -20,6 +22,7 @@ class DeveloperPanelDialog extends StatelessWidget {
     Future<void> Function()? onInspectNpcStatus,
     Future<void> Function()? onSimulateVillageActions,
     Future<void> Function()? onOpenWorldMap,
+    Future<void> Function()? onClearAllSaves,
   }) {
     return showDialog(
       context: context,
@@ -28,6 +31,7 @@ class DeveloperPanelDialog extends StatelessWidget {
         onInspectNpcStatus: onInspectNpcStatus,
         onSimulateVillageActions: onSimulateVillageActions,
         onOpenWorldMap: onOpenWorldMap,
+        onClearAllSaves: onClearAllSaves,
       ),
     );
   }
@@ -127,6 +131,17 @@ class DeveloperPanelDialog extends StatelessWidget {
                       onOpenWorldMap,
                       closePanelFirst: true,
                     ),
+                  ),
+                  _panelButton(
+                    icon: Icons.delete_forever_outlined,
+                    title: '清除全部存档',
+                    subtitle: '删除 player_save 和 world_save，并回到标题页。',
+                    onTap: () => _runAction(
+                      context,
+                      onClearAllSaves,
+                      closePanelFirst: true,
+                    ),
+                    accentColor: _danger,
                   ),
                 ],
               ),

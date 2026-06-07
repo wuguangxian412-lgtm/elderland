@@ -33,7 +33,9 @@ class _GameMainPageState extends State<GameMainPage> {
   List<Building> _currentBuildings = [];
   Building? _selectedBuilding;
   bool _buildingLoading = false;
+  bool _isWorldMapOpen = false;
   String? _buildingError;
+  DateTime? _lastTipTime;
 
   static const Color _bg = Color(0xFFF7F5F2);
   static const Color _card = Color(0xFFFFFFFF);
@@ -46,14 +48,29 @@ class _GameMainPageState extends State<GameMainPage> {
   void initState() {
     super.initState();
     _player = widget.player;
-    WorldService().initialize().then((_) {
-      debugPrint('[GameMainPage] WorldService初始化完成');
-      if (mounted) setState(() {});
-    }).catchError((Object e) {
-      debugPrint('[GameMainPage] WorldService初始化失败: $e');
-    });
+    WorldService()
+        .initialize()
+        .then((_) {
+          debugPrint('[GameMainPage] WorldService初始化完成');
+          if (mounted) setState(() {});
+        })
+        .catchError((Object e) {
+          debugPrint('[GameMainPage] WorldService初始化失败: $e');
+        });
     _loadBuildingsForCurrentLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkTimelineEvent());
+  }
+
+  void _showTip(String message) {
+    final now = DateTime.now();
+    if (_lastTipTime != null &&
+        now.difference(_lastTipTime!).inMilliseconds < 1000) {
+      return;
+    }
+    _lastTipTime = now;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _advanceDay() async {
@@ -63,9 +80,7 @@ class _GameMainPageState extends State<GameMainPage> {
     await SaveService().autoSave(_player);
     _checkTimelineEvent();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('玩家时间已推进一天')),
-    );
+    _showTip('玩家时间已推进一天');
   }
 
   Future<void> _inspectNpcStatus() async {
@@ -73,9 +88,7 @@ class _GameMainPageState extends State<GameMainPage> {
     WorldService().advanceDay();
     setState(() {});
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('人物状态已输出到调试日志')),
-    );
+    _showTip('人物状态已输出到调试日志');
   }
 
   Future<void> _simulateAi() async {
@@ -86,20 +99,24 @@ class _GameMainPageState extends State<GameMainPage> {
     }
     setState(() {});
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('村内人物行动已模拟')),
-    );
+    _showTip('村内人物行动已模拟');
   }
 
   Future<void> _openWorldMap() async {
-    final updated = await WorldMapDialog.show(context, _player);
-    if (!mounted) return;
-    if (updated != null) {
-      setState(() {
-        _player = updated;
-        _selectedBuilding = null;
-      });
-      _loadBuildingsForCurrentLocation();
+    if (_isWorldMapOpen) return;
+    _isWorldMapOpen = true;
+    try {
+      final updated = await WorldMapDialog.show(context, _player);
+      if (!mounted) return;
+      if (updated != null) {
+        setState(() {
+          _player = updated;
+          _selectedBuilding = null;
+        });
+        _loadBuildingsForCurrentLocation();
+      }
+    } finally {
+      _isWorldMapOpen = false;
     }
   }
 
@@ -110,7 +127,9 @@ class _GameMainPageState extends State<GameMainPage> {
       _buildingError = null;
     });
     try {
-      final buildings = await BuildingService().loadBuildingsByLocation(_player.locationId);
+      final buildings = await BuildingService().loadBuildingsByLocation(
+        _player.locationId,
+      );
       if (!mounted) return;
       setState(() {
         _currentBuildings = buildings;
@@ -132,7 +151,9 @@ class _GameMainPageState extends State<GameMainPage> {
     debugPrint('[Building] 点击建筑: ${building.id} ${building.name}');
     showModalBottomSheet<void>(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -152,7 +173,7 @@ class _GameMainPageState extends State<GameMainPage> {
               onTap: () {
                 Navigator.of(ctx).pop();
                 debugPrint('[Building] 观察建筑: ${building.id} ${building.name}');
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('观察功能后续开放')));
+                _showTip('观察功能后续开放');
               },
             ),
             ListTile(
@@ -175,7 +196,9 @@ class _GameMainPageState extends State<GameMainPage> {
     debugPrint('[NPC] 点击NPC: ${npc.id} ${npc.name}');
     showModalBottomSheet<void>(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -193,7 +216,7 @@ class _GameMainPageState extends State<GameMainPage> {
               title: const Text('更多行动'),
               onTap: () {
                 Navigator.of(ctx).pop();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('更多行动功能后续开放')));
+                _showTip('更多行动功能后续开放');
               },
             ),
             ListTile(
@@ -210,7 +233,10 @@ class _GameMainPageState extends State<GameMainPage> {
   Future<void> _openNpcInteraction(Building building, Npc npc) async {
     final record = await Navigator.push<InteractionRecord?>(
       context,
-      MaterialPageRoute(builder: (_) => NpcInteractionPage(player: _player, npc: npc, building: building)),
+      MaterialPageRoute(
+        builder: (_) =>
+            NpcInteractionPage(player: _player, npc: npc, building: building),
+      ),
     );
     if (!mounted) return;
     if (record == null) {
@@ -222,8 +248,14 @@ class _GameMainPageState extends State<GameMainPage> {
     final resultService = const InteractionResultService();
     final affinityDelta = resultService.estimateAffinityDelta(record);
     final dialogueEvent = resultService.buildDialogueEvent(record);
-    final relationshipEvent = resultService.buildRelationshipEvent(record, affinityDelta);
-    final memorySummary = resultService.buildNpcMemorySummary(record, affinityDelta);
+    final relationshipEvent = resultService.buildRelationshipEvent(
+      record,
+      affinityDelta,
+    );
+    final memorySummary = resultService.buildNpcMemorySummary(
+      record,
+      affinityDelta,
+    );
     final relationships = resultService.upsertRelationship(
       player: _player,
       npc: npc,
@@ -236,12 +268,15 @@ class _GameMainPageState extends State<GameMainPage> {
     final updatedEvents = [
       ..._player.eventRecords,
       dialogueEvent,
-      if (relationshipEvent != null) relationshipEvent,
+      ?relationshipEvent,
     ];
 
+    final importantRelationshipEvent = affinityDelta.abs() >= 10
+        ? relationshipEvent
+        : null;
     final updatedImportantEvents = [
       ..._player.importantEventRecords,
-      if (relationshipEvent != null && affinityDelta.abs() >= 10) relationshipEvent,
+      ?importantRelationshipEvent,
     ];
 
     setState(() {
@@ -258,7 +293,9 @@ class _GameMainPageState extends State<GameMainPage> {
       playerName: _player.name,
       summary: memorySummary,
       affinityDelta: affinityDelta,
-      interactionCount: relationships.firstWhere((r) => r.npcId == npc.id).interactionCount,
+      interactionCount: relationships
+          .firstWhere((r) => r.npcId == npc.id)
+          .interactionCount,
     );
     await SaveService().autoSave(_player);
 
@@ -266,7 +303,7 @@ class _GameMainPageState extends State<GameMainPage> {
     debugPrint('[Interaction] 已写入统一经历: ${dialogueEvent.id}');
     debugPrint('[Interaction] 好感变化: $affinityDelta');
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('互动、经历、人脉与NPC记忆已保存')));
+    _showTip('互动、经历、人脉与NPC记忆已保存');
   }
 
   String _npcStateText(String state) {
@@ -285,13 +322,21 @@ class _GameMainPageState extends State<GameMainPage> {
   }
 
   Future<void> _checkTimelineEvent() async {
-    final event = await TimelineService().getTimelineByYearSeason(_player.year, _player.season);
+    final event = await TimelineService().getTimelineByYearSeason(
+      _player.year,
+      _player.season,
+    );
     if (event == null) return;
     final eventName = event.title;
     if (_player.triggeredTimelineEvents.contains(eventName)) return;
     debugPrint('[TIMELINE] 触发事件：$eventName');
     setState(() {
-      _player = _player.copyWith(triggeredTimelineEvents: [..._player.triggeredTimelineEvents, eventName]);
+      _player = _player.copyWith(
+        triggeredTimelineEvents: [
+          ..._player.triggeredTimelineEvents,
+          eventName,
+        ],
+      );
     });
     await SaveService().autoSave(_player);
     if (!context.mounted) return;
@@ -304,14 +349,24 @@ class _GameMainPageState extends State<GameMainPage> {
       builder: (ctx) => AlertDialog(
         title: const Text('时代事件'),
         content: SingleChildScrollView(child: Text(event.content)),
-        actions: [TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('知道了'))],
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('知道了'),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildLocationBuildingsView() {
     if (_buildingLoading) {
-      return const Center(child: Text('建筑加载中...', style: TextStyle(fontSize: 14, color: _textSecondary)));
+      return const Center(
+        child: Text(
+          '建筑加载中...',
+          style: TextStyle(fontSize: 14, color: _textSecondary),
+        ),
+      );
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,9 +375,19 @@ class _GameMainPageState extends State<GameMainPage> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              const Text('周围建筑', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: _text)),
+              const Text(
+                '周围建筑',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: _text,
+                ),
+              ),
               const Spacer(),
-              Text('数量: ${_currentBuildings.length}', style: const TextStyle(fontSize: 13, color: _textSecondary)),
+              Text(
+                '数量: ${_currentBuildings.length}',
+                style: const TextStyle(fontSize: 13, color: _textSecondary),
+              ),
             ],
           ),
         ),
@@ -330,16 +395,25 @@ class _GameMainPageState extends State<GameMainPage> {
         if (_buildingError != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-            child: Text(_buildingError!, style: const TextStyle(fontSize: 13, color: Color(0xFFC75C5C))),
+            child: Text(
+              _buildingError!,
+              style: const TextStyle(fontSize: 13, color: Color(0xFFC75C5C)),
+            ),
           ),
         Expanded(
           child: _currentBuildings.isEmpty
-              ? const Center(child: Text('附近暂时没有可进入的建筑', style: TextStyle(fontSize: 14, color: _textSecondary)))
+              ? const Center(
+                  child: Text(
+                    '附近暂时没有可进入的建筑',
+                    style: TextStyle(fontSize: 14, color: _textSecondary),
+                  ),
+                )
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                   itemCount: _currentBuildings.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) => _buildingCard(_currentBuildings[index]),
+                  itemBuilder: (context, index) =>
+                      _buildingCard(_currentBuildings[index]),
                 ),
         ),
       ],
@@ -352,20 +426,39 @@ class _GameMainPageState extends State<GameMainPage> {
       onTap: () => _showBuildingActionSheet(building),
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: const Color(0xFFFAFAFA), border: Border.all(color: _border), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAFAFA),
+          border: Border.all(color: _border),
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Expanded(child: Text(building.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: _text))),
+                Expanded(
+                  child: Text(
+                    building.name,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: _text,
+                    ),
+                  ),
+                ),
                 _tag(building.isPublic ? '公共区域' : '私人区域'),
               ],
             ),
             const SizedBox(height: 6),
-            Text(building.type, style: const TextStyle(fontSize: 12, color: _textSecondary)),
+            Text(
+              building.type,
+              style: const TextStyle(fontSize: 12, color: _textSecondary),
+            ),
             const SizedBox(height: 6),
-            Text(building.description, style: const TextStyle(fontSize: 13, color: _text, height: 1.4)),
+            Text(
+              building.description,
+              style: const TextStyle(fontSize: 13, color: _text, height: 1.4),
+            ),
           ],
         ),
       ),
@@ -373,7 +466,10 @@ class _GameMainPageState extends State<GameMainPage> {
   }
 
   Widget _buildBuildingInteriorView(Building building) {
-    final buildingNpcs = WorldService().findNpcsByBuilding(_player.locationId, building.id);
+    final buildingNpcs = WorldService().findNpcsByBuilding(
+      _player.locationId,
+      building.id,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -383,7 +479,12 @@ class _GameMainPageState extends State<GameMainPage> {
             onPressed: _returnToBuildingList,
             icon: const Icon(Icons.arrow_back, size: 18),
             label: const Text('离开'),
-            style: TextButton.styleFrom(foregroundColor: _textSecondary, padding: EdgeInsets.zero, minimumSize: const Size(0, 32), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            style: TextButton.styleFrom(
+              foregroundColor: _textSecondary,
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 32),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
           ),
         ),
         Padding(
@@ -391,15 +492,36 @@ class _GameMainPageState extends State<GameMainPage> {
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: const Color(0xFFFAFAFA), border: Border.all(color: _border), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFAFAFA),
+              border: Border.all(color: _border),
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(building.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _text)),
+                Text(
+                  building.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: _text,
+                  ),
+                ),
                 const SizedBox(height: 10),
-                Text('建筑类型：${building.type}', style: const TextStyle(fontSize: 13, color: _textSecondary)),
+                Text(
+                  '建筑类型：${building.type}',
+                  style: const TextStyle(fontSize: 13, color: _textSecondary),
+                ),
                 const SizedBox(height: 12),
-                Text(building.description, style: const TextStyle(fontSize: 14, color: _text, height: 1.5)),
+                Text(
+                  building.description,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: _text,
+                    height: 1.5,
+                  ),
+                ),
               ],
             ),
           ),
@@ -407,17 +529,30 @@ class _GameMainPageState extends State<GameMainPage> {
         const SizedBox(height: 18),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(building.isPublic ? '周围人物' : '房间人物', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: _text)),
+          child: Text(
+            building.isPublic ? '周围人物' : '房间人物',
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: _text,
+            ),
+          ),
         ),
         const SizedBox(height: 6),
         Expanded(
           child: buildingNpcs.isEmpty
-              ? const Center(child: Text('这里暂时没有可见人物', style: TextStyle(fontSize: 14, color: _textSecondary)))
+              ? const Center(
+                  child: Text(
+                    '这里暂时没有可见人物',
+                    style: TextStyle(fontSize: 14, color: _textSecondary),
+                  ),
+                )
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                   itemCount: buildingNpcs.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) => _npcCard(building, buildingNpcs[index]),
+                  itemBuilder: (context, index) =>
+                      _npcCard(building, buildingNpcs[index]),
                 ),
         ),
       ],
@@ -430,16 +565,30 @@ class _GameMainPageState extends State<GameMainPage> {
       onTap: () => _showNpcActionSheet(building, npc),
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: const Color(0xFFFAFAFA), border: Border.all(color: _border), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAFAFA),
+          border: Border.all(color: _border),
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Row(
           children: [
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(npc.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: _text)),
+                  Text(
+                    npc.name,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: _text,
+                    ),
+                  ),
                   const SizedBox(height: 5),
-                  Text('状态：${_npcStateText(npc.state)}', style: const TextStyle(fontSize: 12, color: _textSecondary)),
+                  Text(
+                    '状态：${_npcStateText(npc.state)}',
+                    style: const TextStyle(fontSize: 12, color: _textSecondary),
+                  ),
                 ],
               ),
             ),
@@ -453,7 +602,10 @@ class _GameMainPageState extends State<GameMainPage> {
   Widget _tag(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(color: _accent.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+        color: _accent.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(4),
+      ),
       child: Text(text, style: const TextStyle(fontSize: 12, color: _accent)),
     );
   }
@@ -477,11 +629,29 @@ class _GameMainPageState extends State<GameMainPage> {
 
   Widget _topPlayerCard(Size size) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(size.width * 0.04, size.height * 0.015, size.width * 0.04, 0),
+      padding: EdgeInsets.fromLTRB(
+        size.width * 0.04,
+        size.height * 0.015,
+        size.width * 0.04,
+        0,
+      ),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.03, vertical: size.height * 0.012),
-        decoration: BoxDecoration(color: _card, borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 2))]),
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.03,
+          vertical: size.height * 0.012,
+        ),
+        decoration: BoxDecoration(
+          color: _card,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
         child: Row(
           children: [
             GestureDetector(
@@ -490,8 +660,16 @@ class _GameMainPageState extends State<GameMainPage> {
               child: Container(
                 width: size.width * 0.15,
                 height: size.width * 0.15,
-                decoration: BoxDecoration(color: const Color(0xFFE8E5E0), shape: BoxShape.circle, border: Border.all(color: _border, width: 2)),
-                child: const Icon(Icons.person, size: 30, color: _textSecondary),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE8E5E0),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _border, width: 2),
+                ),
+                child: const Icon(
+                  Icons.person,
+                  size: 30,
+                  color: _textSecondary,
+                ),
               ),
             ),
             SizedBox(width: size.width * 0.04),
@@ -502,9 +680,23 @@ class _GameMainPageState extends State<GameMainPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_player.name, style: const TextStyle(color: _text, fontSize: 20, fontWeight: FontWeight.w600)),
+                  Text(
+                    _player.name,
+                    style: const TextStyle(
+                      color: _text,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text('血量 HP: ${_player.hp}/${_player.maxHp}', style: const TextStyle(color: _accent, fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text(
+                    '血量 HP: ${_player.hp}/${_player.maxHp}',
+                    style: const TextStyle(
+                      color: _accent,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -518,21 +710,53 @@ class _GameMainPageState extends State<GameMainPage> {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-      decoration: BoxDecoration(color: _card, border: Border.all(color: _border), borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 1))]),
+      decoration: BoxDecoration(
+        color: _card,
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
             child: Row(
               children: [
-                Expanded(flex: 3, child: _statusChip(key: const ValueKey('current_time_text'), text: '神圣历${_player.year}年 ${_player.season} Day ${_player.day}', icon: Icons.calendar_today_outlined)),
+                Expanded(
+                  flex: 3,
+                  child: _statusChip(
+                    key: const ValueKey('current_time_text'),
+                    text:
+                        '神圣历${_player.year}年 ${_player.season} Day ${_player.day}',
+                    icon: Icons.calendar_today_outlined,
+                  ),
+                ),
                 const SizedBox(width: 8),
-                Expanded(flex: 2, child: _statusChip(key: const ValueKey('current_location_text'), text: _player.location, icon: Icons.place_outlined)),
+                Expanded(
+                  flex: 2,
+                  child: _statusChip(
+                    key: const ValueKey('current_location_text'),
+                    text: _player.location,
+                    icon: Icons.place_outlined,
+                    trailingIcon: Icons.map_outlined,
+                    onTap: _openWorldMap,
+                  ),
+                ),
               ],
             ),
           ),
           const Divider(height: 14),
-          Expanded(child: _selectedBuilding == null ? _buildLocationBuildingsView() : _buildBuildingInteriorView(_selectedBuilding!)),
+          Expanded(
+            child: _selectedBuilding == null
+                ? _buildLocationBuildingsView()
+                : _buildBuildingInteriorView(_selectedBuilding!),
+          ),
         ],
       ),
     );
@@ -541,18 +765,35 @@ class _GameMainPageState extends State<GameMainPage> {
   Widget _bottomNav() {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(color: _card, border: Border(top: BorderSide(color: _border, width: 0.5))),
+      decoration: BoxDecoration(
+        color: _card,
+        border: Border(top: BorderSide(color: _border, width: 0.5)),
+      ),
       child: SafeArea(
         top: false,
         child: SizedBox(
           height: 64,
           child: Row(
             children: [
-              _navItem(Icons.backpack_outlined, '背包', () => BagDialog.show(context), key: const ValueKey('open_bag_button')),
+              _navItem(
+                Icons.backpack_outlined,
+                '背包',
+                () => BagDialog.show(context),
+                key: const ValueKey('open_bag_button'),
+              ),
               _navDivider(),
-              _navItem(Icons.people_outlined, '人脉', () => RelationshipDialog.show(context, _player)),
+              _navItem(
+                Icons.people_outlined,
+                '人脉',
+                () => RelationshipDialog.show(context, _player),
+              ),
               _navDivider(),
-              _navItem(Icons.history_outlined, '经历', () => HistoryDialog.show(context, _player), key: const ValueKey('open_history_button')),
+              _navItem(
+                Icons.history_outlined,
+                '经历',
+                () => HistoryDialog.show(context, _player),
+                key: const ValueKey('open_history_button'),
+              ),
               _navDivider(),
               _navItem(
                 Icons.settings_outlined,
@@ -583,7 +824,10 @@ class _GameMainPageState extends State<GameMainPage> {
           children: [
             Icon(icon, color: _textSecondary, size: 24),
             const SizedBox(height: 3),
-            Text(label, style: const TextStyle(color: _textSecondary, fontSize: 11)),
+            Text(
+              label,
+              style: const TextStyle(color: _textSecondary, fontSize: 11),
+            ),
           ],
         ),
       ),
@@ -592,18 +836,54 @@ class _GameMainPageState extends State<GameMainPage> {
 
   Widget _navDivider() => Container(width: 0.5, height: 28, color: _border);
 
-  Widget _statusChip({required Key key, required String text, required IconData icon}) {
-    return Container(
-      key: key,
+  Widget _statusChip({
+    required Key key,
+    required String text,
+    required IconData icon,
+    IconData? trailingIcon,
+    VoidCallback? onTap,
+  }) {
+    final borderRadius = BorderRadius.circular(9);
+    final content = Container(
+      key: onTap == null ? key : null,
       constraints: const BoxConstraints(minHeight: 30),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(color: const Color(0xFFFAFAFA), border: Border.all(color: _border), borderRadius: BorderRadius.circular(9)),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAFAFA),
+        border: Border.all(color: _border),
+        borderRadius: borderRadius,
+      ),
       child: Row(
         children: [
           Icon(icon, size: 13, color: _textSecondary),
           const SizedBox(width: 4),
-          Expanded(child: Text(text, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _text))),
+          Expanded(
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: _text,
+              ),
+            ),
+          ),
+          if (trailingIcon != null) ...[
+            const SizedBox(width: 4),
+            Icon(trailingIcon, size: 13, color: _textSecondary),
+          ],
         ],
+      ),
+    );
+    if (onTap == null) return content;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        key: key,
+        borderRadius: borderRadius,
+        onTap: onTap,
+        child: content,
       ),
     );
   }

@@ -39,12 +39,27 @@ class RelationshipDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(size.width * 0.05, size.height * 0.02, size.width * 0.03, 8),
+              padding: EdgeInsets.fromLTRB(
+                size.width * 0.05,
+                size.height * 0.02,
+                size.width * 0.03,
+                8,
+              ),
               child: Row(
                 children: [
-                  const Text('人脉', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: _text)),
+                  const Text(
+                    '人脉',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: _text,
+                    ),
+                  ),
                   const Spacer(),
-                  IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(context).pop()),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
                 ],
               ),
             ),
@@ -53,7 +68,11 @@ class RelationshipDialog extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
               child: Text(
                 '只显示你实际互动过的人物；不会显示对方当前所在位置。',
-                style: const TextStyle(fontSize: 12, color: _textSecondary, height: 1.35),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: _textSecondary,
+                  height: 1.35,
+                ),
               ),
             ),
             Expanded(
@@ -62,14 +81,19 @@ class RelationshipDialog extends StatelessWidget {
                       child: Text(
                         '暂无人脉记录\n与 NPC 对话后会自动加入这里',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, color: _textSecondary, height: 1.5),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: _textSecondary,
+                          height: 1.5,
+                        ),
                       ),
                     )
                   : ListView.separated(
                       padding: const EdgeInsets.all(14),
                       itemCount: relationships.length,
                       separatorBuilder: (_, _) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) => _relationshipCard(context, relationships[index]),
+                      itemBuilder: (context, index) =>
+                          _relationshipCard(context, relationships[index]),
                     ),
             ),
           ],
@@ -84,7 +108,11 @@ class RelationshipDialog extends StatelessWidget {
       onTap: () => _showRelationshipDetail(context, relationship),
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: _bgSoft, border: Border.all(color: _border), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+          color: _bgSoft,
+          border: Border.all(color: _border),
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -92,21 +120,34 @@ class RelationshipDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    relationship.npcName.isEmpty ? '未知人物' : relationship.npcName,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _text),
+                    relationship.npcName.isEmpty
+                        ? '未知人物'
+                        : relationship.npcName,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: _text,
+                    ),
                   ),
                 ),
                 _affinityPill(relationship.affinityLabel),
               ],
             ),
             const SizedBox(height: 6),
-            _metaText('身份：${relationship.knownIdentity.isEmpty ? '未知' : relationship.knownIdentity}'),
+            _metaText(
+              '身份：${relationship.knownIdentity.isEmpty ? '未知' : relationship.knownIdentity}',
+            ),
             _metaText('互动次数：${relationship.interactionCount}'),
-            _metaText('上次见面：${relationship.lastMetLocationName}${relationship.lastMetBuildingName.isEmpty ? '' : ' / ${relationship.lastMetBuildingName}'}'),
+            _metaText(
+              '上次见面：${relationship.lastMetLocationName}${relationship.lastMetBuildingName.isEmpty ? '' : ' / ${relationship.lastMetBuildingName}'}',
+            ),
             if (relationship.canSendLetter)
               const Padding(
                 padding: EdgeInsets.only(top: 6),
-                child: Text('通信：已解锁（功能后续开放）', style: TextStyle(fontSize: 12, color: _accent)),
+                child: Text(
+                  '通信：已解锁（功能后续开放）',
+                  style: TextStyle(fontSize: 12, color: _accent),
+                ),
               ),
           ],
         ),
@@ -117,19 +158,39 @@ class RelationshipDialog extends StatelessWidget {
   Widget _affinityPill(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: _accent.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6)),
-      child: Text(label, style: const TextStyle(fontSize: 12, color: _accent, fontWeight: FontWeight.w700)),
+      decoration: BoxDecoration(
+        color: _accent.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          color: _accent,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 
   Widget _metaText(String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 3),
-      child: Text(text, style: const TextStyle(fontSize: 12, color: _textSecondary, height: 1.35)),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 12,
+          color: _textSecondary,
+          height: 1.35,
+        ),
+      ),
     );
   }
 
-  void _showRelationshipDetail(BuildContext context, NpcRelationship relationship) {
+  void _showRelationshipDetail(
+    BuildContext context,
+    NpcRelationship relationship,
+  ) {
     showDialog<void>(
       context: context,
       builder: (ctx) => Dialog(
@@ -148,22 +209,61 @@ class RelationshipDialog extends StatelessWidget {
                     Expanded(
                       child: Text(
                         relationship.npcName,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _text),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: _text,
+                        ),
                       ),
                     ),
-                    IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(ctx).pop()),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(ctx).pop(),
+                    ),
                   ],
                 ),
                 const Divider(height: 1, color: _border),
-                const SizedBox(height: 12),
-                _detailLine('关系', relationship.affinityLabel),
-                _detailLine('关系值', relationship.affinity.toString()),
-                _detailLine('身份', relationship.knownIdentity.isEmpty ? '未知' : relationship.knownIdentity),
-                _detailLine('上次互动时间', '神圣历${relationship.year}年 ${relationship.season} Day ${relationship.day}'),
-                _detailLine('上次见面地点', relationship.lastMetLocationName),
-                _detailLine('上次见面建筑', relationship.lastMetBuildingName.isEmpty ? '无' : relationship.lastMetBuildingName),
-                _detailLine('最近互动', relationship.lastInteractionSummary.isEmpty ? '暂无摘要' : relationship.lastInteractionSummary),
-                _detailLine('记忆摘要', relationship.memorySummary.isEmpty ? '暂无摘要' : relationship.memorySummary),
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _detailLine('关系', relationship.affinityLabel),
+                        _detailLine('关系值', relationship.affinity.toString()),
+                        _detailLine(
+                          '身份',
+                          relationship.knownIdentity.isEmpty
+                              ? '未知'
+                              : relationship.knownIdentity,
+                        ),
+                        _detailLine(
+                          '上次互动时间',
+                          '神圣历${relationship.year}年 ${relationship.season} Day ${relationship.day}',
+                        ),
+                        _detailLine('上次见面地点', relationship.lastMetLocationName),
+                        _detailLine(
+                          '上次见面建筑',
+                          relationship.lastMetBuildingName.isEmpty
+                              ? '无'
+                              : relationship.lastMetBuildingName,
+                        ),
+                        _detailLine(
+                          '最近互动',
+                          relationship.lastInteractionSummary.isEmpty
+                              ? '暂无摘要'
+                              : relationship.lastInteractionSummary,
+                        ),
+                        _detailLine(
+                          '记忆摘要',
+                          relationship.memorySummary.isEmpty
+                              ? '暂无摘要'
+                              : relationship.memorySummary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -178,9 +278,15 @@ class RelationshipDialog extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: _textSecondary)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: _textSecondary),
+          ),
           const SizedBox(height: 2),
-          Text(value, style: const TextStyle(fontSize: 14, color: _text, height: 1.4)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 14, color: _text, height: 1.4),
+          ),
         ],
       ),
     );

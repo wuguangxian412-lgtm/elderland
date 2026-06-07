@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import '../models/player.dart';
 import '../pages/start_page.dart';
 import '../services/save_service.dart';
+import '../services/world_save_service.dart';
+import '../services/world_service.dart';
 import 'developer_panel_dialog.dart';
 
 class SettingsDialog extends StatelessWidget {
@@ -12,6 +14,7 @@ class SettingsDialog extends StatelessWidget {
   final Future<void> Function()? onInspectNpcStatus;
   final Future<void> Function()? onSimulateVillageActions;
   final Future<void> Function()? onOpenWorldMap;
+  final Future<void> Function()? onClearAllSaves;
 
   const SettingsDialog({
     super.key,
@@ -20,6 +23,7 @@ class SettingsDialog extends StatelessWidget {
     this.onInspectNpcStatus,
     this.onSimulateVillageActions,
     this.onOpenWorldMap,
+    this.onClearAllSaves,
   });
 
   static Future<void> show(
@@ -29,6 +33,7 @@ class SettingsDialog extends StatelessWidget {
     Future<void> Function()? onInspectNpcStatus,
     Future<void> Function()? onSimulateVillageActions,
     Future<void> Function()? onOpenWorldMap,
+    Future<void> Function()? onClearAllSaves,
   }) {
     return showDialog(
       context: context,
@@ -38,8 +43,23 @@ class SettingsDialog extends StatelessWidget {
         onInspectNpcStatus: onInspectNpcStatus,
         onSimulateVillageActions: onSimulateVillageActions,
         onOpenWorldMap: onOpenWorldMap,
+        onClearAllSaves: onClearAllSaves,
       ),
     );
+  }
+
+  static DateTime? _lastTipTime;
+
+  void _showTip(BuildContext context, String message) {
+    final now = DateTime.now();
+    if (_lastTipTime != null &&
+        now.difference(_lastTipTime!).inMilliseconds < 1000) {
+      return;
+    }
+    _lastTipTime = now;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showExitConfirmDialog(BuildContext context) {
@@ -89,6 +109,19 @@ class SettingsDialog extends StatelessWidget {
       onInspectNpcStatus: onInspectNpcStatus,
       onSimulateVillageActions: onSimulateVillageActions,
       onOpenWorldMap: onOpenWorldMap,
+      onClearAllSaves: onClearAllSaves ?? () => _clearAllSaves(context),
+    );
+  }
+
+  Future<void> _clearAllSaves(BuildContext context) async {
+    debugPrint('[Developer] 清除全部存档');
+    await SaveService().clearPlayerSave();
+    await WorldSaveService().clearWorldSave();
+    WorldService().clearNpcs();
+    if (!context.mounted) return;
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const StartPage()),
+      (route) => false,
     );
   }
 
@@ -177,9 +210,7 @@ class SettingsDialog extends StatelessWidget {
                     onPressed: () async {
                       await SaveService().savePlayer(player);
                       if (!context.mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(const SnackBar(content: Text('存档成功')));
+                      _showTip(context, '存档成功');
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFF333333),

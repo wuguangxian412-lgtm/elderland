@@ -13,7 +13,7 @@ class TimelineService {
 
   List<TimelineEntry>? _cached;
 
-  /// 加载全部时间线条目，返回 List<TimelineEntry>
+  /// 加载全部时间线条目，返回 `List<TimelineEntry>`
   Future<List<TimelineEntry>> loadTimeline() async {
     if (_cached != null) return _cached!;
 

@@ -29,6 +29,16 @@ class SaveService {
     debugPrint('SAVE SUCCESS: ${file.path}');
   }
 
+  Future<void> clearPlayerSave() async {
+    final file = await _localFile;
+    if (await file.exists()) {
+      await file.delete();
+      debugPrint('CLEAR SAVE SUCCESS: ${file.path}');
+    } else {
+      debugPrint('CLEAR SAVE SKIPPED: player_save not found');
+    }
+  }
+
   Future<Player?> loadPlayer() async {
     try {
       final file = await _localFile;

@@ -13,7 +13,7 @@ class MapService {
 
   List<MapNode>? _cached;
 
-  /// 加载全部地图节点，返回 List<MapNode>
+  /// 加载全部地图节点，返回 `List<MapNode>`
   Future<List<MapNode>> loadMap() async {
     if (_cached != null) return _cached!;
 

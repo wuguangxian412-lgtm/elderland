@@ -59,8 +59,12 @@ class GameEventRecord {
        locationName = locationName.trim(),
        buildingId = buildingId.trim(),
        buildingName = buildingName.trim(),
-       npcIds = List.unmodifiable(npcIds.map((e) => e.trim()).where((e) => e.isNotEmpty)),
-       npcNames = List.unmodifiable(npcNames.map((e) => e.trim()).where((e) => e.isNotEmpty)),
+       npcIds = List.unmodifiable(
+         npcIds.map((e) => e.trim()).where((e) => e.isNotEmpty),
+       ),
+       npcNames = List.unmodifiable(
+         npcNames.map((e) => e.trim()).where((e) => e.isNotEmpty),
+       ),
        result = result.trim(),
        metadata = Map.unmodifiable(metadata),
        createdAt = (createdAt == null || createdAt.trim().isEmpty)
@@ -130,7 +134,7 @@ class GameEventRecord {
     }
   }
 
-  String get timeLabel => '神圣历${year}年 $season Day $day';
+  String get timeLabel => '神圣历$year年 $season Day $day';
 
   static List<String> _parseStringList(dynamic raw) {
     if (raw is! List) return [];

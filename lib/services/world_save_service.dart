@@ -85,6 +85,9 @@ class WorldSaveService {
     final file = await _localFile;
     if (await file.exists()) {
       await file.delete();
+      debugPrint('[WorldSaveService] 已清除 world_save: ${file.path}');
+    } else {
+      debugPrint('[WorldSaveService] 清除跳过，world_save 不存在');
     }
   }
 }

@@ -44,6 +44,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   List<MapNode>? _nodes;
   final List<MapNode> _dynamicNodes = [];
   String? _error;
+  DateTime? _lastTipTime;
 
   double _currentScale = 1.0;
   final TransformationController _controller = TransformationController();
@@ -146,6 +147,21 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     return false;
   }
 
+  void _showTip(
+    String message, {
+    Duration duration = const Duration(seconds: 2),
+  }) {
+    final now = DateTime.now();
+    if (_lastTipTime != null &&
+        now.difference(_lastTipTime!).inMilliseconds < 1000) {
+      return;
+    }
+    _lastTipTime = now;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), duration: duration));
+  }
+
   /// 执行移动到目标地点
   Future<void> _movePlayerToNode(MapNode targetNode) async {
     debugPrint('[MapMove] 准备移动: ${_player.locationId} -> ${targetNode.id}');
@@ -168,14 +184,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
       '[MapMove] 移动完成: locationId=${advancedPlayer.locationId}, location=${advancedPlayer.location}',
     );
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('已移动到：${targetNode.name}'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
+    if (mounted) _showTip('已移动到：${targetNode.name}');
   }
 
   @override
@@ -280,8 +289,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     setState(() {
       _currentScale = initialScale;
       _controller.value = Matrix4.identity()
-        ..translate(tx, ty)
-        ..scale(initialScale);
+        ..translateByDouble(tx, ty, 0, 1)
+        ..scaleByDouble(initialScale, initialScale, initialScale, 1);
     });
   }
 
@@ -454,8 +463,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final newTy = fp.dy - canvasY * newScale;
 
     _controller.value = Matrix4.identity()
-      ..translate(newTx, newTy)
-      ..scale(newScale);
+      ..translateByDouble(newTx, newTy, 0, 1)
+      ..scaleByDouble(newScale, newScale, newScale, 1);
     // _onTransformChanged 会通过 listener 自动触发 setState
   }
 
