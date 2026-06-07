@@ -10,6 +10,12 @@ class SaveService {
   static const String _fileName = 'player_save.json';
   static const int _saveVersion = 1;
 
+  /// 对话详情记录会比统一经历更占空间，因此只保留最近一部分完整详情。
+  /// 统一经历仍然是长期主记录，避免存档无限膨胀。
+  static const int _maxInteractionRecords = 50;
+  static const int _maxEventRecords = 300;
+  static const int _maxImportantEventRecords = 100;
+
   /// 存档目录获取
   Future<String> get _localPath async {
     final dir = await getApplicationDocumentsDirectory();
@@ -24,9 +30,33 @@ class SaveService {
 
   Future<void> savePlayer(Player player) async {
     final file = await _localFile;
-    final data = {'version': _saveVersion, 'data': player.toJson()};
+    final normalizedPlayer = _normalizePlayerForSave(player);
+    final data = {'version': _saveVersion, 'data': normalizedPlayer.toJson()};
     await file.writeAsString(jsonEncode(data), flush: true);
     debugPrint('SAVE SUCCESS: ${file.path}');
+  }
+
+  /// 保存前统一收束玩家存档体积。
+  ///
+  /// 规则：
+  /// - interactionRecords：保留最近 50 条完整对话详情；
+  /// - eventRecords：保留最近 300 条统一经历；
+  /// - importantEventRecords：保留最近 100 条重要经历；
+  /// - relationships / activeQuests 不截断，因为它们是当前可见玩法状态。
+  Player _normalizePlayerForSave(Player player) {
+    return player.copyWith(
+      interactionRecords: _takeLast(player.interactionRecords, _maxInteractionRecords),
+      eventRecords: _takeLast(player.eventRecords, _maxEventRecords),
+      importantEventRecords: _takeLast(
+        player.importantEventRecords,
+        _maxImportantEventRecords,
+      ),
+    );
+  }
+
+  List<T> _takeLast<T>(List<T> source, int maxCount) {
+    if (source.length <= maxCount) return source;
+    return source.sublist(source.length - maxCount);
   }
 
   Future<void> clearPlayerSave() async {
