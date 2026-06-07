@@ -2,6 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import '../services/save_service.dart';
+import '../services/world_save_service.dart';
+import '../services/world_service.dart';
 import 'create_role_page.dart';
 import 'game_main_page.dart';
 
@@ -84,15 +86,20 @@ class _StartPageState extends State<StartPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('提示'),
-        content: const Text('要开始新的游戏吗？'),
+        content: const Text('要开始新的游戏吗？这会清除旧的玩家存档和世界状态。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('取消'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(ctx).pop();
+              await SaveService().clearPlayerSave();
+              await WorldSaveService().clearWorldSave();
+              WorldService().clearNpcs();
+              debugPrint('[StartPage] 新游戏已清除旧玩家存档和世界状态');
+              if (!context.mounted) return;
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => const CreateRolePage()),
