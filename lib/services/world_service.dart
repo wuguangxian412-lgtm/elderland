@@ -13,6 +13,13 @@ class WorldService {
   WorldService._();
 
   static const String _npcAssetPath = 'assets/data/npc_data.json';
+  static const Set<String> _allowedMemorySections = {
+    'player',
+    'daily',
+    'quest',
+    'world',
+    'lastAction',
+  };
 
   /// 全部 NPC 列表（静态 + 动态生成）
   final List<Npc> npcs = [];
@@ -148,6 +155,7 @@ class WorldService {
   void clearNpcs() {
     npcs.clear();
     _initialized = false;
+    _initializing = null;
   }
 
   // === AI 指令执行系统 ===
@@ -205,10 +213,15 @@ class WorldService {
       case 'update_memory':
         final npc = findNpcById(action.targetId ?? '');
         if (npc != null) {
+          final safePayload = _sanitizeMemoryPayload(action.payload);
+          if (safePayload.isEmpty) {
+            debugPrint('[WorldService]  update_memory 跳过：payload 没有允许的记忆字段');
+            break;
+          }
           debugPrint(
-            '[WorldService]  update_memory NPC ${npc.name}: ${action.payload}',
+            '[WorldService]  update_memory NPC ${npc.name}: $safePayload',
           );
-          npc.memory.addAll(action.payload);
+          npc.memory.addAll(safePayload);
           didChange = true;
         } else {
           debugPrint('[WorldService]  update_memory 未找到: ${action.targetId}');
@@ -222,6 +235,16 @@ class WorldService {
     if (didChange) {
       await saveWorldState();
     }
+  }
+
+  Map<String, dynamic> _sanitizeMemoryPayload(Map<String, dynamic> payload) {
+    final safe = <String, dynamic>{};
+    for (final entry in payload.entries) {
+      final key = entry.key.trim();
+      if (!_allowedMemorySections.contains(key)) continue;
+      safe[key] = entry.value;
+    }
+    return safe;
   }
 
   /// 模拟村内人物行动 — 返回测试用 Action 列表
@@ -250,8 +273,10 @@ class WorldService {
         targetId: 'npc_village_elder_001',
         payload: {
           'lastAction': '在村口广场处理村务',
-          'attitudeToPlayer': 'neutral',
-          'day': 1,
+          'daily': {
+            'attitudeToPlayer': 'neutral',
+            'day': 1,
+          },
         },
       ),
       Action(
@@ -268,7 +293,7 @@ class WorldService {
           'buildingId': 'silver_leaf_village_inn',
           'state': 'idle',
           'personality': {'type': '普通'},
-          'memory': {'source': 'simulateAIDay'},
+          'memory': {'world': {'source': 'simulateAIDay'}},
           'history': [],
         },
       ),
