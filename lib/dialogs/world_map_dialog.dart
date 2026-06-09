@@ -1,8 +1,7 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart'
-    show PointerCancelEvent, PointerDownEvent, PointerUpEvent;
 
 import '../models/map_node.dart';
 import '../models/player.dart';
@@ -42,13 +41,11 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   String? _error;
   DateTime? _lastTipTime;
 
-  double _currentScale = 1.0;
   final TransformationController _controller = TransformationController();
   final GlobalKey _mapContentKey = GlobalKey();
 
   static const double _minScale = 1.0;
   static const double _maxScale = 1.0;
-  static const double _zoomStep = 0.1;
   static const double _initialScale = 1.0;
   static const double _mapCanvasSize = 1600.0;
   static const double _mapCanvasPadding = 300.0;
@@ -70,10 +67,6 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   /// 外层地图点击监听用。
   /// 不再依赖单个节点 GestureDetector 的命中。
   final Map<int, Offset> _mapPointerDownPositions = {};
-
-  /// 缩放按钮长按相关 Timer
-  Timer? _zoomLongPressDelayTimer;
-  Timer? _zoomRepeatTimer;
 
   /// 最近一次构建节点时算出的标签偏移。
   /// 点击判定需要用到同一份偏移，否则视觉位置和判定位置会不一致。
@@ -115,11 +108,57 @@ class _WorldMapContentState extends State<_WorldMapContent> {
 
   List<MapNode> get _allNodes => [...?_nodes, ..._dynamicNodes];
 
+  Set<String> _buildVisitedLocationIds({required Player player}) {
+    final visited = <String>{};
+    final locationId = player.locationId.trim();
+    if (locationId.isNotEmpty) visited.add(locationId);
+
+    for (final event in player.eventRecords) {
+      final eventLocationId = event.locationId.trim();
+      if (eventLocationId.isNotEmpty) visited.add(eventLocationId);
+
+      final from = event.metadata['fromLocationId'];
+      if (from is String && from.trim().isNotEmpty) {
+        visited.add(from.trim());
+      }
+      final to = event.metadata['toLocationId'];
+      if (to is String && to.trim().isNotEmpty) {
+        visited.add(to.trim());
+      }
+    }
+
+    return visited;
+  }
+
+  Set<String> _buildVisibleLocationIds({
+    required Player player,
+    required List<MapNode> allNodes,
+  }) {
+    final nodeById = {for (final node in allNodes) node.id: node};
+    final visited = _buildVisitedLocationIds(player: player);
+    final visible = {...visited};
+
+    for (final id in visited) {
+      final node = nodeById[id];
+      if (node == null) continue;
+      visible.addAll(node.connectedNodes);
+    }
+
+    return visible;
+  }
+
   List<MapNode> get _visibleNodes {
-    final result = _allNodes;
+    final allNodes = _allNodes;
+    final visibleIds = _buildVisibleLocationIds(
+      player: _player,
+      allNodes: allNodes,
+    );
+    final result = allNodes
+        .where((node) => visibleIds.contains(node.id))
+        .toList();
     if (kMapDebugMode) {
       debugPrint(
-        '[Map] scale=$_currentScale  visible=${result.length}: ${result.map((n) => n.name).join("  ")}  dynamic=${_dynamicNodes.length}',
+        '[Map] visible=${result.length}: ${result.map((n) => n.name).join("  ")}  dynamic=${_dynamicNodes.length}',
       );
     }
     return result;
@@ -188,14 +227,11 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     super.initState();
     _player = widget.player;
     debugPrint('[WorldMap] 打开地图 locationId=${_player.locationId}');
-    _controller.addListener(_onTransformChanged);
     _loadData();
   }
 
   @override
   void dispose() {
-    _cancelZoomTimersOnly();
-    _controller.removeListener(_onTransformChanged);
     _controller.dispose();
     super.dispose();
   }
@@ -282,24 +318,9 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final tx = -cx * initialScale + viewW / 2;
     final ty = -cy * initialScale + viewH / 2;
 
-    setState(() {
-      _currentScale = initialScale;
-      _controller.value = Matrix4.identity()
-        ..translateByDouble(tx, ty, 0, 1)
-        ..scaleByDouble(initialScale, initialScale, initialScale, 1);
-    });
-  }
-
-  void _onTransformChanged() {
-    final matrixScale = _controller.value.getMaxScaleOnAxis();
-    if ((matrixScale - _currentScale).abs() > 0.01) {
-      setState(() => _currentScale = matrixScale);
-    }
-    if (kMapDebugMode) {
-      debugPrint(
-        '[MapScale] _currentScale=$_currentScale  matrix=${matrixScale.toStringAsFixed(2)}  display=$_scaleText',
-      );
-    }
+    _controller.value = Matrix4.identity()
+      ..translateByDouble(tx, ty, 0, 1)
+      ..scaleByDouble(initialScale, initialScale, initialScale, 1);
   }
 
   // ──────────────────────────────────────────────
@@ -405,67 +426,6 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   // ──────────────────────────────────────────────
 
   /// 长按延迟结束后开始连续缩放
-  void _startZoomPress(double delta) {
-    _cancelZoomTimersOnly();
-    _zoomLongPressDelayTimer = Timer(const Duration(milliseconds: 320), () {
-      _zoomRepeatTimer = Timer.periodic(
-        const Duration(milliseconds: 70),
-        (_) => _zoomBy(delta),
-      );
-    });
-  }
-
-  /// 松手时：若正在连续缩放则停止；否则执行单次缩放
-  void _endZoomPress(double delta) {
-    final wasRepeating = _zoomRepeatTimer?.isActive ?? false;
-    _cancelZoomTimersOnly();
-    if (!wasRepeating) {
-      _zoomBy(delta);
-    }
-  }
-
-  /// 清理所有缩放 Timer
-  void _cancelZoomTimersOnly() {
-    _zoomLongPressDelayTimer?.cancel();
-    _zoomLongPressDelayTimer = null;
-    _zoomRepeatTimer?.cancel();
-    _zoomRepeatTimer = null;
-  }
-
-  /// 以指定焦点（默认视口中心）为锚点缩放 delta 步长
-  void _zoomBy(double delta, {Offset? focalPoint}) {
-    final renderBox =
-        _mapContentKey.currentContext?.findRenderObject() as RenderBox?;
-    if (renderBox == null) return;
-    final viewW = renderBox.size.width;
-    final viewH = renderBox.size.height;
-    if (viewW <= 0 || viewH <= 0) return;
-
-    final matrix = _controller.value;
-    final oldScale = matrix.getMaxScaleOnAxis();
-    final newScale = (oldScale + delta).clamp(_minScale, _maxScale);
-    if (newScale == oldScale) return;
-
-    final tx = matrix.entry(0, 3);
-    final ty = matrix.entry(1, 3);
-
-    // 以鼠标位置（或视口中心）为缩放锚点
-    final fp = focalPoint ?? Offset(viewW / 2, viewH / 2);
-    final canvasX = (fp.dx - tx) / oldScale;
-    final canvasY = (fp.dy - ty) / oldScale;
-
-    // 保持锚点画布坐标不变，仅修改缩放倍率
-    final newTx = fp.dx - canvasX * newScale;
-    final newTy = fp.dy - canvasY * newScale;
-
-    _controller.value = Matrix4.identity()
-      ..translateByDouble(newTx, newTy, 0, 1)
-      ..scaleByDouble(newScale, newScale, newScale, 1);
-    // _onTransformChanged 会通过 listener 自动触发 setState
-  }
-
-  /// 缩放倍率文本，如 "500%"
-  String get _scaleText => '${(_currentScale * 100).round()}%';
 
   // ──────────────────────────────────────────────
   // UI
@@ -474,57 +434,60 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final dialogSize = math.min(size.width * 0.82, size.height * 0.72);
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        width: size.width * 0.9,
-        height: size.height * 0.8,
-        decoration: BoxDecoration(
-          color: _card,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            // 标题栏 + 关闭按钮
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 12, 0),
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '世界地图',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF333333),
+      child: SizedBox(
+        width: dialogSize,
+        height: dialogSize,
+        child: Container(
+          decoration: BoxDecoration(
+            color: _card,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              // 标题栏 + 关闭按钮
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 12, 0),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '世界地图',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF333333),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${_player.location} · ${_player.country}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: _textSecondary,
+                        const SizedBox(height: 2),
+                        Text(
+                          '${_player.location} · ${_player.country}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: _textSecondary,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    key: const ValueKey('world_map_close_button'),
-                    onPressed: () => Navigator.of(context).pop(_player),
-                    icon: const Icon(Icons.close, color: _textSecondary),
-                    tooltip: '关闭',
-                  ),
-                ],
+                      ],
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      key: const ValueKey('world_map_close_button'),
+                      onPressed: () => Navigator.of(context).pop(_player),
+                      icon: const Icon(Icons.close, color: _textSecondary),
+                      tooltip: '关闭',
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Divider(height: 1, color: _border),
-            Expanded(child: _buildMapContent()),
-          ],
+              const Divider(height: 1, color: _border),
+              Expanded(child: _buildMapContent()),
+            ],
+          ),
         ),
       ),
     );
@@ -724,106 +687,6 @@ class _WorldMapContentState extends State<_WorldMapContent> {
                   ),
                 ),
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 重置视图到初始缩放与位置
-  void _resetZoom() {
-    if (_nodes == null) return;
-    _centerMap(_nodes!);
-  }
-
-  /// 调试缩放工具栏
-  Widget _buildZoomToolbar() {
-    return Container(
-      height: 36,
-      decoration: BoxDecoration(
-        color: _card,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _zoomButton(
-            Icons.remove,
-            -_zoomStep,
-            key: const ValueKey('map_zoom_out_button'),
-          ),
-          _zoomTextButton(
-            '重置',
-            _resetZoom,
-            key: const ValueKey('map_reset_button'),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Text(
-              _scaleText,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF333333),
-              ),
-            ),
-          ),
-          _zoomButton(
-            Icons.add,
-            _zoomStep,
-            key: const ValueKey('map_zoom_in_button'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _zoomButton(IconData icon, double delta, {Key? key}) {
-    return SizedBox(
-      key: key,
-      width: 32,
-      height: 32,
-      child: Listener(
-        onPointerDown: (_) => _startZoomPress(delta),
-        onPointerUp: (_) => _endZoomPress(delta),
-        onPointerCancel: (_) => _cancelZoomTimersOnly(),
-        child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
-          child: Icon(icon, size: 16, color: const Color(0xFF555555)),
-        ),
-      ),
-    );
-  }
-
-  Widget _zoomTextButton(String label, VoidCallback onTap, {Key? key}) {
-    return SizedBox(
-      key: key,
-      height: 32,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(6),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Center(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFF555555),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
             ),
           ),
         ),
