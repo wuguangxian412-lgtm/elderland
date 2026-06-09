@@ -60,7 +60,6 @@ class _LocationDetailContent extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 标题
             Text(
               key: const ValueKey('location_detail_title'),
               node.name,
@@ -71,13 +70,10 @@ class _LocationDetailContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            // 类型
             _infoRow('类型', node.type),
             const SizedBox(height: 8),
-            // 国家
             _infoRow('国家', node.country),
             const SizedBox(height: 16),
-            // 描述
             const Text(
               '描述',
               style: TextStyle(
@@ -91,7 +87,6 @@ class _LocationDetailContent extends StatelessWidget {
               node.description,
               style: const TextStyle(fontSize: 14, color: _text, height: 1.6),
             ),
-            // 场景描述
             if (flavorTextMap[node.id] != null &&
                 flavorTextMap[node.id]!.isNotEmpty) ...[
               const SizedBox(height: 16),
@@ -101,7 +96,7 @@ class _LocationDetailContent extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: const Color(0xFFF7F5F2),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(0xFFE5E5E5)),
+                  border: Border.all(color: const Color(0xFFE5E5E5)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +124,6 @@ class _LocationDetailContent extends StatelessWidget {
                 ),
               ),
             ],
-            // 移动区域
             _buildMoveSection(context),
             const SizedBox(height: 16),
             Align(
@@ -166,7 +160,7 @@ class _LocationDetailContent extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFE8F5E9),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Color(0xFFA5D6A7)),
+              border: Border.all(color: const Color(0xFFA5D6A7)),
             ),
             child: const Row(
               children: [
@@ -201,7 +195,7 @@ class _LocationDetailContent extends StatelessWidget {
                 ),
               ),
               child: Text(
-                moveHintText ?? '进入城市',
+                moveHintText ?? '前往此地',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -217,7 +211,7 @@ class _LocationDetailContent extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFF5F5F5),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Color(0xFFE0E0E0)),
+              border: Border.all(color: const Color(0xFFE0E0E0)),
             ),
             child: const Row(
               children: [
