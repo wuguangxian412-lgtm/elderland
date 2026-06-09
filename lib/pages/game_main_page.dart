@@ -47,10 +47,12 @@ class _GameMainPageState extends State<GameMainPage> {
 
   static const Color _bg = Color(0xFFF7F5F2);
   static const Color _card = Color(0xFFFFFFFF);
+  static const Color _softCard = Color(0xFFFAFAFA);
   static const Color _border = Color(0xFFE5E5E5);
   static const Color _text = Color(0xFF333333);
   static const Color _textSecondary = Color(0xFF777777);
   static const Color _accent = Color(0xFF7BAE7F);
+  static const Color _danger = Color(0xFFD48383);
 
   @override
   void initState() {
@@ -148,7 +150,7 @@ class _GameMainPageState extends State<GameMainPage> {
           _player = nextPlayer;
           _selectedBuilding = null;
         });
-        _loadBuildingsForCurrentLocation();
+        await _loadBuildingsForCurrentLocation();
         if (oldPlayer.locationId != updated.locationId) {
           await SaveService().autoSave(nextPlayer);
         }
@@ -172,6 +174,15 @@ class _GameMainPageState extends State<GameMainPage> {
       setState(() {
         _currentBuildings = buildings;
         _buildingLoading = false;
+        if (buildings.isEmpty) {
+          _selectedBuilding = null;
+        } else {
+          final selectedId = _selectedBuilding?.id;
+          _selectedBuilding = buildings.firstWhere(
+            (building) => building.id == selectedId,
+            orElse: () => buildings.first,
+          );
+        }
       });
       debugPrint('[Building] 当前地点建筑数量: ${buildings.length}');
     } catch (e) {
@@ -180,49 +191,15 @@ class _GameMainPageState extends State<GameMainPage> {
       setState(() {
         _buildingError = '建筑加载失败: $e';
         _currentBuildings = [];
+        _selectedBuilding = null;
         _buildingLoading = false;
       });
     }
   }
 
-  void _showBuildingActionSheet(Building building) {
-    debugPrint('[Building] 点击建筑: ${building.id} ${building.name}');
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.meeting_room_outlined),
-              title: const Text('进入'),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                debugPrint('[Building] 进入建筑: ${building.id} ${building.name}');
-                setState(() => _selectedBuilding = building);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.visibility_outlined),
-              title: const Text('观察'),
-              onTap: () async {
-                Navigator.of(ctx).pop();
-                debugPrint('[Building] 观察建筑: ${building.id} ${building.name}');
-                await _recordBuildingObservation(building);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.close),
-              title: const Text('取消'),
-              onTap: () => Navigator.of(ctx).pop(),
-            ),
-          ],
-        ),
-      ),
-    );
+  void _selectBuilding(Building building) {
+    debugPrint('[Building] 切换建筑: ${building.id} ${building.name}');
+    setState(() => _selectedBuilding = building);
   }
 
   Future<void> _recordBuildingObservation(Building building) async {
@@ -264,49 +241,6 @@ class _GameMainPageState extends State<GameMainPage> {
             child: const Text('知道了'),
           ),
         ],
-      ),
-    );
-  }
-
-  void _returnToBuildingList() {
-    debugPrint('[Building] 返回地点建筑列表');
-    setState(() => _selectedBuilding = null);
-  }
-
-  void _showNpcActionSheet(Building building, Npc npc) {
-    debugPrint('[NPC] 点击NPC: ${npc.id} ${npc.name}');
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.chat_bubble_outline),
-              title: const Text('对话'),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                _openNpcInteraction(building, npc);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.assignment_outlined),
-              title: const Text('查看委托'),
-              onTap: () async {
-                Navigator.of(ctx).pop();
-                await _openQuestOffer(building, npc);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.close),
-              title: const Text('取消'),
-              onTap: () => Navigator.of(ctx).pop(),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -457,6 +391,188 @@ class _GameMainPageState extends State<GameMainPage> {
     }
   }
 
+  String _npcPersonalityText(Npc npc) {
+    final type = npc.personality['type'];
+    if (type is String && type.trim().isNotEmpty) return type.trim();
+    return '未知';
+  }
+
+  String _npcMemorySummary(Npc npc) {
+    final playerMemory = npc.memory['player'];
+    if (playerMemory is Map) {
+      final summary = playerMemory['summary'];
+      if (summary is String && summary.trim().isNotEmpty) {
+        return summary.trim();
+      }
+    }
+    final lastAction = npc.memory['lastAction'];
+    if (lastAction is String && lastAction.trim().isNotEmpty) {
+      return lastAction.trim();
+    }
+    return '你对这个人物的了解还很有限。';
+  }
+
+  void _showNpcInfoDialog(Building building, Npc npc) {
+    debugPrint('[NPC] 打开人物信息: ${npc.id} ${npc.name}');
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          width: 320,
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: _card,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8E5E0),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: _border),
+                    ),
+                    child: const Icon(
+                      Icons.person_outline,
+                      size: 26,
+                      color: _textSecondary,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          npc.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: _text,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          _npcStateText(npc.state),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: _textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _npcInfoRow('所在建筑', building.name),
+              const SizedBox(height: 8),
+              _npcInfoRow('性格', _npcPersonalityText(npc)),
+              const SizedBox(height: 8),
+              _npcInfoRow('状态', _npcStateText(npc.state)),
+              const SizedBox(height: 14),
+              const Text(
+                '人物印象',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: _text,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: _softCard,
+                  border: Border.all(color: _border),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  _npcMemorySummary(npc),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: _textSecondary,
+                    height: 1.45,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    child: const Text('关闭'),
+                  ),
+                  const Spacer(),
+                  OutlinedButton(
+                    onPressed: () async {
+                      Navigator.of(dialogContext).pop();
+                      await _openQuestOffer(building, npc);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: _text,
+                      side: const BorderSide(color: _border),
+                    ),
+                    child: const Text('委托'),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      _openNpcInteraction(building, npc);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _accent,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                    ),
+                    child: const Text('互动'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _npcInfoRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 70,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              color: _textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value.isEmpty ? '未知' : value,
+            style: const TextStyle(fontSize: 14, color: _text),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> _checkTimelineEvent() async {
     final event = await TimelineService().getTimelineByYearSeason(
       _player.year,
@@ -495,278 +611,22 @@ class _GameMainPageState extends State<GameMainPage> {
     );
   }
 
-  Widget _buildLocationBuildingsView() {
-    if (_buildingLoading) {
-      return const Center(
-        child: Text(
-          '建筑加载中...',
-          style: TextStyle(fontSize: 14, color: _textSecondary),
-        ),
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            children: [
-              const Text(
-                '周围建筑',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: _text,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '数量: ${_currentBuildings.length}',
-                style: const TextStyle(fontSize: 13, color: _textSecondary),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-          child: SizedBox(
-            width: double.infinity,
-            height: 36,
-            child: OutlinedButton.icon(
-              onPressed: _recordWanderEvent,
-              icon: const Icon(Icons.explore_outlined, size: 17),
-              label: const Text('随便逛逛'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: _text,
-                side: const BorderSide(color: _border),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                textStyle: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(9),
-                ),
-              ),
-            ),
-          ),
-        ),
-        if (_buildingError != null)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-            child: Text(
-              _buildingError!,
-              style: const TextStyle(fontSize: 13, color: Color(0xFFC75C5C)),
-            ),
-          ),
-        Expanded(
-          child: _currentBuildings.isEmpty
-              ? const Center(
-                  child: Text(
-                    '附近暂时没有可进入的建筑',
-                    style: TextStyle(fontSize: 14, color: _textSecondary),
-                  ),
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-                  itemCount: _currentBuildings.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) =>
-                      _buildingCard(_currentBuildings[index]),
-                ),
-        ),
-      ],
-    );
-  }
+  List<GameEventRecord> _buildingActionLogs(Building building) {
+    final logs = _player.eventRecords.where((event) {
+      if (event.buildingId == building.id) return true;
+      if (event.locationId != _player.locationId) return false;
+      return event.buildingId.isEmpty &&
+          (event.type == GameEventRecord.typeMovement ||
+              event.type == GameEventRecord.typeExploration);
+    }).toList();
 
-  Widget _buildingCard(Building building) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: () => _showBuildingActionSheet(building),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFAFAFA),
-          border: Border.all(color: _border),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    building.name,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: _text,
-                    ),
-                  ),
-                ),
-                _tag(building.isPublic ? '公共区域' : '私人区域'),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              building.type,
-              style: const TextStyle(fontSize: 12, color: _textSecondary),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              building.description,
-              style: const TextStyle(fontSize: 13, color: _text, height: 1.4),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    logs.sort((a, b) {
+      if (a.year != b.year) return b.year.compareTo(a.year);
+      if (a.day != b.day) return b.day.compareTo(a.day);
+      return b.createdAt.compareTo(a.createdAt);
+    });
 
-  Widget _buildBuildingInteriorView(Building building) {
-    final buildingNpcs = WorldService().findNpcsByBuilding(
-      _player.locationId,
-      building.id,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: TextButton.icon(
-            onPressed: _returnToBuildingList,
-            icon: const Icon(Icons.arrow_back, size: 18),
-            label: const Text('离开'),
-            style: TextButton.styleFrom(
-              foregroundColor: _textSecondary,
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 32),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFAFAFA),
-              border: Border.all(color: _border),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  building.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: _text,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '建筑类型：${building.type}',
-                  style: const TextStyle(fontSize: 13, color: _textSecondary),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  building.description,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: _text,
-                    height: 1.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 18),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            building.isPublic ? '周围人物' : '房间人物',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: _text,
-            ),
-          ),
-        ),
-        const SizedBox(height: 6),
-        Expanded(
-          child: buildingNpcs.isEmpty
-              ? const Center(
-                  child: Text(
-                    '这里暂时没有可见人物',
-                    style: TextStyle(fontSize: 14, color: _textSecondary),
-                  ),
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-                  itemCount: buildingNpcs.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) =>
-                      _npcCard(building, buildingNpcs[index]),
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _npcCard(Building building, Npc npc) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: () => _showNpcActionSheet(building, npc),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFAFAFA),
-          border: Border.all(color: _border),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    npc.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _text,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '状态：${_npcStateText(npc.state)}',
-                    style: const TextStyle(fontSize: 12, color: _textSecondary),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.chevron_right, size: 18, color: _textSecondary),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _tag(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: _accent.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(text, style: const TextStyle(fontSize: 12, color: _accent)),
-    );
+    return logs.take(30).toList();
   }
 
   @override
@@ -911,13 +771,405 @@ class _GameMainPageState extends State<GameMainPage> {
             ),
           ),
           const Divider(height: 14),
+          Expanded(child: _buildMainInteriorArea(size)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMainInteriorArea(Size size) {
+    if (_buildingLoading) {
+      return const Center(
+        child: Text(
+          '建筑加载中...',
+          style: TextStyle(fontSize: 14, color: _textSecondary),
+        ),
+      );
+    }
+
+    if (_buildingError != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Text(
+            _buildingError!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 13, color: _danger),
+          ),
+        ),
+      );
+    }
+
+    if (_currentBuildings.isEmpty || _selectedBuilding == null) {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 2, 12, 8),
+            child: OutlinedButton.icon(
+              onPressed: _recordWanderEvent,
+              icon: const Icon(Icons.explore_outlined, size: 17),
+              label: const Text('随便逛逛'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: _text,
+                side: const BorderSide(color: _border),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
+          ),
+          const Expanded(
+            child: Center(
+              child: Text(
+                '附近暂时没有可进入的建筑',
+                style: TextStyle(fontSize: 14, color: _textSecondary),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        _buildingSelectorBar(_selectedBuilding!),
+        Expanded(child: _buildBuildingInteriorView(size, _selectedBuilding!)),
+      ],
+    );
+  }
+
+  Widget _buildingSelectorBar(Building selectedBuilding) {
+    return Container(
+      height: 48,
+      padding: const EdgeInsets.fromLTRB(12, 2, 12, 8),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: _currentBuildings.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final building = _currentBuildings[index];
+          final selected = building.id == selectedBuilding.id;
+          return ChoiceChip(
+            label: Text(building.name),
+            selected: selected,
+            selectedColor: _accent,
+            backgroundColor: _softCard,
+            side: BorderSide(color: selected ? _accent : _border),
+            showCheckmark: false,
+            labelStyle: TextStyle(
+              color: selected ? Colors.white : _text,
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+              fontSize: 13,
+            ),
+            onSelected: (_) => _selectBuilding(building),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBuildingInteriorView(Size size, Building building) {
+    final buildingNpcs = WorldService().findNpcsByBuilding(
+      _player.locationId,
+      building.id,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+      child: Column(
+        children: [
+          _interiorHeader(building),
+          const SizedBox(height: 8),
           Expanded(
-            child: _selectedBuilding == null
-                ? _buildLocationBuildingsView()
-                : _buildBuildingInteriorView(_selectedBuilding!),
+            child: Row(
+              children: [
+                SizedBox(width: 74, child: _buildItemPanel()),
+                const SizedBox(width: 8),
+                Expanded(child: _buildActionLogPanel(building)),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 92,
+                  child: _buildNpcNamePanel(building, buildingNpcs),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _interiorHeader(Building building) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+      decoration: BoxDecoration(
+        color: _softCard,
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  building.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: _text,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  '${building.type} · ${building.isPublic ? '公共区域' : '私人区域'}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: _textSecondary),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          _miniButton('观察', () => _recordBuildingObservation(building)),
+          const SizedBox(width: 6),
+          _miniButton('闲逛', _recordWanderEvent),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemPanel() {
+    return _sidePanel(
+      title: '物品',
+      child: const Center(
+        child: Text(
+          '空',
+          style: TextStyle(fontSize: 13, color: _textSecondary),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNpcNamePanel(Building building, List<Npc> npcs) {
+    return _sidePanel(
+      title: '人物',
+      child: npcs.isEmpty
+          ? const Center(
+              child: Text(
+                '暂无',
+                style: TextStyle(fontSize: 13, color: _textSecondary),
+              ),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              itemCount: npcs.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 6),
+              itemBuilder: (context, index) {
+                final npc = npcs[index];
+                return InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () => _showNpcInfoDialog(building, npc),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _softCard,
+                      border: Border.all(color: _border),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      npc.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: _text,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _buildActionLogPanel(Building building) {
+    final logs = _buildingActionLogs(building);
+    return Container(
+      decoration: BoxDecoration(
+        color: _softCard,
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    '行动日志',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: _text,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Text(
+                  '记录 ${logs.length}',
+                  style: const TextStyle(fontSize: 11, color: _textSecondary),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: _border),
+          Expanded(
+            child: logs.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      '你进入了${building.name}。这里还没有新的行动记录，后续可以接入 AI 生成环境描写、物品发现和人物行动。',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        height: 1.55,
+                        color: _textSecondary,
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.all(10),
+                    itemCount: logs.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
+                    itemBuilder: (context, index) => _actionLogCard(logs[index]),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionLogCard(GameEventRecord event) {
+    return Container(
+      padding: const EdgeInsets.all(9),
+      decoration: BoxDecoration(
+        color: _card,
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(9),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  event.title.isEmpty ? event.typeLabel : event.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: _text,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              _tag(event.typeLabel),
+            ],
+          ),
+          if (event.summary.isNotEmpty) ...[
+            const SizedBox(height: 5),
+            Text(
+              event.summary,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12,
+                color: _textSecondary,
+                height: 1.45,
+              ),
+            ),
+          ],
+          const SizedBox(height: 5),
+          Text(
+            '${event.year}年${event.season}${event.day}日',
+            style: const TextStyle(fontSize: 11, color: Color(0xFFAAAAAA)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _sidePanel({required String title, required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _card,
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            decoration: const BoxDecoration(
+              color: _softCard,
+              border: Border(bottom: BorderSide(color: _border)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+            ),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 13,
+                color: _text,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
+
+  Widget _miniButton(String text, VoidCallback onTap) {
+    return SizedBox(
+      height: 30,
+      child: OutlinedButton(
+        onPressed: onTap,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: _text,
+          side: const BorderSide(color: _border),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: Text(text, style: const TextStyle(fontSize: 12)),
+      ),
+    );
+  }
+
+  Widget _tag(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: _accent.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(text, style: const TextStyle(fontSize: 10, color: _accent)),
     );
   }
 
@@ -1007,7 +1259,7 @@ class _GameMainPageState extends State<GameMainPage> {
       constraints: const BoxConstraints(minHeight: 30),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
+        color: _softCard,
         border: Border.all(color: _border),
         borderRadius: borderRadius,
       ),
