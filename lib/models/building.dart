@@ -16,10 +16,16 @@ class Building {
     this.isPublic = true,
   });
 
-  factory Building.fromJson(Map<String, dynamic> json) {
+  factory Building.fromJson(
+    Map<String, dynamic> json, {
+    String defaultLocationId = '',
+  }) {
+    final rawLocationId = (json['locationId'] as String?)?.trim();
     return Building(
       id: (json['id'] as String?)?.trim() ?? '',
-      locationId: (json['locationId'] as String?)?.trim() ?? '',
+      locationId: rawLocationId != null && rawLocationId.isNotEmpty
+          ? rawLocationId
+          : defaultLocationId,
       name: (json['name'] as String?)?.trim() ?? '',
       type: (json['type'] as String?)?.trim() ?? '',
       description: (json['description'] as String?)?.trim() ?? '',

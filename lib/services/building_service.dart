@@ -11,7 +11,7 @@ class BuildingService {
   factory BuildingService() => _instance;
   BuildingService._();
 
-  static const String _buildingAssetPath = 'assets/data/building_data.json';
+  static const String _buildingAssetPath = 'assets/data/map_data.json';
 
   Map<String, List<Building>>? _buildingsByLocation;
 
@@ -20,30 +20,33 @@ class BuildingService {
 
     final jsonStr = await rootBundle.loadString(_buildingAssetPath);
     final data = json.decode(jsonStr) as Map<String, dynamic>;
-    final locations = data['locations'] is Map
-        ? Map<String, dynamic>.from(
-            (data['locations'] as Map).map((k, v) => MapEntry(k.toString(), v)),
-          )
-        : <String, dynamic>{};
+    final mapDatas = data['map_datas'] as List<dynamic>?;
 
     final parsed = <String, List<Building>>{};
-    for (final entry in locations.entries) {
-      final rawList = entry.value;
-      if (rawList is! List) {
-        parsed[entry.key] = [];
-        continue;
-      }
+    if (mapDatas != null) {
+      for (final rawNode in mapDatas) {
+        if (rawNode is! Map) continue;
+        final locationId = (rawNode['id'] as String?)?.trim() ?? '';
+        if (locationId.isEmpty) continue;
 
-      parsed[entry.key] = rawList
-          .whereType<Map<dynamic, dynamic>>()
-          .map(
-            (item) => Building.fromJson(
-              Map<String, dynamic>.from(
-                item.map((k, v) => MapEntry(k.toString(), v)),
+        final rawBuildings = rawNode['building'];
+        if (rawBuildings is! List) {
+          parsed[locationId] = [];
+          continue;
+        }
+
+        parsed[locationId] = rawBuildings
+            .whereType<Map<dynamic, dynamic>>()
+            .map(
+              (item) => Building.fromJson(
+                Map<String, dynamic>.from(
+                  item.map((k, v) => MapEntry(k.toString(), v)),
+                ),
+                defaultLocationId: locationId,
               ),
-            ),
-          )
-          .toList();
+            )
+            .toList();
+      }
     }
 
     _buildingsByLocation = parsed;

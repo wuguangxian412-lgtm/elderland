@@ -2,11 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart'
-    show
-        PointerCancelEvent,
-        PointerDownEvent,
-        PointerScrollEvent,
-        PointerUpEvent;
+    show PointerCancelEvent, PointerDownEvent, PointerUpEvent;
 
 import '../models/map_node.dart';
 import '../models/player.dart';
@@ -50,8 +46,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   final TransformationController _controller = TransformationController();
   final GlobalKey _mapContentKey = GlobalKey();
 
-  static const double _minScale = 0.3;
-  static const double _maxScale = 1.5;
+  static const double _minScale = 1.0;
+  static const double _maxScale = 1.0;
   static const double _zoomStep = 0.1;
   static const double _initialScale = 1.0;
   static const double _mapCanvasSize = 1600.0;
@@ -559,52 +555,56 @@ class _WorldMapContentState extends State<_WorldMapContent> {
 
     final visibleNodes = _visibleNodes;
 
-    return Stack(
-      key: _mapContentKey,
-      children: [
-        Listener(
-          behavior: HitTestBehavior.opaque,
-          onPointerDown: _handleMapPointerDown,
-          onPointerUp: _handleMapPointerUp,
-          onPointerCancel: _handleMapPointerCancel,
-          onPointerSignal: (event) {
-            if (event is PointerScrollEvent) {
-              _zoomBy(
-                event.scrollDelta.dy > 0 ? -_zoomStep : _zoomStep,
-                focalPoint: event.localPosition,
-              );
-            }
-          },
-          child: InteractiveViewer(
-            transformationController: _controller,
-            minScale: _minScale,
-            maxScale: _maxScale,
-            constrained: false,
-            boundaryMargin: const EdgeInsets.all(_mapBoundaryMargin),
-            child: RepaintBoundary(
-              child: SizedBox(
-                width: _mapCanvasSize,
-                height: _mapCanvasSize,
-                child: CustomPaint(
-                  painter: _LinePainter(
-                    nodes: visibleNodes,
-                    canvasPadding: _mapCanvasPadding,
-                  ),
-                  // 连线在底层，节点在上层
-                  child: RepaintBoundary(
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: _buildNodeWidgets(visibleNodes),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final side = constraints.maxWidth < constraints.maxHeight
+            ? constraints.maxWidth
+            : constraints.maxHeight;
+        return Center(
+          child: SizedBox(
+            width: side,
+            height: side,
+            child: Stack(
+              key: _mapContentKey,
+              children: [
+                Listener(
+                  behavior: HitTestBehavior.opaque,
+                  onPointerDown: _handleMapPointerDown,
+                  onPointerUp: _handleMapPointerUp,
+                  onPointerCancel: _handleMapPointerCancel,
+                  child: InteractiveViewer(
+                    transformationController: _controller,
+                    minScale: _minScale,
+                    maxScale: _maxScale,
+                    scaleEnabled: false,
+                    constrained: false,
+                    boundaryMargin: const EdgeInsets.all(_mapBoundaryMargin),
+                    child: RepaintBoundary(
+                      child: SizedBox(
+                        width: _mapCanvasSize,
+                        height: _mapCanvasSize,
+                        child: CustomPaint(
+                          painter: _LinePainter(
+                            nodes: visibleNodes,
+                            canvasPadding: _mapCanvasPadding,
+                          ),
+                          // 连线在底层，节点在上层
+                          child: RepaintBoundary(
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: _buildNodeWidgets(visibleNodes),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ),
-        // 调试缩放工具栏
-        Positioned(top: 8, right: 8, child: _buildZoomToolbar()),
-      ],
+        );
+      },
     );
   }
 

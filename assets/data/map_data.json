@@ -3,774 +3,791 @@
     {
       "id": "holy_light_city",
       "coordinates": [
-        200,
-        700
+        290,
+        715
       ],
       "name": "圣光城",
       "type": "城市",
       "description": "圣光城圣山王国的首都，宏伟的白色石墙与高耸的教堂是其标志，是王国的政治与宗教中心。",
       "connected_nodes": [
+        "highland_granary",
         "holy_light_fortress",
-        "border_fortress",
-        "saint_mill_village",
-        "chapel_crossroads",
-        "silver_leaf_village",
-        "misty_mountains"
+        "griffin_perch",
+        "north_mine_town"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "holy_light_fortress",
       "coordinates": [
-        230,
-        780
+        450,
+        715
       ],
       "name": "圣光要塞",
       "type": "要塞",
       "description": "圣光城外围的核心军事堡垒，由圣山王国王家骑士团与教会武装共同驻守。高大的白石城墙沿山势而建，既守护首都南部通道，也监视莫尔德领地与边境山路的动向。",
       "connected_nodes": [
         "holy_light_city",
-        "griffin_perch",
-        "mord_fiefdom",
-        "highland_granary",
-        "star_tear_lake",
         "misty_highlands"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "griffin_perch",
       "coordinates": [
-        300,
-        820
+        130,
+        715
       ],
       "name": "狮鹫巢要塞",
       "type": "要塞",
       "description": "高耸在圣山王国绝壁之上的险峻要塞，是王家空中骑士团的驻地。陡峭的石阶直接开凿在山体内部，平台上停歇着体型庞大、目光锐利的雪山狮鹫。这里防守严密，是俯瞰并钳制莫尔德领地的战略制高点。",
       "connected_nodes": [
-        "holy_light_fortress",
-        "mord_fiefdom",
+        "holy_light_city",
         "star_tear_lake"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "mord_fiefdom",
       "coordinates": [
-        150,
-        850
+        450,
+        795
       ],
       "name": "莫尔德领地",
-      "type": "要塞",
+      "type": "城市",
       "description": "莫尔德公爵统治的铁腕领地。戒备森严的城堡矗立在黑沉沉的山头，领地内的村庄法律极为严苛，随处可见巡逻的冷酷私兵，气氛压抑而死寂，与圣光城的宏伟神圣形成鲜明对比。",
       "connected_nodes": [
-        "holy_light_fortress",
-        "griffin_perch",
-        "blood_brotherhood_camp",
-        "chapel_crossroads",
-        "weeping_gorge"
+        "highland_granary",
+        "border_fortress"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "border_fortress",
       "coordinates": [
-        320,
-        720
+        450,
+        875
       ],
       "name": "边境要塞",
       "type": "要塞",
       "description": "扼守王国交通要道的军事重镇，驻扎着大量精锐守军，防御设施极其坚固。",
       "connected_nodes": [
-        "holy_light_city",
-        "imperial_border_town"
+        "mord_fiefdom",
+        "siren_shoals"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "blood_brotherhood_camp",
       "coordinates": [
-        250,
-        950
+        290,
+        955
       ],
       "name": "兄弟会密林营地",
       "type": "村庄",
       "description": "隐匿在深山密林之中的简陋营地。由无家可归的流民与起义农民自发聚集而成，周围布置了大量的猎人陷阱与暗哨。这里的人们虽然衣衫褴褛，但眼神中闪烁着对不公宿命的反抗之火。",
       "connected_nodes": [
-        "mord_fiefdom",
-        "weeping_gorge",
-        "white_sail_port"
+        "chapel_crossroads"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "saint_mill_village",
       "coordinates": [
-        160,
-        620
+        130,
+        795
       ],
       "name": "圣磨坊村",
       "type": "村庄",
       "description": "圣光城北侧山谷中的粮食加工村落。水车磨坊沿溪流排列，来自高地粮仓的谷物会先在这里脱壳、磨粉，再运往首都与周边教会领地，是圣山王国民生补给链的重要小节点。",
       "connected_nodes": [
-        "holy_light_city",
-        "silver_leaf_village",
         "highland_granary"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "chapel_crossroads",
       "coordinates": [
-        120,
-        760
+        290,
+        875
       ],
       "name": "白石礼拜岔路",
       "type": "村庄",
       "description": "位于圣光城、莫尔德领地与南部峡谷之间的小型路口聚落。白石礼拜堂、马厩和简陋旅店围绕山路而建，朝圣者、逃难农民、税吏与巡逻骑士经常在这里短暂停留。",
       "connected_nodes": [
-        "holy_light_city",
-        "mord_fiefdom",
-        "weeping_gorge"
+        "silver_leaf_village",
+        "blood_brotherhood_camp",
+        "highland_granary"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": [
+        {
+          "id": "white_stone_chapel",
+          "name": "白石礼拜堂",
+          "type": "宗教建筑",
+          "description": "由粗糙白石砌成的古老礼拜堂，朝圣者们在此祈祷，高耸的圣徽在峡谷风中微微作响。",
+          "isPublic": true
+        },
+        {
+          "id": "white_stone_crossroad_stable",
+          "name": "岔路马厩",
+          "type": "交通设施",
+          "description": "规模颇大的马厩，为往来于圣光城与莫尔德领地的骑士和税吏提供换乘与草料，充斥着干草与皮革的气味。",
+          "isPublic": true
+        },
+        {
+          "id": "shabby_roadside_inn",
+          "name": "简陋旅店",
+          "type": "旅店",
+          "description": "墙壁漏风的歇脚点。逃难的农民、疲惫的旅人与行商混杂在此，廉价的劣酒和细碎的传闻是这里的核心。",
+          "isPublic": true
+        },
+        {
+          "id": "royal_patrol_post",
+          "name": "巡逻骑士驻点",
+          "type": "军事建筑",
+          "description": "圣山王国巡逻队临时征用的石屋，作为监管这条交通要道、盘查过往行人和收取临时税收的据点。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "silver_leaf_village",
       "coordinates": [
-        80,
-        680
+        130,
+        875
       ],
       "name": "银叶村",
       "type": "村庄",
       "description": "位于圣山王国边境的宁静村落，因周边盛产银叶树而得名，居民多以采集与农耕为生。",
       "connected_nodes": [
-        "holy_light_city",
-        "saint_mill_village",
-        "whispering_forest"
+        "weeping_gorge",
+        "chapel_crossroads"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": [
+        {
+          "id": "silver_leaf_village_square",
+          "name": "村口广场",
+          "type": "公共区域",
+          "description": "银叶村最热闹的地方，村民常在这里交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_elder_house",
+          "name": "村长家",
+          "type": "住宅",
+          "description": "村长居住和处理村务的地方，屋内常堆着村里的账册与信件。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_leaf_village_blacksmith",
+          "name": "铁匠铺",
+          "type": "工坊",
+          "description": "铁匠打制农具和修理武器的地方，炉火常年不熄。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_inn",
+          "name": "旅店",
+          "type": "旅店",
+          "description": "供旅人歇脚的小旅店，也是不少消息流通的地方。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "highland_granary",
       "coordinates": [
-        100,
-        550
+        290,
+        795
       ],
       "name": "高地粮仓·索尔镇",
-      "type": "村庄",
+      "type": "城市",
       "description": "圣山王国少有的肥沃梯田区域。在教会推广的新法令下，大片荒山被开垦出来，种植着耐寒的高原大麦。镇中心建有巨大的石质公共粮仓，身穿白袍的教会神职人员在这里定期分发圣水和宣讲教义。",
       "connected_nodes": [
-        "holy_light_fortress",
+        "chapel_crossroads",
         "saint_mill_village",
-        "misty_highlands"
+        "mord_fiefdom",
+        "holy_light_city"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "weeping_gorge",
       "coordinates": [
-        70,
-        800
+        130,
+        955
       ],
       "name": "哭泣峡谷",
       "type": "荒野",
       "description": "圣山王国南部边界的一处乱石峡谷。狂风穿过狭窄的岩缝时，会发出如同妇人哭泣般的凄厉呜咽。由于地势复杂且缺乏管辖，这里成了逃避苛捐杂税的流民和流放者的藏身之所，环境极其野蛮残酷。",
       "connected_nodes": [
-        "mord_fiefdom",
-        "blood_brotherhood_camp",
-        "chapel_crossroads"
+        "silver_leaf_village"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "star_tear_lake",
       "coordinates": [
-        340,
-        610
+        130,
+        635
       ],
       "name": "星泪湖",
       "type": "荒野",
       "description": "隐藏在圣山高处的冰蓝湖泊，湖面常年倒映星光般的银色微芒。骑士、朝圣者与采药人都传说这里能获得神圣祝福，但通往湖边的山路潮湿陡峭，极易迷失方向。",
       "connected_nodes": [
-        "holy_light_fortress",
-        "griffin_perch",
-        "misty_highlands"
+        "griffin_perch"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "misty_highlands",
       "coordinates": [
-        250,
-        520
+        450,
+        635
       ],
       "name": "迷雾高地",
       "type": "荒野",
-      "description": "圣山王国与北方接壤的广阔高原。此地常年大雾弥漫，地势崎嘘不平，只有零星的坚韧植被在寒风中摇曳。虽然自然条件艰苦，但新颁布的自由民法令让许多破产流民选择来到这里开拓荒地。",
+      "description": "圣山王国与北方接壤的广阔高原。此地常年大雾弥漫，地势崎岖不平，只有零星的坚韧植被在寒风中摇曳。虽然自然条件艰苦，但新颁布的自由民法令让许多破产流民选择来到这里开拓荒地。",
       "connected_nodes": [
-        "holy_light_fortress",
-        "highland_granary",
-        "star_tear_lake",
-        "iron_crown_city",
-        "misty_mountains"
+        "holy_light_fortress"
       ],
-      "country": "圣山王国"
+      "country": "圣山王国",
+      "building": []
     },
     {
       "id": "emperor_city",
       "coordinates": [
-        680,
-        250
+        610,
+        475
       ],
       "name": "帝都罗姆",
       "type": "城市",
       "description": "赛琳娜帝国的核心都市，充斥着宏伟的黑石建筑与蒸汽机械的轰鸣声，体现着帝国强盛的工业与军事力量。",
       "connected_nodes": [
-        "imperial_border_town",
-        "equality_suburb",
-        "runeglass_town"
+        "southern_trading_post",
+        "aurora_weave_city"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "starlight_academy",
       "coordinates": [
-        900,
-        50
+        770,
+        315
       ],
       "name": "星辉魔导学院",
       "type": "城市",
       "description": "赛琳娜帝国最著名的魔法学府，位于首都附近的独立浮空岛上。建筑群由璀璨的白玉石砌成，周围环绕着缓缓流淌的奥术星沙。这里聚集了全大陆最具天赋的年轻法师，日夜钻研着高深的元素法则。",
       "connected_nodes": [
-        "aurora_weave_city",
         "radiant_city"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "aurora_weave_city",
       "coordinates": [
-        840,
-        140
+        770,
+        475
       ],
       "name": "极光织法城",
       "type": "城市",
       "description": "辉光城东北侧的副核心城市，以魔法织物、符文玻璃和光桥零件制造闻名。这里不像首都那样奢华，却承担着帝国大量基础魔导工业，是贵族法师、平民工匠与无魔者劳工共同维持的繁忙城市。",
       "connected_nodes": [
-        "starlight_academy",
-        "radiant_city",
-        "equality_suburb",
-        "obsidian_mine"
+        "emperor_city",
+        "imperial_border_town",
+        "whispering_volcano_belt",
+        "radiant_city"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "radiant_city",
       "coordinates": [
-        750,
-        80
+        770,
+        395
       ],
       "name": "辉光城",
       "type": "城市",
       "description": "赛琳娜帝国的首都。整座都市被虹彩绚丽的魔法光桥连接，无数高耸入云的法师塔在夜空中熠熠生辉。这里的法术能量高度充盈，街头充斥着奇幻的魔法造物，彰显着魔法国度的高傲与繁华。",
       "connected_nodes": [
-        "starlight_academy",
         "aurora_weave_city",
+        "starlight_academy",
         "blood_purity_spire",
-        "whispering_volcano_belt",
-        "emerald_lagoon"
+        "runeglass_town"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "blood_purity_spire",
       "coordinates": [
-        600,
-        120
+        610,
+        395
       ],
       "name": "圣血高塔",
       "type": "要塞",
       "description": "坐落在辉光城外围的一座高耸石塔，是帝国正统贵族的聚集地。塔身雕刻着繁复的古老符文，散发着微弱的红光，四周常年有皇家魔法骑士巡逻，防守极为严密。",
       "connected_nodes": [
         "radiant_city",
-        "equality_suburb",
-        "runeglass_town",
-        "emerald_lagoon"
+        "equality_suburb"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "imperial_border_town",
       "coordinates": [
-        550,
-        320
+        930,
+        475
       ],
       "name": "帝国边境镇",
       "type": "村庄",
       "description": "赛琳娜帝国前线的贸易集散地，虽然规模不大，但由于各国商旅云集，显得异常繁华与鱼龙混杂。",
       "connected_nodes": [
-        "border_fortress",
-        "emperor_city",
-        "cinder_vine_fields",
-        "misty_mountains"
+        "aurora_weave_city"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "equality_suburb",
       "coordinates": [
-        760,
-        200
+        610,
+        315
       ],
       "name": "平民区·同德里",
       "type": "村庄",
-      "description": "虽然是平民与无魔者聚居区，但得益于帝国陛下推行的平等政策，这里的街区整洁有序.居民们虽然没有魔法天赋，却靠着勤劳的双手和基础魔法道具过着安居乐业的生活。",
+      "description": "虽然是平民与无魔者聚居区，但得益于帝国陛下推行的平等政策，这里的街区整洁有序。居民们虽然没有魔法天赋，却靠着勤劳的双手和基础魔法道具过着安居乐业的生活。",
       "connected_nodes": [
-        "emperor_city",
-        "aurora_weave_city",
-        "blood_purity_spire",
-        "runeglass_town",
-        "whispering_volcano_belt",
-        "emerald_lagoon"
+        "blood_purity_spire"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "runeglass_town",
       "coordinates": [
-        690,
-        180
+        930,
+        395
       ],
       "name": "符玻镇",
       "type": "村庄",
       "description": "位于辉光城外围的工坊聚落，居民多为平民魔法师学徒、符文玻璃匠和搬运工。这里生产的廉价魔法灯具与基础护符会被送往帝都、边境镇和平民区。",
       "connected_nodes": [
-        "emperor_city",
-        "blood_purity_spire",
-        "equality_suburb"
+        "radiant_city",
+        "emerald_lagoon"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "whispering_volcano_belt",
       "coordinates": [
-        850,
-        320
+        770,
+        555
       ],
       "name": "低语火山带",
       "type": "荒野",
       "description": "赛琳娜帝国境内的远古火山遗迹。此地地表龟裂，滚烫的岩浆在沟壑中流淌，空气中弥漫着刺鼻的硫磺味。尽管环境极其恶劣，但这里蕴藏着极为丰富的火元素结晶，吸引了无数冒险者前来试炼。",
       "connected_nodes": [
-        "radiant_city",
-        "equality_suburb",
-        "cinder_vine_fields",
+        "aurora_weave_city",
         "obsidian_mine",
-        "white_sail_port"
+        "cinder_vine_fields"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "cinder_vine_fields",
       "coordinates": [
-        780,
-        410
+        930,
+        555
       ],
       "name": "灰烬藤原",
       "type": "荒野",
       "description": "低语火山带外缘的黑灰色旷野，坚韧的灰烬藤会缠绕在冷却熔岩上生长。炼金师会冒险采集藤籽与火元素灰土，但这里也常有火蜥、裂地气孔和迷路商队的遗骸。",
       "connected_nodes": [
-        "imperial_border_town",
-        "whispering_volcano_belt",
-        "white_sail_port"
+        "whispering_volcano_belt"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "emerald_lagoon",
       "coordinates": [
-        680,
-        50
+        930,
+        315
       ],
       "name": "翠绿魔沼",
       "type": "荒野",
       "description": "赛琳娜帝国内陆一片充满水与木元素能量的潮湿沼泽。微光苔藓将这里映照得一片莹绿，空气中弥漫着芬芳但带有一丝致幻效果的孢子雾气。这里是许多珍稀水系魔法生物的栖息地。",
       "connected_nodes": [
-        "radiant_city",
-        "blood_purity_spire",
-        "equality_suburb"
+        "runeglass_town"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "obsidian_mine",
       "coordinates": [
-        920,
-        220
+        610,
+        555
       ],
       "name": "黑曜石熔矿场",
       "type": "荒野",
       "description": "低语火山带边缘的危险矿区。滚烫岩浆、黑曜石矿脉与火晶石裸露在裂谷之间，帝国设有临时护盾和监工据点，但真正决定这里价值的是恶劣环境中的资源与冒险机会。",
       "connected_nodes": [
-        "aurora_weave_city",
         "whispering_volcano_belt"
       ],
-      "country": "赛琳娜帝国"
+      "country": "赛琳娜帝国",
+      "building": []
     },
     {
       "id": "wintergate_city",
       "coordinates": [
-        120,
-        120
+        290,
+        395
       ],
       "name": "冬门城",
       "type": "城市",
       "description": "艾瑞斯王国北境山道入口的矿业与军需城市。它规模不及铁冠城，却控制着通往永冻山脉的盐铁商路，城内有铁匠行会、仓库、佣兵旅店与边防征兵处。",
       "connected_nodes": [
         "iron_crown_city",
-        "ember_watch_outpost",
-        "north_mine_town",
-        "frost_breath_valley"
+        "ember_watch_outpost"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "iron_crown_city",
       "coordinates": [
-        220,
-        220
+        290,
+        475
       ],
       "name": "铁冠城",
       "type": "城市",
       "description": "艾瑞斯王国的首都。这是一座依山而建、规模宏伟的军事要塞都市。高耸的黑色岩石城墙常年有重兵把守，内部建筑风格严谨而冰冷，处处透露着铁血与威严的统治气息，是北方的军事防御核心。",
       "connected_nodes": [
-        "misty_highlands",
-        "wintergate_city",
-        "ember_watch_outpost",
-        "silver_blade_garrison",
         "north_mine_town",
-        "solstice_village"
+        "solstice_village",
+        "southern_trading_post",
+        "wintergate_city"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "ember_watch_outpost",
       "coordinates": [
-        80,
-        200
+        290,
+        315
       ],
       "name": "余烬哨所",
       "type": "要塞",
       "description": "艾瑞斯王国建立在黑岩山脉脊线上的前沿哨所。这里终年寒风呼啸，地势险要，驻守着警惕性极高的王国斥候。从高耸的瞭望塔上可以俯瞰整个北方冻原，任何风吹草动都逃不过守卫的眼睛。",
       "connected_nodes": [
         "wintergate_city",
-        "iron_crown_city"
+        "frost_breath_valley"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "silver_blade_garrison",
       "coordinates": [
-        350,
-        120
+        450,
+        555
       ],
       "name": "银刃要塞",
       "type": "要塞",
       "description": "位于艾瑞斯王国边境的重要军事驻地。这里不仅驻扎着帝国的精锐中下级军官与士兵，更是扼守交通要道的咽喉。营地内整日回荡着武器锻造的敲击声与士兵的操练呐喊。",
       "connected_nodes": [
-        "iron_crown_city",
-        "north_mine_town",
-        "southern_trading_post",
-        "frost_breath_valley"
+        "north_mine_town"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "north_mine_town",
       "coordinates": [
-        300,
-        190
+        290,
+        555
       ],
       "name": "北矿镇",
       "type": "村庄",
       "description": "铁冠城与银刃要塞之间的矿工镇，居民依靠铁矿、煤石和军需运输生活。这里是普通士兵、矿工家庭和南来商贩交汇的地方，适合承接护送、采购和矿难调查类事件。",
       "connected_nodes": [
-        "wintergate_city",
-        "iron_crown_city",
+        "holy_light_city",
         "silver_blade_garrison",
-        "frost_breath_valley"
+        "iron_crown_city"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "southern_trading_post",
       "coordinates": [
-        320,
-        320
+        450,
+        475
       ],
-      "name": "南部商埠",
-      "type": "村庄",
+      "name": "东部商埠",
+      "type": "城市",
       "description": "紧邻艾瑞斯南部边境的繁华贸易集散地。由南方商业贵族注资兴建，往来客商络绎不绝，堆满了来自各地的香料、丝绸与矿石，是王国在冰冷冰雪中少有的、充满喧嚣活力的地方。",
       "connected_nodes": [
-        "silver_blade_garrison",
-        "solstice_village",
-        "redcedar_wilds",
-        "white_sail_port",
-        "golden_weight_house"
+        "iron_crown_city",
+        "emperor_city"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "solstice_village",
       "coordinates": [
-        180,
-        350
+        130,
+        475
       ],
       "name": "至日村",
       "type": "村庄",
       "description": "依傍着南部森林建立的艾瑞斯边缘村落。这里的居民主要以砍伐红杉木和狩猎为生。村庄里保留着古老的丰收祭祀传统，在冰天雪地的王国中，这里醇厚的小麦酒和热情的篝火深受过往旅人的喜爱。",
       "connected_nodes": [
         "iron_crown_city",
-        "southern_trading_post",
         "redcedar_wilds"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "redcedar_wilds",
       "coordinates": [
-        120,
-        420
+        130,
+        555
       ],
       "name": "红杉猎林",
       "type": "荒野",
       "description": "艾瑞斯南部边缘的大片红杉林，猎人、伐木工和逃兵都可能在林中留下踪迹。森林连接南方村落与中立低语森林，是进入王国腹地前的一段缓冲地带。",
       "connected_nodes": [
-        "southern_trading_post",
-        "solstice_village",
-        "whispering_forest"
+        "solstice_village"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "frost_breath_valley",
       "coordinates": [
-        250,
-        50
+        130,
+        315
       ],
       "name": "霜息峡谷",
       "type": "荒野",
       "description": "位于艾瑞斯王国深处的一片寒冷山谷。两侧峭壁如刀削般陡峭，谷底堆积着万年不化的坚冰。这里不仅生存着耐寒的野生魔兽，还盛产一种能散发微弱热量的“冬暖草”，时常有采药人冒着严寒前来采集。",
       "connected_nodes": [
-        "wintergate_city",
-        "silver_blade_garrison",
-        "north_mine_town"
+        "ember_watch_outpost"
       ],
-      "country": "艾瑞斯王国"
+      "country": "艾瑞斯王国",
+      "building": []
     },
     {
       "id": "tidewatch_city",
       "coordinates": [
-        770,
-        700
+        930,
+        795
       ],
       "name": "望潮城",
       "type": "城市",
       "description": "自由城邦联盟东南海岸的自治城邦，依靠灯塔、船坞修理和潮汐观测站维持繁荣。它比白帆港安静，却是远航船只离港前最后确认风向、海况和雇佣水手的重要城市。",
       "connected_nodes": [
-        "white_sail_port",
-        "coral_bay",
-        "saltwind_village",
-        "anchor_docks",
-        "siren_shoals"
+        "golden_weight_house",
+        "saltwind_village"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "white_sail_port",
       "coordinates": [
-        650,
-        600
+        770,
+        875
       ],
       "name": "白帆港",
       "type": "城市",
       "description": "自由城邦联盟的首都与核心。大陆最庞大的贸易与航运中枢，港口停泊着数以万计、来自世界各地的白帆商船。这里商贾云集，街道两旁林立着大大小小的交易所与酒馆，是金钱与自由的乐园。",
       "connected_nodes": [
-        "blood_brotherhood_camp",
-        "whispering_volcano_belt",
-        "cinder_vine_fields",
-        "southern_trading_post",
-        "tidewatch_city",
-        "golden_weight_house",
-        "coral_bay",
+        "siren_shoals",
+        "black_rose_alley",
         "anchor_docks",
-        "black_rose_alley"
+        "golden_weight_house"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "golden_weight_house",
       "coordinates": [
-        520,
-        550
+        770,
+        795
       ],
       "name": "金秤大商会",
-      "type": "要塞",
+      "type": "城市",
       "description": "自由城邦联盟内各大商团联合设立的武装金库与公证所。这座建筑由坚固的花岗岩和精钢铸成，内部设有的大型魔法天平可以精准测量各类稀有矿石与魔法金币。商会雇佣了大量高级佣兵，戒备等级堪比军事要塞。",
       "connected_nodes": [
-        "southern_trading_post",
-        "white_sail_port"
+        "white_sail_port",
+        "tidewatch_city",
+        "coral_bay",
+        "misty_mountains"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "coral_bay",
       "coordinates": [
-        800,
-        550
+        610,
+        795
       ],
       "name": "珊瑚湾集市",
       "type": "村庄",
       "description": "位于自由城邦联盟沿海的一座美丽渔村，以出产珍贵的七彩珊瑚和珍珠闻名。半透明的浅滩上搭建着错落有致的高脚木屋，潮汐教团在村中心设立了温和的祈福神龛，常年为远航的渔民祈求风平浪静。",
       "connected_nodes": [
-        "tidewatch_city",
-        "white_sail_port",
-        "saltwind_village"
+        "golden_weight_house",
+        "pearl_reef_wilds"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "saltwind_village",
       "coordinates": [
-        900,
-        650
+        930,
+        715
       ],
       "name": "盐风渔村",
       "type": "村庄",
       "description": "珊瑚湾以东的海风村落，居民晒盐、捕鱼，也为过路商船提供淡水和修补帆布。这里适合承接海货买卖、潮汐教团传闻和远海失踪线索。",
       "connected_nodes": [
-        "tidewatch_city",
-        "coral_bay",
-        "mirac_island"
+        "tidewatch_city"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "anchor_docks",
       "coordinates": [
-        680,
-        750
+        930,
+        875
       ],
       "name": "铁锚老码头",
       "type": "村庄",
       "description": "白帆港最具历史的货运码头区。这里随处可见堆积如山的货箱与忙碌的装卸工人。码头民风彪悍，由当地庞大的工人帮派自主维持基本秩序，是海运任务、走私传闻与底层人情往来的集中地。",
       "connected_nodes": [
-        "tidewatch_city",
-        "white_sail_port",
-        "black_rose_alley",
-        "siren_shoals",
-        "pearl_reef_wilds",
-        "mirac_island"
+        "white_sail_port"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "black_rose_alley",
       "coordinates": [
-        520,
-        680
+        770,
+        955
       ],
       "name": "黑玫瑰下街",
       "type": "村庄",
       "description": "白帆港繁华阴影下的错综街区。白日里看似是普通的廉价集市与居民区，到了夜晚，琳琅满目的地下酒吧与黑市交易所便悄然开张，是各类情报贩子、走私商人和冒险者汇聚的无序地带。",
       "connected_nodes": [
-        "white_sail_port",
-        "anchor_docks",
-        "siren_shoals"
+        "white_sail_port"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "siren_shoals",
       "coordinates": [
-        580,
-        850
+        610,
+        875
       ],
       "name": "海妖浅滩",
       "type": "荒野",
       "description": "白帆港外海一片礁石密布的危险海域。这里的暗礁在落潮时会如利齿般暴露在水面上，由于洋流复杂，常年伴有浓雾。这里虽然经常发生沉船事故，但也因散落着无数未被发掘的古代商船遗宝而吸引着亡命之徒。",
       "connected_nodes": [
-        "tidewatch_city",
-        "anchor_docks",
-        "black_rose_alley",
-        "pearl_reef_wilds"
+        "border_fortress",
+        "white_sail_port"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "pearl_reef_wilds",
       "coordinates": [
-        740,
-        900
+        610,
+        715
       ],
       "name": "珍珠暗礁群",
       "type": "荒野",
       "description": "自由城邦联盟外海的暗礁水域，退潮时会露出闪烁贝床与古旧船骸。这里既是采珠人与冒险者眼中的宝地，也是海雾、暗流和海兽出没的危险探索区。",
       "connected_nodes": [
-        "anchor_docks",
-        "siren_shoals",
+        "coral_bay",
         "mirac_island"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "mirac_island",
       "coordinates": [
-        850,
-        800
+        610,
+        635
       ],
       "name": "米拉克外海岛",
       "type": "荒野",
       "description": "位于自由联盟外海的一座神秘移动岛屿。岛上怪石嶙峋，植被奇特，常年伴随着温柔却诡异的潮汐声。传说岛上有远古时代的遗迹残骸，偶尔会有寻求古老智慧的法师冒险登岛考察。",
       "connected_nodes": [
-        "saltwind_village",
-        "anchor_docks",
         "pearl_reef_wilds"
       ],
-      "country": "自由城邦联盟"
+      "country": "自由城邦联盟",
+      "building": []
     },
     {
       "id": "whispering_forest",
       "coordinates": [
-        410,
-        620
+        450,
+        395
       ],
       "name": "低语森林",
       "type": "荒野",
       "description": "古老的茂密森林，常年雾气缭绕，风吹过树叶时发出类似低语的声音，隐藏着许多未知的魔兽。",
-      "connected_nodes": [
-        "silver_leaf_village",
-        "redcedar_wilds",
-        "misty_mountains"
-      ],
-      "country": "中立地域"
+      "connected_nodes": [],
+      "country": "中立地域",
+      "building": []
     },
     {
       "id": "misty_mountains",
       "coordinates": [
-        430,
-        500
+        770,
+        715
       ],
       "name": "迷雾山脉",
       "type": "荒野",
       "description": "绵延万里的险峻山脉，是圣山王国与赛琳娜帝国的天然国界，山中气候恶劣，常有盗贼与古老遗迹出没。",
       "connected_nodes": [
-        "holy_light_city",
-        "misty_highlands",
-        "imperial_border_town",
-        "whispering_forest"
+        "golden_weight_house"
       ],
-      "country": "中立地域"
+      "country": "中立地域",
+      "building": []
     }
   ]
 }
