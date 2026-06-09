@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../models/map_node.dart';
 import '../models/player.dart';
 import '../services/map_service.dart';
-import '../services/save_service.dart';
 import '../services/time_service.dart';
 import 'location_detail_dialog.dart';
 
@@ -30,9 +28,6 @@ class _WorldMapContent extends StatefulWidget {
 }
 
 class _WorldMapContentState extends State<_WorldMapContent> {
-  // AI Dynamic Expansion Reserved — Future AI-generated nodes (villages, towns,
-  // dungeons, ruins, event sites, special instances) require no architecture changes.
-
   static const bool kMapDebugMode = false;
 
   late Player _player;
@@ -42,42 +37,23 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   DateTime? _lastTipTime;
 
   final TransformationController _controller = TransformationController();
-  final GlobalKey _mapContentKey = GlobalKey();
+  final Map<int, Offset> _mapPointerDownPositions = {};
+  Map<String, Offset> _lastLabelOffsets = {};
 
-  static const double _minScale = 1.0;
-  static const double _maxScale = 1.0;
-  static const double _initialScale = 1.0;
   static const double _mapCanvasSize = 1600.0;
   static const double _mapCanvasPadding = 300.0;
   static const double _mapBoundaryMargin = 1200.0;
-
-  /// 地图节点按钮的固定视觉尺寸。
-  /// 这样“看得见的按钮区域”和“点击判定区域”可以保持一致。
   static const double _nodeButtonWidth = 112.0;
   static const double _nodeButtonHeight = 40.0;
-
-  /// 点击判定额外扩展范围。
-  /// 用来照顾模拟器鼠标点击、缩放后的轻微误差。
   static const double _nodeHitExtraPadding = 6.0;
-
-  /// 判断一次 pointer 操作是点击还是拖动。
-  /// 这个是屏幕像素距离，不是地图坐标距离。
   static const double _mapTapMoveTolerance = 10.0;
-
-  /// 外层地图点击监听用。
-  /// 不再依赖单个节点 GestureDetector 的命中。
-  final Map<int, Offset> _mapPointerDownPositions = {};
-
-  /// 最近一次构建节点时算出的标签偏移。
-  /// 点击判定需要用到同一份偏移，否则视觉位置和判定位置会不一致。
-  Map<String, Offset> _lastLabelOffsets = {};
 
   static const Color _card = Color(0xFFFFFFFF);
   static const Color _border = Color(0xFFE5E5E5);
+  static const Color _text = Color(0xFF333333);
   static const Color _textSecondary = Color(0xFF777777);
   static const Color _accent = Color(0xFF7BAE7F);
 
-  // 节点类型颜色
   static const Map<String, Color> _nodeBgColors = {
     '村庄': Color(0xFFF3F4F6),
     '城市': Color(0xFFE3F2FD),
@@ -97,21 +73,21 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     '荒野': Color(0xFFE65100),
   };
 
-  /// 地图节点始终可见，缩放只改变阅读尺度，不再改变节点显隐。
-  /// 节点 Map 缓存（性能优化：避免每次 build 重新遍历 _allNodes）
   Map<String, MapNode>? _nodeMapCache;
+
+  List<MapNode> get _allNodes => [...?_nodes, ..._dynamicNodes];
 
   Map<String, MapNode> get _nodeMap {
     _nodeMapCache ??= {for (final n in _allNodes) n.id: n};
     return _nodeMapCache!;
   }
 
-  List<MapNode> get _allNodes => [...?_nodes, ..._dynamicNodes];
+  MapNode? get _currentLocationNode => _nodeMap[_player.locationId];
 
-  Set<String> _buildVisitedLocationIds({required Player player}) {
+  Set<String> _buildVisitedLocationIds(Player player) {
     final visited = <String>{};
-    final locationId = player.locationId.trim();
-    if (locationId.isNotEmpty) visited.add(locationId);
+    final current = player.locationId.trim();
+    if (current.isNotEmpty) visited.add(current);
 
     for (final event in player.eventRecords) {
       final eventLocationId = event.locationId.trim();
@@ -121,6 +97,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
       if (from is String && from.trim().isNotEmpty) {
         visited.add(from.trim());
       }
+
       final to = event.metadata['toLocationId'];
       if (to is String && to.trim().isNotEmpty) {
         visited.add(to.trim());
@@ -135,8 +112,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     required List<MapNode> allNodes,
   }) {
     final nodeById = {for (final node in allNodes) node.id: node};
-    final visited = _buildVisitedLocationIds(player: player);
-    final visible = {...visited};
+    final visited = _buildVisitedLocationIds(player);
+    final visible = <String>{...visited};
 
     for (final id in visited) {
       final node = nodeById[id];
@@ -153,33 +130,26 @@ class _WorldMapContentState extends State<_WorldMapContent> {
       player: _player,
       allNodes: allNodes,
     );
-    final result = allNodes
+    final visibleNodes = allNodes
         .where((node) => visibleIds.contains(node.id))
-        .toList();
+        .toList(growable: false);
+
     if (kMapDebugMode) {
       debugPrint(
-        '[Map] visible=${result.length}: ${result.map((n) => n.name).join("  ")}  dynamic=${_dynamicNodes.length}',
+        '[Map] visited=${_buildVisitedLocationIds(_player).length}, '
+        'visible=${visibleNodes.length}: ${visibleNodes.map((e) => e.name).join('、')}',
       );
     }
-    return result;
+
+    return visibleNodes;
   }
 
-  /// 玩家当前所在地对应的 MapNode
-  MapNode? get _currentLocationNode {
-    for (final n in _allNodes) {
-      if (n.id == _player.locationId) return n;
-    }
-    return null;
-  }
-
-  /// 判断目标节点是否与当前所在地相邻
   bool _isAdjacentToCurrentLocation(MapNode targetNode) {
     final currentNode = _currentLocationNode;
     if (currentNode == null) return false;
     if (targetNode.id == currentNode.id) return false;
-    if (currentNode.connectedNodes.contains(targetNode.id)) return true;
-    if (targetNode.connectedNodes.contains(currentNode.id)) return true;
-    return false;
+    return currentNode.connectedNodes.contains(targetNode.id) ||
+        targetNode.connectedNodes.contains(currentNode.id);
   }
 
   void _showTip(
@@ -197,29 +167,29 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     ).showSnackBar(SnackBar(content: Text(message), duration: duration));
   }
 
-  /// 执行移动到目标地点
+  /// 执行移动到目标地点。
+  ///
+  /// 注意：这里不直接保存 player_save。
+  /// 地图关闭返回主界面后，由 GameMainPage 统一写入移动经历并保存，
+  /// 避免出现“地点已经保存，但移动经历还没写入”的中间状态。
   Future<void> _movePlayerToNode(MapNode targetNode) async {
     debugPrint('[MapMove] 准备移动: ${_player.locationId} -> ${targetNode.id}');
 
-    final updatedPlayer = _player.copyWith(
+    final movedPlayer = _player.copyWith(
       locationId: targetNode.id,
       location: targetNode.name,
       country: targetNode.country,
     );
-    final advancedPlayer = TimeService.advanceOneDay(updatedPlayer);
-
-    await SaveService().savePlayer(advancedPlayer);
+    final advancedPlayer = TimeService.advanceOneDay(movedPlayer);
 
     if (!mounted) return;
-    setState(() {
-      _player = advancedPlayer;
-    });
+    setState(() => _player = advancedPlayer);
 
     debugPrint(
-      '[MapMove] 移动完成: locationId=${advancedPlayer.locationId}, location=${advancedPlayer.location}',
+      '[MapMove] 移动完成但暂不保存，等待主界面写入移动经历: '
+      'locationId=${advancedPlayer.locationId}, location=${advancedPlayer.location}',
     );
-
-    if (mounted) _showTip('已移动到：${targetNode.name}');
+    _showTip('已移动到：${targetNode.name}');
   }
 
   @override
@@ -236,74 +206,24 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     super.dispose();
   }
 
-  // ──────────────────────────────────────────────
-  // AI Dynamic Expansion Reserved — 动态地图节点接口
-  // 供后续 AI 引擎调用生成：村庄 / 城镇 / 地下城 / 遗迹 / 事件地点 / 特殊副本
-  // ──────────────────────────────────────────────
-
-  /// 添加一个 AI 动态生成的地图节点
-  void addDynamicNode(MapNode node) {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.add(node));
-  }
-
-  /// 批量添加动态节点
-  void addDynamicNodes(List<MapNode> nodes) {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.addAll(nodes));
-  }
-
-  /// 清除所有动态节点
-  void clearDynamicNodes() {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.clear());
-  }
-
-  /// 按 ID 移除动态节点
-  void removeDynamicNode(String id) {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.removeWhere((n) => n.id == id));
-  }
-
-  /// 更新指定动态节点（ID 不变，替换其他字段）
-  void updateDynamicNode(MapNode node) {
-    _nodeMapCache = null;
-    setState(() {
-      final idx = _dynamicNodes.indexWhere((n) => n.id == node.id);
-      if (idx != -1) _dynamicNodes[idx] = node;
-    });
-  }
-
-  /// 在所有节点（静态+动态）中按 ID 查找
-  MapNode? findNodeById(String id) => _nodeMap[id];
-
-  // ──────────────────────────────────────────────
-  // 数据加载
-  // ──────────────────────────────────────────────
-
   Future<void> _loadData() async {
     try {
       final nodes = await MapService().loadMap();
-      if (mounted) {
-        setState(() {
-          _nodes = nodes;
-          _nodeMapCache = null;
-        });
-        WidgetsBinding.instance.addPostFrameCallback((_) => _centerMap(nodes));
-      }
+      if (!mounted) return;
+      setState(() {
+        _nodes = nodes;
+        _nodeMapCache = null;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) => _centerMap());
     } catch (e) {
       if (kMapDebugMode) debugPrint('[WorldMap] 加载地图数据失败: $e');
-      if (mounted) {
-        setState(() => _error = e.toString());
-      }
+      if (!mounted) return;
+      setState(() => _error = e.toString());
     }
   }
 
-  /// 初始将视口聚焦于玩家当前所在地
-  void _centerMap(List<MapNode> nodes) {
-    // 查找玩家所在地节点
-    MapNode? target = _currentLocationNode;
-    target ??= nodes.where((n) => n.typeTier == 0).firstOrNull;
+  void _centerMap() {
+    final target = _currentLocationNode;
     if (target == null || target.coordinates.length < 2) return;
 
     final renderBox = context.findRenderObject() as RenderBox?;
@@ -312,20 +232,12 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final viewH = renderBox.size.height;
     if (viewW <= 0 || viewH <= 0) return;
 
-    const initialScale = _initialScale;
     final cx = target.coordinates[0].toDouble() + _mapCanvasPadding;
     final cy = target.coordinates[1].toDouble() + _mapCanvasPadding;
-    final tx = -cx * initialScale + viewW / 2;
-    final ty = -cy * initialScale + viewH / 2;
 
     _controller.value = Matrix4.identity()
-      ..translateByDouble(tx, ty, 0, 1)
-      ..scaleByDouble(initialScale, initialScale, initialScale, 1);
+      ..translate(-cx + viewW / 2, -cy + viewH / 2);
   }
-
-  // ──────────────────────────────────────────────
-  // 地图节点点击判定
-  // ──────────────────────────────────────────────
 
   void _handleMapPointerDown(PointerDownEvent event) {
     _mapPointerDownPositions[event.pointer] = event.localPosition;
@@ -336,33 +248,13 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     if (downPosition == null) return;
 
     final movedDistance = (event.localPosition - downPosition).distance;
+    if (movedDistance > _mapTapMoveTolerance) return;
 
-    // 用户明显拖动地图时，不触发地点点击。
-    if (movedDistance > _mapTapMoveTolerance) {
-      if (kMapDebugMode) {
-        debugPrint(
-          '[MapHitTest] 判定为拖动地图，moved=${movedDistance.toStringAsFixed(1)}',
-        );
-      }
-      return;
-    }
-
-    // 把屏幕上的点击位置转换成 InteractiveViewer 内部地图坐标。
     final scenePoint = _controller.toScene(event.localPosition);
     final hitNode = _hitTestNode(scenePoint);
+    if (hitNode == null) return;
 
-    if (hitNode == null) {
-      if (kMapDebugMode) {
-        debugPrint(
-          '[MapHitTest] 点击地图空白处 scene=(${scenePoint.dx.toStringAsFixed(1)}, ${scenePoint.dy.toStringAsFixed(1)})',
-        );
-      }
-      return;
-    }
-
-    debugPrint(
-      '[MapHitTest] 命中地图节点: ${hitNode.id} / ${hitNode.name}, scene=(${scenePoint.dx.toStringAsFixed(1)}, ${scenePoint.dy.toStringAsFixed(1)})',
-    );
+    debugPrint('[MapHitTest] 命中地图节点: ${hitNode.id} / ${hitNode.name}');
     _openLocationDetail(hitNode);
   }
 
@@ -370,39 +262,27 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     _mapPointerDownPositions.remove(event.pointer);
   }
 
-  /// 根据地图坐标判断点击落在哪个节点按钮上。
-  ///
-  /// 注意：
-  /// 这里不依赖 GestureDetector 的命中结果。
-  /// 即使节点 Widget 自己没有收到点击，只要外层地图收到了点击，
-  /// 就可以通过坐标反推用户点中了哪个地点。
   MapNode? _hitTestNode(Offset scenePoint) {
     final nodes = _visibleNodes;
 
-    // Stack 后面的节点绘制在上层，所以倒序判断，优先命中视觉上更靠上的节点。
     for (final node in nodes.reversed) {
       if (node.coordinates.length < 2) continue;
-
       final x = node.coordinates[0].toDouble() + _mapCanvasPadding;
       final y = node.coordinates[1].toDouble() + _mapCanvasPadding;
       final labelOffset = _lastLabelOffsets[node.id] ?? Offset.zero;
-
       final rect = Rect.fromCenter(
         center: Offset(x + labelOffset.dx, y + labelOffset.dy),
         width: _nodeButtonWidth,
         height: _nodeButtonHeight,
       ).inflate(_nodeHitExtraPadding);
 
-      if (rect.contains(scenePoint)) {
-        return node;
-      }
+      if (rect.contains(scenePoint)) return node;
     }
 
     return null;
   }
 
   Future<void> _openLocationDetail(MapNode node) async {
-    debugPrint('[MapNode] 准备打开地点详情: ${node.id} / ${node.name}');
     final isCurrent = node.id == _player.locationId;
     final canMove = _isAdjacentToCurrentLocation(node);
     final entered = await LocationDetailDialog.show(
@@ -410,6 +290,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
       node,
       isCurrentLocation: isCurrent,
       canMoveHere: canMove,
+      moveHintText: '前往此地',
       onMoveHere: canMove
           ? () async {
               await _movePlayerToNode(node);
@@ -421,15 +302,35 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     }
   }
 
-  // ──────────────────────────────────────────────
-  // 缩放工具栏
-  // ──────────────────────────────────────────────
+  void addDynamicNode(MapNode node) {
+    _nodeMapCache = null;
+    setState(() => _dynamicNodes.add(node));
+  }
 
-  /// 长按延迟结束后开始连续缩放
+  void addDynamicNodes(List<MapNode> nodes) {
+    _nodeMapCache = null;
+    setState(() => _dynamicNodes.addAll(nodes));
+  }
 
-  // ──────────────────────────────────────────────
-  // UI
-  // ──────────────────────────────────────────────
+  void clearDynamicNodes() {
+    _nodeMapCache = null;
+    setState(() => _dynamicNodes.clear());
+  }
+
+  void removeDynamicNode(String id) {
+    _nodeMapCache = null;
+    setState(() => _dynamicNodes.removeWhere((n) => n.id == id));
+  }
+
+  void updateDynamicNode(MapNode node) {
+    _nodeMapCache = null;
+    setState(() {
+      final idx = _dynamicNodes.indexWhere((n) => n.id == node.id);
+      if (idx != -1) _dynamicNodes[idx] = node;
+    });
+  }
+
+  MapNode? findNodeById(String id) => _nodeMap[id];
 
   @override
   Widget build(BuildContext context) {
@@ -448,33 +349,35 @@ class _WorldMapContentState extends State<_WorldMapContent> {
           ),
           child: Column(
             children: [
-              // 标题栏 + 关闭按钮
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 12, 12, 0),
                 child: Row(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          '世界地图',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF333333),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            '世界地图',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: _text,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${_player.location} · ${_player.country}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: _textSecondary,
+                          const SizedBox(height: 2),
+                          Text(
+                            '${_player.location} · ${_player.country}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: _textSecondary,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    const Spacer(),
                     IconButton(
                       key: const ValueKey('world_map_close_button'),
                       onPressed: () => Navigator.of(context).pop(_player),
@@ -520,50 +423,40 @@ class _WorldMapContentState extends State<_WorldMapContent> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final side = constraints.maxWidth < constraints.maxHeight
-            ? constraints.maxWidth
-            : constraints.maxHeight;
+        final side = math.min(constraints.maxWidth, constraints.maxHeight);
         return Center(
           child: SizedBox(
             width: side,
             height: side,
-            child: Stack(
-              key: _mapContentKey,
-              children: [
-                Listener(
-                  behavior: HitTestBehavior.opaque,
-                  onPointerDown: _handleMapPointerDown,
-                  onPointerUp: _handleMapPointerUp,
-                  onPointerCancel: _handleMapPointerCancel,
-                  child: InteractiveViewer(
-                    transformationController: _controller,
-                    minScale: _minScale,
-                    maxScale: _maxScale,
-                    scaleEnabled: false,
-                    constrained: false,
-                    boundaryMargin: const EdgeInsets.all(_mapBoundaryMargin),
-                    child: RepaintBoundary(
-                      child: SizedBox(
-                        width: _mapCanvasSize,
-                        height: _mapCanvasSize,
-                        child: CustomPaint(
-                          painter: _LinePainter(
-                            nodes: visibleNodes,
-                            canvasPadding: _mapCanvasPadding,
-                          ),
-                          // 连线在底层，节点在上层
-                          child: RepaintBoundary(
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: _buildNodeWidgets(visibleNodes),
-                            ),
-                          ),
-                        ),
+            child: Listener(
+              behavior: HitTestBehavior.opaque,
+              onPointerDown: _handleMapPointerDown,
+              onPointerUp: _handleMapPointerUp,
+              onPointerCancel: _handleMapPointerCancel,
+              child: InteractiveViewer(
+                transformationController: _controller,
+                minScale: 1.0,
+                maxScale: 1.0,
+                scaleEnabled: false,
+                constrained: false,
+                boundaryMargin: const EdgeInsets.all(_mapBoundaryMargin),
+                child: RepaintBoundary(
+                  child: SizedBox(
+                    width: _mapCanvasSize,
+                    height: _mapCanvasSize,
+                    child: CustomPaint(
+                      painter: _LinePainter(
+                        nodes: visibleNodes,
+                        canvasPadding: _mapCanvasPadding,
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: _buildNodeWidgets(visibleNodes),
                       ),
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         );
@@ -571,14 +464,12 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     );
   }
 
-  /// 构建所有可见节点 Widget（含重叠检测）
   List<Widget> _buildNodeWidgets(List<MapNode> nodes) {
     if (nodes.isEmpty) {
       _lastLabelOffsets = {};
       return [];
     }
 
-    // 收集坐标
     final positions = <String, Offset>{};
     for (final n in nodes) {
       if (n.coordinates.length >= 2) {
@@ -589,14 +480,13 @@ class _WorldMapContentState extends State<_WorldMapContent> {
       }
     }
 
-    // 重叠检测：距离过近时横向错开标签
     final labelOffsets = <String, Offset>{};
-    const double minDist = 50.0;
+    const minDist = 50.0;
     final ids = nodes.map((n) => n.id).toList();
-    for (int i = 0; i < ids.length; i++) {
+    for (var i = 0; i < ids.length; i++) {
       final aPos = positions[ids[i]];
       if (aPos == null) continue;
-      for (int j = i + 1; j < ids.length; j++) {
+      for (var j = i + 1; j < ids.length; j++) {
         final bPos = positions[ids[j]];
         if (bPos == null) continue;
         if ((aPos - bPos).distance < minDist) {
@@ -607,10 +497,9 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     }
 
     _lastLabelOffsets = labelOffsets;
-
-    return nodes.map((n) {
-      return _buildNodeWidget(n, labelOffset: labelOffsets[n.id]);
-    }).toList();
+    return nodes
+        .map((n) => _buildNodeWidget(n, labelOffset: labelOffsets[n.id]))
+        .toList();
   }
 
   Widget _buildNodeWidget(MapNode node, {Offset? labelOffset}) {
@@ -619,23 +508,20 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final x = node.coordinates[0].toDouble() + _mapCanvasPadding;
     final y = node.coordinates[1].toDouble() + _mapCanvasPadding;
     final isCurrent = node.id == _player.locationId;
+    final canMove = _isAdjacentToCurrentLocation(node);
     final bgColor = isCurrent
         ? const Color(0xFFE8F5E9)
         : (_nodeBgColors[node.type] ?? _card);
     final borderColor = isCurrent
         ? _accent
-        : (_nodeBorderColors[node.type] ?? _border);
+        : canMove
+            ? _accent.withValues(alpha: 0.7)
+            : (_nodeBorderColors[node.type] ?? _border);
     final textColor = isCurrent
         ? const Color(0xFF2E7D32)
-        : (_nodeTextColors[node.type] ?? const Color(0xFF333333));
+        : (_nodeTextColors[node.type] ?? _text);
     final leftOffset = labelOffset?.dx ?? 0;
     final topOffset = labelOffset?.dy ?? 0;
-
-    if (kMapDebugMode) {
-      debugPrint(
-        '[MapNode] $x,$y  →  left:${x - _nodeButtonWidth / 2 + leftOffset} top:${y - _nodeButtonHeight / 2 + topOffset}  「${node.name}」(${node.type})',
-      );
-    }
 
     return Positioned(
       key: ValueKey('map_location_${node.id}'),
@@ -651,7 +537,10 @@ class _WorldMapContentState extends State<_WorldMapContent> {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: bgColor,
-            border: Border.all(color: borderColor, width: isCurrent ? 2 : 1),
+            border: Border.all(
+              color: borderColor,
+              width: isCurrent || canMove ? 2 : 1,
+            ),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
@@ -671,7 +560,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
                     child: Icon(
                       Icons.location_on,
                       size: 12,
-                      color: Color(0xFF7BAE7F),
+                      color: _accent,
                     ),
                   ),
                 Flexible(
@@ -695,7 +584,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   }
 }
 
-/// 连线绘制器 — 根据国家关系使用不同样式
+/// 连线绘制器 — 只接收可见节点，因此不会通过线条暴露未知地图。
 class _LinePainter extends CustomPainter {
   final List<MapNode> nodes;
   final double canvasPadding;
@@ -707,6 +596,7 @@ class _LinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final nodeMap = {for (final n in nodes) n.id: n};
+    final drawnPairs = <String>{};
 
     for (final node in nodes) {
       if (node.coordinates.length < 2) continue;
@@ -718,26 +608,24 @@ class _LinePainter extends CustomPainter {
       for (final targetId in node.connectedNodes) {
         final target = nodeMap[targetId];
         if (target == null || target.coordinates.length < 2) continue;
+
+        final pairKey = node.id.compareTo(target.id) < 0
+            ? '${node.id}::$targetId'
+            : '$targetId::${node.id}';
+        if (!drawnPairs.add(pairKey)) continue;
+
         final to = Offset(
           target.coordinates[0].toDouble() + canvasPadding,
           target.coordinates[1].toDouble() + canvasPadding,
         );
-
         final paint = _linePaintFor(node, target);
         if (paint == null) continue;
-
-        if (paint.style == PaintingStyle.stroke) {
-          canvas.drawLine(from, to, paint);
-        } else {
-          _drawDashedLine(canvas, from, to, paint);
-        }
+        canvas.drawLine(from, to, paint);
       }
     }
   }
 
-  /// 根据连线两端节点的国家关系决定样式
   Paint? _linePaintFor(MapNode a, MapNode b) {
-    // 中立区域连线 → 灰色细线
     if (_neutralCountries.contains(a.country) ||
         _neutralCountries.contains(b.country)) {
       return Paint()
@@ -746,7 +634,6 @@ class _LinePainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
     }
 
-    // 国家内部连线 → 红色细线
     if (a.country == b.country) {
       return Paint()
         ..color = const Color(0xFFCC3333)
@@ -754,35 +641,17 @@ class _LinePainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
     }
 
-    // 跨国家连线 → 橙色虚线
     return Paint()
       ..color = const Color(0xFFE67E22)
       ..strokeWidth = 1.2
       ..style = PaintingStyle.stroke;
   }
 
-  void _drawDashedLine(Canvas canvas, Offset from, Offset to, Paint paint) {
-    final path = Path()
-      ..moveTo(from.dx, from.dy)
-      ..lineTo(to.dx, to.dy);
-    const double dashWidth = 5.0;
-    const double dashSpace = 3.0;
-    for (final metric in path.computeMetrics()) {
-      double distance = 0;
-      while (distance < metric.length) {
-        final end = (distance + dashWidth).clamp(0.0, metric.length);
-        canvas.drawPath(metric.extractPath(distance, end), paint);
-        distance += dashWidth + dashSpace;
-      }
-    }
-  }
-
   @override
   bool shouldRepaint(covariant _LinePainter oldDelegate) {
-    if (identical(oldDelegate.nodes, nodes)) return false;
     if (oldDelegate.canvasPadding != canvasPadding) return true;
     if (oldDelegate.nodes.length != nodes.length) return true;
-    for (int i = 0; i < nodes.length; i++) {
+    for (var i = 0; i < nodes.length; i++) {
       if (oldDelegate.nodes[i].id != nodes[i].id) return true;
     }
     return false;
