@@ -135,10 +135,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
         .toList(growable: false);
 
     if (kMapDebugMode) {
-      debugPrint(
-        '[Map] visited=${_buildVisitedLocationIds(_player).length}, '
-        'visible=${visibleNodes.length}: ${visibleNodes.map((e) => e.name).join('、')}',
-      );
+      debugPrint('[Map] visible node count: ${visibleNodes.length}');
     }
 
     return visibleNodes;
