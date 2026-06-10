@@ -143,8 +143,11 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
                 children: [
                   _buildHeader(compact: compact),
                   Expanded(child: _buildMessageList(compact: compact)),
-                  _buildInputArea(compact: compact),
-                  _buildPlayerBar(compact: compact),
+                  _buildInputArea(
+                    compact: compact,
+                    keyboardVisible: keyboardVisible,
+                  ),
+                  if (!keyboardVisible) _buildPlayerBar(compact: compact),
                 ],
               );
             },
@@ -342,9 +345,17 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     );
   }
 
-  Widget _buildInputArea({required bool compact}) {
+  Widget _buildInputArea({
+    required bool compact,
+    required bool keyboardVisible,
+  }) {
     return Container(
-      margin: EdgeInsets.fromLTRB(16, compact ? 6 : 8, 16, compact ? 6 : 8),
+      margin: EdgeInsets.fromLTRB(
+        16,
+        compact ? 6 : 8,
+        16,
+        keyboardVisible ? 0 : (compact ? 6 : 8),
+      ),
       padding: EdgeInsets.fromLTRB(10, compact ? 4 : 6, 10, compact ? 4 : 6),
       decoration: BoxDecoration(
         color: _card,
@@ -357,7 +368,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
             child: TextField(
               controller: _inputController,
               minLines: 1,
-              maxLines: compact ? 1 : 2,
+              maxLines: keyboardVisible ? 1 : (compact ? 1 : 2),
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => _sendMessage(),
               decoration: const InputDecoration(
