@@ -36,7 +36,6 @@ class _BagDialogState extends State<BagDialog> {
           height: panelH,
           child: Column(
             children: [
-              Container(height: 1, color: _border),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
