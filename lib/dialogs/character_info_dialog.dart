@@ -31,6 +31,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
   static const Color _textSecondary = Color(0xFF777777);
   static const Color _accent = Color(0xFF7BAE7F);
   static const double _tabWidth = 48;
+  static const double _titleOverlapPadding = 38;
   static const _tabs = ['信息', '人脉', '经历'];
 
   int _selectedTab = 0;
@@ -58,7 +59,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
       math.min(size.width * 0.74, size.width - _tabWidth - 28),
     );
     final panelH = math.min(size.height * 2 / 3, size.height - 92);
-    final contentH = panelH - 58;
+    final contentH = panelH - 58 - _titleOverlapPadding;
 
     return Material(
       color: Colors.transparent,
@@ -99,12 +100,11 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                           ),
                           child: Column(
                             children: [
-                              Container(height: 1, color: _border),
                               Expanded(
                                 child: SingleChildScrollView(
                                   padding: EdgeInsets.fromLTRB(
                                     size.width * 0.04,
-                                    8,
+                                    _titleOverlapPadding,
                                     size.width * 0.04,
                                     0,
                                   ),
