@@ -7,11 +7,13 @@ import '../models/quest.dart';
 class CharacterRelationshipTab extends StatelessWidget {
   final Player player;
   final Size size;
+  final double minHeight;
 
   const CharacterRelationshipTab({
     super.key,
     required this.player,
     required this.size,
+    required this.minHeight,
   });
 
   static const Color _card = Color(0xFFFFFFFF);
@@ -26,23 +28,25 @@ class CharacterRelationshipTab extends StatelessWidget {
     final rels = _visibleRelationships();
 
     if (rels.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 40),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.people_outline, size: 40, color: _textSecondary),
-            SizedBox(height: 8),
-            Text(
-              '暂无人脉记录\n与 NPC 互动，或接受 NPC 的委托后会出现在这里。',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                color: _textSecondary,
-                height: 1.5,
+      return SizedBox(
+        height: minHeight,
+        child: const Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.people_outline, size: 40, color: _textSecondary),
+              SizedBox(height: 8),
+              Text(
+                '暂无人脉记录\n与 NPC 互动，或接受 NPC 的委托后会出现在这里。',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: _textSecondary,
+                  height: 1.5,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }

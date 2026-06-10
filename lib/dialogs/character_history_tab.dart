@@ -7,11 +7,13 @@ import '../models/player.dart';
 class CharacterHistoryTab extends StatelessWidget {
   final Player player;
   final Size size;
+  final double minHeight;
 
   const CharacterHistoryTab({
     super.key,
     required this.player,
     required this.size,
+    required this.minHeight,
   });
 
   static const Color _card = Color(0xFFFFFFFF);
@@ -28,18 +30,20 @@ class CharacterHistoryTab extends StatelessWidget {
         : _legacyEventsFromInteractions().reversed.toList();
 
     if (records.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 40),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.history, size: 40, color: _textSecondary),
-            SizedBox(height: 8),
-            Text(
-              '暂无经历记录',
-              style: TextStyle(fontSize: 15, color: _textSecondary),
-            ),
-          ],
+      return SizedBox(
+        height: minHeight,
+        child: const Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.history, size: 40, color: _textSecondary),
+              SizedBox(height: 8),
+              Text(
+                '暂无经历记录',
+                style: TextStyle(fontSize: 15, color: _textSecondary),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -203,7 +207,10 @@ class CharacterHistoryTab extends StatelessWidget {
                   record.npcNames.isEmpty ? '无' : record.npcNames.join('、'),
                 ),
                 _detailLine('结果', record.result.isEmpty ? '无' : record.result),
-                _detailLine('摘要', record.summary.isEmpty ? '暂无摘要' : record.summary),
+                _detailLine(
+                  '摘要',
+                  record.summary.isEmpty ? '暂无摘要' : record.summary,
+                ),
               ],
             ),
           ),

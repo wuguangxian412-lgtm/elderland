@@ -8,7 +8,7 @@
       ],
       "name": "圣光城",
       "type": "城市",
-      "description": "圣光城圣山王国的首都，宏伟的白色石墙与高耸的教堂是其标志，是王国的政治与宗教中心。",
+      "description": "圣山王国的白石首都，王宫、教会与山道市集层层依山展开。它直接连通高地粮仓、圣光要塞、狮鹫巢要塞与北矿镇，是王权、信仰和边境交通汇聚之地。",
       "connected_nodes": [
         "highland_granary",
         "holy_light_fortress",
@@ -16,7 +16,232 @@
         "north_mine_town"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "holy_light_city_building_01",
+          "name": "白石王宫",
+          "type": "王宫",
+          "description": "依山修建的白石宫殿，国王诏令与贵族觐见都在这里完成。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_02",
+          "name": "神圣大教堂",
+          "type": "宗教建筑",
+          "description": "高塔与彩窗俯视全城，主教和教士在此主持大型祈祷。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_03",
+          "name": "王家议事厅",
+          "type": "政务建筑",
+          "description": "贵族、骑士和教会代表在长桌旁争论税法与军务。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_04",
+          "name": "自由民登记所",
+          "type": "政务建筑",
+          "description": "负责登记新自由民、土地转移和教会庇护文书。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_05",
+          "name": "白阶广场",
+          "type": "公共区域",
+          "description": "通往王宫与大教堂的层层石阶，常有布告和演说。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_06",
+          "name": "朝圣者旅舍",
+          "type": "旅店",
+          "description": "廉价床铺与公共炉火供外地朝圣者短暂停留。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_07",
+          "name": "圣水分发院",
+          "type": "宗教建筑",
+          "description": "教会在此发放圣水、面包和带印章的赎罪票。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_08",
+          "name": "王家骑士团营房",
+          "type": "军事建筑",
+          "description": "披白袍的骑士在这里整队巡城，马具擦得发亮。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_09",
+          "name": "教会武装驻所",
+          "type": "军事建筑",
+          "description": "持矛修士守卫街口，负责保护教会仓库与神职人员。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_10",
+          "name": "山道马车站",
+          "type": "交通设施",
+          "description": "前往粮仓、要塞和北矿镇的马车在此换乘。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_11",
+          "name": "首都粮税仓",
+          "type": "仓储建筑",
+          "description": "来自索尔镇与磨坊村的粮袋在这里称重入库。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_12",
+          "name": "白袍医馆",
+          "type": "医疗建筑",
+          "description": "修女和药师照料伤兵、贫民与高原病患者。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_13",
+          "name": "王室文书馆",
+          "type": "政务建筑",
+          "description": "保存土地契约、封臣名册和历代王令。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_14",
+          "name": "圣徽铸造坊",
+          "type": "工坊",
+          "description": "工匠铸造圣徽、烛台和骑士团的礼仪佩饰。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_15",
+          "name": "白石市集",
+          "type": "市场",
+          "description": "山民、农户和商贩在棚下出售谷物、毛皮与木器。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_16",
+          "name": "香烛铺",
+          "type": "商铺",
+          "description": "店内堆满蜂蜡烛、祷文牌和小圣像。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_17",
+          "name": "贵族宅邸",
+          "type": "住宅",
+          "description": "高墙内住着来首都候命的乡间贵族家族。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_18",
+          "name": "贵族宅邸",
+          "type": "住宅",
+          "description": "门前有家徽旗帜和沉默仆役，平民不得靠近。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_19",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "沿山坡挤出的白石小屋，窗台晾着粗布和药草。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_20",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "一家手工业者居住的狭窄屋舍，后院堆着木柴。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_21",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通石屋沿山路排列，炉烟贴着屋顶散开。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_22",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "手工业者家庭的住处，门口摆着修补工具。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_23",
+          "name": "小型旅店",
+          "type": "旅店",
+          "description": "接待脚夫、朝圣者和低阶商人的朴素旅店。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_24",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "草料、皮革和马粪味混在低矮棚屋中。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_25",
+          "name": "公告栏",
+          "type": "公共设施",
+          "description": "王令、教会告示和寻人启事钉在木板上。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_26",
+          "name": "面包房",
+          "type": "商铺",
+          "description": "烘烤黑麦面包和干粮，清晨排队的人最多。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_27",
+          "name": "裁缝铺",
+          "type": "商铺",
+          "description": "缝补羊毛斗篷、粗布衣和教会白袍。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_28",
+          "name": "小仓库",
+          "type": "仓储建筑",
+          "description": "租给商人和村镇代表暂放货物的小仓。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_29",
+          "name": "守卫岗亭",
+          "type": "军事建筑",
+          "description": "两名守卫轮值，负责巡查附近街口。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_city_building_30",
+          "name": "祈祷小堂",
+          "type": "宗教建筑",
+          "description": "街区居民每日点烛祈祷的小教堂。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_31",
+          "name": "药草铺",
+          "type": "商铺",
+          "description": "出售干草药、止血布和简单祛寒药。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_city_building_32",
+          "name": "石匠工坊",
+          "type": "工坊",
+          "description": "加工白石砖、墓碑和教会浮雕。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "holy_light_fortress",
@@ -26,13 +251,189 @@
       ],
       "name": "圣光要塞",
       "type": "要塞",
-      "description": "圣光城外围的核心军事堡垒，由圣山王国王家骑士团与教会武装共同驻守。高大的白石城墙沿山势而建，既守护首都南部通道，也监视莫尔德领地与边境山路的动向。",
+      "description": "守在圣光城外缘的白石军堡，控制通往迷雾高地的山道。王家骑士与教会武装共同驻守，盘查粮队、朝圣者和从高地返回的开拓民。",
       "connected_nodes": [
         "holy_light_city",
         "misty_highlands"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "holy_light_fortress_building_01",
+          "name": "南山门楼",
+          "type": "军事建筑",
+          "description": "厚重闸门压在山道上，进出者必须接受盘问。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_02",
+          "name": "白石城墙",
+          "type": "军事建筑",
+          "description": "沿山势修筑的高墙，墙道可俯视通往高地的道路。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_03",
+          "name": "王家骑士营房",
+          "type": "军事建筑",
+          "description": "骑士与侍从同住的长屋，门外排列长枪和盾牌。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_04",
+          "name": "教会武装修院",
+          "type": "宗教建筑",
+          "description": "武装修士在此祈祷、休息并保养盔甲。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_05",
+          "name": "山路盘查所",
+          "type": "军事建筑",
+          "description": "记录朝圣者、粮队和开拓民身份的小石屋。",
+          "isPublic": true
+        },
+        {
+          "id": "holy_light_fortress_building_06",
+          "name": "军需仓库",
+          "type": "仓储建筑",
+          "description": "盐肉、麦粉、弩矢和火油被分门别类存放。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_07",
+          "name": "堡内马厩",
+          "type": "交通设施",
+          "description": "战马和驮马在低矮石棚里等待换乘。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_08",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "塔顶能看见迷雾高地边缘的旧界碑。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_09",
+          "name": "信号烽台",
+          "type": "军事建筑",
+          "description": "用于向圣光城传递狼烟和夜间灯号。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_10",
+          "name": "军医室",
+          "type": "医疗建筑",
+          "description": "药草气味混着皮革味，伤兵在木床上静养。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_11",
+          "name": "审问室",
+          "type": "军事建筑",
+          "description": "狭窄石室用来盘问可疑流民与走私向导。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_12",
+          "name": "守军食堂",
+          "type": "生活设施",
+          "description": "大锅汤和黑面包支撑着驻军漫长值守。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_13",
+          "name": "士兵营房",
+          "type": "军事建筑",
+          "description": "守军合住的石屋，床铺和武器架排列整齐。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_14",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "长矛、盾牌、弩矢和备用甲片被锁在库中。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_15",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "塔顶可观察山路、雾线和远处灯号。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_16",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "战马和驮马在干草棚里换草料。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_17",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "干粮、火油、绳索和帐篷按队伍存放。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_18",
+          "name": "军医室",
+          "type": "医疗建筑",
+          "description": "药草、绷带和木夹板摆在长桌上。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_19",
+          "name": "指挥室",
+          "type": "军事建筑",
+          "description": "指挥官在地图前分配巡逻和防务。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_20",
+          "name": "祈祷室",
+          "type": "宗教建筑",
+          "description": "守军出勤前会在这里点烛祈祷。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_21",
+          "name": "食堂",
+          "type": "生活设施",
+          "description": "大锅汤和粗麦饼供应给轮值守军。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_22",
+          "name": "禁闭室",
+          "type": "司法建筑",
+          "description": "违令士兵和可疑人员会被短暂关押。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_23",
+          "name": "内堡水井",
+          "type": "公共设施",
+          "description": "堡内可靠的水源，井口覆着铁栅。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_24",
+          "name": "士兵营房",
+          "type": "军事建筑",
+          "description": "守军合住的石屋，床铺和武器架排列整齐。",
+          "isPublic": false
+        },
+        {
+          "id": "holy_light_fortress_building_25",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "长矛、盾牌、弩矢和备用甲片被锁在库中。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "griffin_perch",
@@ -42,13 +443,182 @@
       ],
       "name": "狮鹫巢要塞",
       "type": "要塞",
-      "description": "高耸在圣山王国绝壁之上的险峻要塞，是王家空中骑士团的驻地。陡峭的石阶直接开凿在山体内部，平台上停歇着体型庞大、目光锐利的雪山狮鹫。这里防守严密，是俯瞰并钳制莫尔德领地的战略制高点。",
+      "description": "建在西侧绝壁上的高空要塞，通往星泪湖的山路由此受控。狮鹫骑士在石台间起降，负责巡视首都外围与高山圣地。",
       "connected_nodes": [
         "holy_light_city",
         "star_tear_lake"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "griffin_perch_building_01",
+          "name": "狮鹫起降台",
+          "type": "军事建筑",
+          "description": "凿在绝壁外侧的宽阔石台，刻有防滑符文。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_02",
+          "name": "狮鹫巢棚",
+          "type": "兽栏",
+          "description": "厚木梁和铁链固定在山壁中，铺着干草与兽皮。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_03",
+          "name": "空骑士营房",
+          "type": "军事建筑",
+          "description": "狮鹫骑士的长屋，墙上悬挂飞行鞍具和长矛。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_04",
+          "name": "驯兽师小屋",
+          "type": "工坊",
+          "description": "负责喂养、安抚和治疗狮鹫的驯兽师居住于此。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_05",
+          "name": "绝壁升降梯",
+          "type": "交通设施",
+          "description": "木笼和绞盘沿山壁上下运送粮袋与伤员。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_06",
+          "name": "高山圣徽台",
+          "type": "宗教建筑",
+          "description": "骑士出巡前会在刻有圣徽的石台前短暂祈祷。",
+          "isPublic": true
+        },
+        {
+          "id": "griffin_perch_building_07",
+          "name": "星泪湖哨亭",
+          "type": "军事建筑",
+          "description": "面向湖道的小哨亭，记录进入圣地的人员。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_08",
+          "name": "风向观测塔",
+          "type": "军事建筑",
+          "description": "塔上挂着长布条，用来判断山风和云层变化。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_09",
+          "name": "飞行器具库",
+          "type": "仓储建筑",
+          "description": "收藏鞍具、羽刷、套索和备用皮带。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_10",
+          "name": "岩内蓄水池",
+          "type": "生活设施",
+          "description": "山泉被引入岩洞水池，供人和狮鹫饮用。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_11",
+          "name": "士兵营房",
+          "type": "军事建筑",
+          "description": "守军合住的石屋，床铺和武器架排列整齐。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_12",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "长矛、盾牌、弩矢和备用甲片被锁在库中。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_13",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "塔顶可观察山路、雾线和远处灯号。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_14",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "战马和驮马在干草棚里换草料。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_15",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "干粮、火油、绳索和帐篷按队伍存放。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_16",
+          "name": "军医室",
+          "type": "医疗建筑",
+          "description": "药草、绷带和木夹板摆在长桌上。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_17",
+          "name": "指挥室",
+          "type": "军事建筑",
+          "description": "指挥官在地图前分配巡逻和防务。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_18",
+          "name": "祈祷室",
+          "type": "宗教建筑",
+          "description": "守军出勤前会在这里点烛祈祷。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_19",
+          "name": "食堂",
+          "type": "生活设施",
+          "description": "大锅汤和粗麦饼供应给轮值守军。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_20",
+          "name": "禁闭室",
+          "type": "司法建筑",
+          "description": "违令士兵和可疑人员会被短暂关押。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_21",
+          "name": "内堡水井",
+          "type": "公共设施",
+          "description": "堡内可靠的水源，井口覆着铁栅。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_22",
+          "name": "士兵营房",
+          "type": "军事建筑",
+          "description": "守军合住的石屋，床铺和武器架排列整齐。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_23",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "长矛、盾牌、弩矢和备用甲片被锁在库中。",
+          "isPublic": false
+        },
+        {
+          "id": "griffin_perch_building_24",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "塔顶可观察山路、雾线和远处灯号。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "mord_fiefdom",
@@ -58,13 +628,210 @@
       ],
       "name": "莫尔德领地",
       "type": "城市",
-      "description": "莫尔德公爵统治的铁腕领地。戒备森严的城堡矗立在黑沉沉的山头，领地内的村庄法律极为严苛，随处可见巡逻的冷酷私兵，气氛压抑而死寂，与圣光城的宏伟神圣形成鲜明对比。",
+      "description": "夹在高地粮仓与边境要塞之间的封闭领地。黑石庄园、私兵关卡和沉默村镇遍布山谷，旧贵族秩序在这里仍压过国王的新政。",
       "connected_nodes": [
         "highland_granary",
         "border_fortress"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "mord_fiefdom_building_01",
+          "name": "莫尔德黑堡",
+          "type": "城堡",
+          "description": "黑石城堡压在山头，公爵的私兵从垛口俯视领地。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_02",
+          "name": "公爵审判厅",
+          "type": "政务建筑",
+          "description": "领民在此接受庄园法庭审问，墙上挂满家族纹章。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_03",
+          "name": "血统档案室",
+          "type": "政务建筑",
+          "description": "保存佃农、骑士和附庸家族的谱系文书。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_04",
+          "name": "私兵营房",
+          "type": "军事建筑",
+          "description": "莫尔德家族私兵居住的长屋，门口有铁链路障。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_05",
+          "name": "黑岩兵器库",
+          "type": "军事建筑",
+          "description": "弩、长矛和重甲被锁在潮湿石室中。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_06",
+          "name": "领主马厩",
+          "type": "交通设施",
+          "description": "披甲战马和传令马由专人看守。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_07",
+          "name": "庄园税仓",
+          "type": "仓储建筑",
+          "description": "各村缴来的谷物、羊毛和矿石在此重新称量。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_08",
+          "name": "领民登记所",
+          "type": "政务建筑",
+          "description": "记录劳役天数、欠税数额和逃亡名单。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_09",
+          "name": "黑石教堂",
+          "type": "宗教建筑",
+          "description": "古旧教堂服从公爵安排，祈祷声压得很低。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_10",
+          "name": "刑具库",
+          "type": "军事建筑",
+          "description": "存放枷锁、铁笼和执行惩戒的工具。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_11",
+          "name": "沉默酒馆",
+          "type": "旅店",
+          "description": "私兵和外来商人低声饮酒，没人轻易谈论公爵。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_12",
+          "name": "铁门关卡",
+          "type": "军事建筑",
+          "description": "通往边境要塞的道路被铁门和木栅截断。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_13",
+          "name": "佃农棚屋",
+          "type": "住宅",
+          "description": "低矮木棚挤在田埂边，屋顶用石片压住。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_14",
+          "name": "佃农棚屋",
+          "type": "住宅",
+          "description": "屋内只有粗糙床铺和存放农具的角落。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_15",
+          "name": "领地磨坊",
+          "type": "工坊",
+          "description": "磨坊由公爵家族收税，农户必须排队等候。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_16",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通石屋沿山路排列，炉烟贴着屋顶散开。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_17",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "手工业者家庭的住处，门口摆着修补工具。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_18",
+          "name": "小型旅店",
+          "type": "旅店",
+          "description": "接待脚夫、朝圣者和低阶商人的朴素旅店。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_19",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "草料、皮革和马粪味混在低矮棚屋中。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_20",
+          "name": "公告栏",
+          "type": "公共设施",
+          "description": "王令、教会告示和寻人启事钉在木板上。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_21",
+          "name": "面包房",
+          "type": "商铺",
+          "description": "烘烤黑麦面包和干粮，清晨排队的人最多。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_22",
+          "name": "裁缝铺",
+          "type": "商铺",
+          "description": "缝补羊毛斗篷、粗布衣和教会白袍。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_23",
+          "name": "小仓库",
+          "type": "仓储建筑",
+          "description": "租给商人和村镇代表暂放货物的小仓。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_24",
+          "name": "守卫岗亭",
+          "type": "军事建筑",
+          "description": "两名守卫轮值，负责巡查附近街口。",
+          "isPublic": false
+        },
+        {
+          "id": "mord_fiefdom_building_25",
+          "name": "祈祷小堂",
+          "type": "宗教建筑",
+          "description": "街区居民每日点烛祈祷的小教堂。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_26",
+          "name": "药草铺",
+          "type": "商铺",
+          "description": "出售干草药、止血布和简单祛寒药。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_27",
+          "name": "石匠工坊",
+          "type": "工坊",
+          "description": "加工白石砖、墓碑和教会浮雕。",
+          "isPublic": true
+        },
+        {
+          "id": "mord_fiefdom_building_28",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通石屋沿山路排列，炉烟贴着屋顶散开。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "border_fortress",
@@ -74,13 +841,189 @@
       ],
       "name": "边境要塞",
       "type": "要塞",
-      "description": "扼守王国交通要道的军事重镇，驻扎着大量精锐守军，防御设施极其坚固。",
+      "description": "圣山王国南境的重关，北连莫尔德领地，另一端通向海妖浅滩。军需车、税吏和商队都必须在此接受检查，是山国通往自由城邦的狭窄门户。",
       "connected_nodes": [
         "mord_fiefdom",
         "siren_shoals"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "border_fortress_building_01",
+          "name": "山海关门",
+          "type": "军事建筑",
+          "description": "厚重关门面对通往海妖浅滩的道路，日夜有人值守。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_02",
+          "name": "边境税卡",
+          "type": "政务建筑",
+          "description": "商队在这里申报货物，税吏用铁秤称量箱笼。",
+          "isPublic": true
+        },
+        {
+          "id": "border_fortress_building_03",
+          "name": "通行文书所",
+          "type": "政务建筑",
+          "description": "负责签发过境许可和扣押可疑文书。",
+          "isPublic": true
+        },
+        {
+          "id": "border_fortress_building_04",
+          "name": "守军主营房",
+          "type": "军事建筑",
+          "description": "边境守军轮班休息，墙边堆着湿斗篷。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_05",
+          "name": "弩炮平台",
+          "type": "军事建筑",
+          "description": "平台正对下方狭路，覆盖着油布和绳索。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_06",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "弩矢、盾牌、链甲和备用刀剑被锁在铁门后。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_07",
+          "name": "扣押货仓",
+          "type": "仓储建筑",
+          "description": "走私品和未缴税货物被暂存在阴冷仓房。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_08",
+          "name": "驿马棚",
+          "type": "交通设施",
+          "description": "传令马和过境驮马在这里换草料。",
+          "isPublic": true
+        },
+        {
+          "id": "border_fortress_building_09",
+          "name": "关隘医所",
+          "type": "医疗建筑",
+          "description": "处理坠崖、刀伤和海岸湿病的小医所。",
+          "isPublic": true
+        },
+        {
+          "id": "border_fortress_building_10",
+          "name": "边兵食堂",
+          "type": "生活设施",
+          "description": "守军、税吏和临时劳工在长桌旁吃粗粮汤。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_11",
+          "name": "外来商队院",
+          "type": "旅店",
+          "description": "缴费商队可在围墙内短暂避风和过夜。",
+          "isPublic": true
+        },
+        {
+          "id": "border_fortress_building_12",
+          "name": "士兵营房",
+          "type": "军事建筑",
+          "description": "守军合住的石屋，床铺和武器架排列整齐。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_13",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "长矛、盾牌、弩矢和备用甲片被锁在库中。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_14",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "塔顶可观察山路、雾线和远处灯号。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_15",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "战马和驮马在干草棚里换草料。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_16",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "干粮、火油、绳索和帐篷按队伍存放。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_17",
+          "name": "军医室",
+          "type": "医疗建筑",
+          "description": "药草、绷带和木夹板摆在长桌上。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_18",
+          "name": "指挥室",
+          "type": "军事建筑",
+          "description": "指挥官在地图前分配巡逻和防务。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_19",
+          "name": "祈祷室",
+          "type": "宗教建筑",
+          "description": "守军出勤前会在这里点烛祈祷。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_20",
+          "name": "食堂",
+          "type": "生活设施",
+          "description": "大锅汤和粗麦饼供应给轮值守军。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_21",
+          "name": "禁闭室",
+          "type": "司法建筑",
+          "description": "违令士兵和可疑人员会被短暂关押。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_22",
+          "name": "内堡水井",
+          "type": "公共设施",
+          "description": "堡内可靠的水源，井口覆着铁栅。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_23",
+          "name": "士兵营房",
+          "type": "军事建筑",
+          "description": "守军合住的石屋，床铺和武器架排列整齐。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_24",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "长矛、盾牌、弩矢和备用甲片被锁在库中。",
+          "isPublic": false
+        },
+        {
+          "id": "border_fortress_building_25",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "塔顶可观察山路、雾线和远处灯号。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "blood_brotherhood_camp",
@@ -90,12 +1033,132 @@
       ],
       "name": "兄弟会密林营地",
       "type": "村庄",
-      "description": "隐匿在深山密林之中的简陋营地。由无家可归的流民与起义农民自发聚集而成，周围布置了大量的猎人陷阱与暗哨。这里的人们虽然衣衫褴褛，但眼神中闪烁着对不公宿命的反抗之火。",
+      "description": "藏在白石礼拜岔路外的密林深处，流民、逃兵和破产自由民在此搭起棚屋。营地依靠暗哨和山路小贩维持补给，气氛紧绷。",
       "connected_nodes": [
         "chapel_crossroads"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "blood_brotherhood_camp_building_01",
+          "name": "密林议事棚",
+          "type": "公共区域",
+          "description": "粗木柱撑起的棚屋，兄弟会成员在此商议去向。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_02",
+          "name": "哨兵树台",
+          "type": "军事建筑",
+          "description": "藏在高树间的木台，可观察通往岔路的山径。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_03",
+          "name": "陷阱工棚",
+          "type": "工坊",
+          "description": "猎夹、绳套和削尖木桩堆在潮湿地面上。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_04",
+          "name": "流民草棚",
+          "type": "住宅",
+          "description": "用树枝和破布搭成的住处，住着失地农户。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_05",
+          "name": "流民草棚",
+          "type": "住宅",
+          "description": "靠近火塘的简陋棚屋，夜里挤满疲惫逃民。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_06",
+          "name": "伤员棚",
+          "type": "医疗建筑",
+          "description": "草药、脏布和木板床构成临时救护点。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_07",
+          "name": "公共火塘",
+          "type": "公共区域",
+          "description": "营地中央的火堆用于煮汤、传话和守夜。",
+          "isPublic": true
+        },
+        {
+          "id": "blood_brotherhood_camp_building_08",
+          "name": "缴获物资堆",
+          "type": "仓储建筑",
+          "description": "从税队和庄园仓库抢来的麻袋堆在树根旁。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_09",
+          "name": "旧猎人小屋",
+          "type": "住宅",
+          "description": "被改成头领临时住处，门口挂着鹿角。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_10",
+          "name": "隐蔽马栏",
+          "type": "交通设施",
+          "description": "几匹瘦马藏在树篱后，用来传递消息。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_11",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "粗石与木梁搭成的小屋，屋边堆着柴草。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_12",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "普通农户居住的低屋，窗台晾着粗布。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_13",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "村民每日取水、交换消息和短暂停留的地方。",
+          "isPublic": true
+        },
+        {
+          "id": "blood_brotherhood_camp_building_14",
+          "name": "小仓房",
+          "type": "仓储建筑",
+          "description": "存放谷物、草料和修补农具的棚屋。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_15",
+          "name": "羊圈",
+          "type": "生产设施",
+          "description": "几户合用的围栏，夜里会点起火盆防兽。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_brotherhood_camp_building_16",
+          "name": "木匠棚",
+          "type": "工坊",
+          "description": "修门板、车轮、木桶和简陋家具的小棚。",
+          "isPublic": true
+        },
+        {
+          "id": "blood_brotherhood_camp_building_17",
+          "name": "小酒屋",
+          "type": "旅店",
+          "description": "村民和路人在这里喝淡麦酒、听山路消息。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "saint_mill_village",
@@ -105,12 +1168,132 @@
       ],
       "name": "圣磨坊村",
       "type": "村庄",
-      "description": "圣光城北侧山谷中的粮食加工村落。水车磨坊沿溪流排列，来自高地粮仓的谷物会先在这里脱壳、磨粉，再运往首都与周边教会领地，是圣山王国民生补给链的重要小节点。",
+      "description": "依附高地粮仓的小村，溪边水车日夜研磨耐寒谷物。这里把索尔镇的粮食加工后送往首都和教会仓库，也接收来自山村的碎散消息。",
       "connected_nodes": [
         "highland_granary"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "saint_mill_village_building_01",
+          "name": "溪边水磨坊",
+          "type": "工坊",
+          "description": "大水轮推动石磨，把索尔镇运来的谷物磨成面粉。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_02",
+          "name": "谷壳晒场",
+          "type": "生产设施",
+          "description": "村民把谷壳和麦秆摊在石板上等待山风吹干。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_03",
+          "name": "磨坊主宅",
+          "type": "住宅",
+          "description": "磨坊主一家居住的木石房，账册藏在内室。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_04",
+          "name": "面粉仓",
+          "type": "仓储建筑",
+          "description": "干燥仓房里堆满麻袋，门口常有教会印章。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_05",
+          "name": "小圣龛",
+          "type": "宗教建筑",
+          "description": "路边白石圣龛供粮车经过时祈福。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_06",
+          "name": "村井",
+          "type": "公共设施",
+          "description": "磨坊村唯一的深井，妇人与孩童常在此排队取水。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_07",
+          "name": "木桥驿亭",
+          "type": "交通设施",
+          "description": "横跨溪流的小桥旁有给脚夫歇脚的木亭。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_08",
+          "name": "烤饼铺",
+          "type": "商铺",
+          "description": "售卖粗麦饼、热汤和给粮车夫准备的干粮。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_09",
+          "name": "修轮工棚",
+          "type": "工坊",
+          "description": "木匠修理粮车车轮、水车叶片和谷仓门板。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_10",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "靠溪而建的小屋，墙边堆满柴火和麻袋。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_11",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "普通磨工家庭的住处，窗边挂着面粉筛。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_12",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "粗石与木梁搭成的小屋，屋边堆着柴草。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_13",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "普通农户居住的低屋，窗台晾着粗布。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_14",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "村民每日取水、交换消息和短暂停留的地方。",
+          "isPublic": true
+        },
+        {
+          "id": "saint_mill_village_building_15",
+          "name": "小仓房",
+          "type": "仓储建筑",
+          "description": "存放谷物、草料和修补农具的棚屋。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_16",
+          "name": "羊圈",
+          "type": "生产设施",
+          "description": "几户合用的围栏，夜里会点起火盆防兽。",
+          "isPublic": false
+        },
+        {
+          "id": "saint_mill_village_building_17",
+          "name": "木匠棚",
+          "type": "工坊",
+          "description": "修门板、车轮、木桶和简陋家具的小棚。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "chapel_crossroads",
@@ -120,7 +1303,7 @@
       ],
       "name": "白石礼拜岔路",
       "type": "村庄",
-      "description": "位于圣光城、莫尔德领地与南部峡谷之间的小型路口聚落。白石礼拜堂、马厩和简陋旅店围绕山路而建，朝圣者、逃难农民、税吏与巡逻骑士经常在这里短暂停留。",
+      "description": "位于高地粮仓、银叶村与密林营地之间的山路聚落。礼拜堂、马厩和旅店挤在白石路旁，朝圣者、税吏、流民和巡逻队频繁擦肩。",
       "connected_nodes": [
         "silver_leaf_village",
         "blood_brotherhood_camp",
@@ -155,6 +1338,97 @@
           "type": "军事建筑",
           "description": "圣山王国巡逻队临时征用的石屋，作为监管这条交通要道、盘查过往行人和收取临时税收的据点。",
           "isPublic": false
+        },
+        {
+          "id": "chapel_crossroads_building_01",
+          "name": "路口水井",
+          "type": "公共设施",
+          "description": "白石路旁的公用水井，旅人和马匹都在此补水。",
+          "isPublic": true
+        },
+        {
+          "id": "chapel_crossroads_building_02",
+          "name": "谷仓小屋",
+          "type": "仓储建筑",
+          "description": "临时存放从索尔镇运来的麦袋和干草。",
+          "isPublic": false
+        },
+        {
+          "id": "chapel_crossroads_building_03",
+          "name": "路标石碑",
+          "type": "公共设施",
+          "description": "刻有圣光城、银叶村和高地粮仓方向的旧石碑。",
+          "isPublic": true
+        },
+        {
+          "id": "chapel_crossroads_building_04",
+          "name": "车夫棚屋",
+          "type": "住宅",
+          "description": "赶车人与脚夫共住的低矮棚屋，堆满破旧鞍具。",
+          "isPublic": false
+        },
+        {
+          "id": "chapel_crossroads_building_05",
+          "name": "行脚商摊",
+          "type": "商铺",
+          "description": "出售针线、盐、干肉和几件来路不明的小货。",
+          "isPublic": true
+        },
+        {
+          "id": "chapel_crossroads_building_06",
+          "name": "简易医棚",
+          "type": "医疗建筑",
+          "description": "老药婆在棚内处理扭伤、冻疮和鞭伤。",
+          "isPublic": true
+        },
+        {
+          "id": "chapel_crossroads_building_07",
+          "name": "税吏暂存仓",
+          "type": "仓储建筑",
+          "description": "巡逻队暂扣货物与征收粮袋的地方。",
+          "isPublic": false
+        },
+        {
+          "id": "chapel_crossroads_building_08",
+          "name": "白石民居",
+          "type": "住宅",
+          "description": "本地路户居住的石屋，门前晾着羊毛毯。",
+          "isPublic": false
+        },
+        {
+          "id": "chapel_crossroads_building_09",
+          "name": "白石民居",
+          "type": "住宅",
+          "description": "靠近马厩的小宅，常收留远亲和短工。",
+          "isPublic": false
+        },
+        {
+          "id": "chapel_crossroads_building_10",
+          "name": "朝圣者棚屋",
+          "type": "旅店",
+          "description": "无钱住旅店的朝圣者会在草垫上挤一夜。",
+          "isPublic": true
+        },
+        {
+          "id": "chapel_crossroads_building_11",
+          "name": "旧马车棚",
+          "type": "交通设施",
+          "description": "破车轮和备用车轴靠墙摆放，等人修理。",
+          "isPublic": true
+        },
+        {
+          "id": "chapel_crossroads_building_12",
+          "name": "后山暗哨",
+          "type": "军事建筑",
+          "description": "巡逻队私下设置的观察点，面向密林方向。",
+          "isPublic": false
+        },
+        {
+          "id": "chapel_crossroads_building_13",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "粗石与木梁搭成的小屋，屋边堆着柴草。",
+          "isPublic": false
         }
       ]
     },
@@ -166,7 +1440,7 @@
       ],
       "name": "银叶村",
       "type": "村庄",
-      "description": "位于圣山王国边境的宁静村落，因周边盛产银叶树而得名，居民多以采集与农耕为生。",
+      "description": "圣山南部边缘的林间村落，南通哭泣峡谷，东接白石礼拜岔路。村民靠银叶树、薄田和小手工维生，对外来骑士与逃难者都保持戒备。",
       "connected_nodes": [
         "weeping_gorge",
         "chapel_crossroads"
@@ -200,6 +1474,97 @@
           "type": "旅店",
           "description": "供旅人歇脚的小旅店，也是不少消息流通的地方。",
           "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_building_01",
+          "name": "银叶晒场",
+          "type": "生产设施",
+          "description": "采回的银叶树枝在木架上晾晒，等待捆扎出售。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_building_02",
+          "name": "猎人小屋",
+          "type": "住宅",
+          "description": "村中猎户的住所，墙上挂着兽皮和短弓。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_leaf_village_building_03",
+          "name": "木炭窑",
+          "type": "生产设施",
+          "description": "用红土封成的小窑，夜里会冒出细白烟。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_building_04",
+          "name": "谷物小仓",
+          "type": "仓储建筑",
+          "description": "存放薄田收成和村民共同粮的木仓。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_leaf_village_building_05",
+          "name": "溪边洗衣棚",
+          "type": "公共设施",
+          "description": "村妇在此洗布，常能听到关于山路的闲谈。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_building_06",
+          "name": "守夜钟楼",
+          "type": "公共设施",
+          "description": "矮木塔上挂着旧铜钟，遇到野兽和骑兵会敲响。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_building_07",
+          "name": "药草棚",
+          "type": "工坊",
+          "description": "村中草药人晾晒冬暖草、苦根和止血叶。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_building_08",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "银叶树荫下的普通木屋，屋檐挂着干菇。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_leaf_village_building_09",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "靠近村口的农户住宅，院中摆着劈柴墩。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_leaf_village_building_10",
+          "name": "羊圈",
+          "type": "生产设施",
+          "description": "几户人家合用的羊圈，围栏被反复修补。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_leaf_village_building_11",
+          "name": "旧货棚",
+          "type": "商铺",
+          "description": "村民把多余木器、兽皮和旧工具放在这里交换。",
+          "isPublic": true
+        },
+        {
+          "id": "silver_leaf_village_building_12",
+          "name": "峡谷路哨棚",
+          "type": "军事建筑",
+          "description": "通往哭泣峡谷的小路旁设有简陋守望棚。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_leaf_village_building_13",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "粗石与木梁搭成的小屋，屋边堆着柴草。",
+          "isPublic": false
         }
       ]
     },
@@ -211,7 +1576,7 @@
       ],
       "name": "高地粮仓·索尔镇",
       "type": "城市",
-      "description": "圣山王国少有的肥沃梯田区域。在教会推广的新法令下，大片荒山被开垦出来，种植着耐寒的高原大麦。镇中心建有巨大的石质公共粮仓，身穿白袍的教会神职人员在这里定期分发圣水和宣讲教义。",
+      "description": "圣山腹地少见的肥沃镇区，连接首都、磨坊、莫尔德领地和白石岔路。石质粮仓、教会账房与新开梯田使这里成为改革争议的中心。",
       "connected_nodes": [
         "chapel_crossroads",
         "saint_mill_village",
@@ -219,7 +1584,197 @@
         "holy_light_city"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "highland_granary_building_01",
+          "name": "索尔大粮仓",
+          "type": "仓储建筑",
+          "description": "巨大的石质粮仓，储存高原大麦和教会征集的粮袋。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_02",
+          "name": "教会账房",
+          "type": "政务建筑",
+          "description": "白袍书记员在此核对土地、税额和救济名单。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_03",
+          "name": "梯田管理所",
+          "type": "政务建筑",
+          "description": "分配新开垦梯田、灌溉时段和劳役任务。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_04",
+          "name": "谷物交易市集",
+          "type": "市场",
+          "description": "农户、磨坊主和粮商在棚下讨价还价。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_05",
+          "name": "圣水井亭",
+          "type": "宗教建筑",
+          "description": "教士定期在井亭旁举行祝福仪式。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_06",
+          "name": "粮车驿站",
+          "type": "交通设施",
+          "description": "往圣光城、磨坊村和莫尔德领地的粮车在此排队。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_07",
+          "name": "谷物烘干房",
+          "type": "生产设施",
+          "description": "用低火烘干受潮大麦，屋内常有焦香味。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_08",
+          "name": "谷仓守卫所",
+          "type": "军事建筑",
+          "description": "负责看守粮仓和驱散偷粮者的小队驻所。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_09",
+          "name": "自由民申诉厅",
+          "type": "政务建筑",
+          "description": "破产农民和开拓民在此递交诉状。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_10",
+          "name": "农具修造坊",
+          "type": "工坊",
+          "description": "铁匠和木匠修理犁、镰刀、水渠闸门。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_11",
+          "name": "索尔镇旅店",
+          "type": "旅店",
+          "description": "粮商和脚夫常住的旅店，墙上贴满欠账纸。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_12",
+          "name": "酒麦坊",
+          "type": "商铺",
+          "description": "出售淡麦酒和发酵谷糟，是农闲时最热闹的地方。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_13",
+          "name": "镇民房",
+          "type": "住宅",
+          "description": "靠近粮仓的石屋，窗台堆满空麻袋。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_14",
+          "name": "镇民房",
+          "type": "住宅",
+          "description": "梯田边的农户住宅，院内有晒谷木架。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_15",
+          "name": "教士宿舍",
+          "type": "住宅",
+          "description": "低阶教士和书记员居住的整齐长屋。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_16",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通石屋沿山路排列，炉烟贴着屋顶散开。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_17",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "手工业者家庭的住处，门口摆着修补工具。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_18",
+          "name": "小型旅店",
+          "type": "旅店",
+          "description": "接待脚夫、朝圣者和低阶商人的朴素旅店。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_19",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "草料、皮革和马粪味混在低矮棚屋中。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_20",
+          "name": "公告栏",
+          "type": "公共设施",
+          "description": "王令、教会告示和寻人启事钉在木板上。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_21",
+          "name": "面包房",
+          "type": "商铺",
+          "description": "烘烤黑麦面包和干粮，清晨排队的人最多。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_22",
+          "name": "裁缝铺",
+          "type": "商铺",
+          "description": "缝补羊毛斗篷、粗布衣和教会白袍。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_23",
+          "name": "小仓库",
+          "type": "仓储建筑",
+          "description": "租给商人和村镇代表暂放货物的小仓。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_24",
+          "name": "守卫岗亭",
+          "type": "军事建筑",
+          "description": "两名守卫轮值，负责巡查附近街口。",
+          "isPublic": false
+        },
+        {
+          "id": "highland_granary_building_25",
+          "name": "祈祷小堂",
+          "type": "宗教建筑",
+          "description": "街区居民每日点烛祈祷的小教堂。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_26",
+          "name": "药草铺",
+          "type": "商铺",
+          "description": "出售干草药、止血布和简单祛寒药。",
+          "isPublic": true
+        },
+        {
+          "id": "highland_granary_building_27",
+          "name": "石匠工坊",
+          "type": "工坊",
+          "description": "加工白石砖、墓碑和教会浮雕。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "weeping_gorge",
@@ -229,12 +1784,41 @@
       ],
       "name": "哭泣峡谷",
       "type": "荒野",
-      "description": "圣山王国南部边界的一处乱石峡谷。狂风穿过狭窄的岩缝时，会发出如同妇人哭泣般的凄厉呜咽。由于地势复杂且缺乏管辖，这里成了逃避苛捐杂税的流民和流放者的藏身之所，环境极其野蛮残酷。",
+      "description": "银叶村外的乱石峡谷，狭窄风口常发出低沉回声。这里远离官道，流放者、偷猎者和避税农民在岩洞间留下临时火塘。",
       "connected_nodes": [
         "silver_leaf_village"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "weeping_gorge_building_01",
+          "name": "风哭岩洞",
+          "type": "自然地标",
+          "description": "风从岩缝穿过时发出低沉回声，洞内留着火灰。",
+          "isPublic": true
+        },
+        {
+          "id": "weeping_gorge_building_02",
+          "name": "流民火塘",
+          "type": "临时营地",
+          "description": "几块乱石围成的火塘，旁边散落破陶碗。",
+          "isPublic": true
+        },
+        {
+          "id": "weeping_gorge_building_03",
+          "name": "偷猎者藏棚",
+          "type": "隐蔽建筑",
+          "description": "用枯枝遮掩的小棚，挂着兽夹和干肉。",
+          "isPublic": false
+        },
+        {
+          "id": "weeping_gorge_building_04",
+          "name": "塌毁吊桥",
+          "type": "遗迹",
+          "description": "断裂绳索垂在峡谷两侧，只剩半截木板摇晃。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "star_tear_lake",
@@ -244,12 +1828,34 @@
       ],
       "name": "星泪湖",
       "type": "荒野",
-      "description": "隐藏在圣山高处的冰蓝湖泊，湖面常年倒映星光般的银色微芒。骑士、朝圣者与采药人都传说这里能获得神圣祝福，但通往湖边的山路潮湿陡峭，极易迷失方向。",
+      "description": "狮鹫巢要塞后方的高山湖泊，湖面夜里泛着细碎银光。骑士和朝圣者把它视作圣地，但湿滑山路与薄雾让外人难以久留。",
       "connected_nodes": [
         "griffin_perch"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "star_tear_lake_building_01",
+          "name": "湖畔祈愿石",
+          "type": "宗教遗迹",
+          "description": "被朝圣者磨得光滑的白石，表面刻着许多短祷文。",
+          "isPublic": true
+        },
+        {
+          "id": "star_tear_lake_building_02",
+          "name": "采药人木棚",
+          "type": "临时营地",
+          "description": "潮湿木棚藏在松树后，用来避雨和晒药草。",
+          "isPublic": true
+        },
+        {
+          "id": "star_tear_lake_building_03",
+          "name": "银光浅滩",
+          "type": "自然地标",
+          "description": "夜里会泛起细碎微光的湖边浅滩，脚印很快被水抹去。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "misty_highlands",
@@ -259,12 +1865,41 @@
       ],
       "name": "迷雾高地",
       "type": "荒野",
-      "description": "圣山王国与北方接壤的广阔高原。此地常年大雾弥漫，地势崎岖不平，只有零星的坚韧植被在寒风中摇曳。虽然自然条件艰苦，但新颁布的自由民法令让许多破产流民选择来到这里开拓荒地。",
+      "description": "圣光要塞外的寒冷高原，雾气常压在草坡和碎石路上。开拓民、巡逻队与采药人沿旧界碑活动，远处山脊很少露出全貌。",
       "connected_nodes": [
         "holy_light_fortress"
       ],
       "country": "圣山王国",
-      "building": []
+      "building": [
+        {
+          "id": "misty_highlands_building_01",
+          "name": "旧界碑",
+          "type": "地标",
+          "description": "半埋在草坡上的古老界碑，字迹被雾水磨平。",
+          "isPublic": true
+        },
+        {
+          "id": "misty_highlands_building_02",
+          "name": "开拓民草屋",
+          "type": "临时住处",
+          "description": "新自由民搭起的低矮草屋，屋边有刚翻过的冻土。",
+          "isPublic": false
+        },
+        {
+          "id": "misty_highlands_building_03",
+          "name": "巡逻队石棚",
+          "type": "军事建筑",
+          "description": "圣光要塞巡逻队临时避雾的石棚。",
+          "isPublic": false
+        },
+        {
+          "id": "misty_highlands_building_04",
+          "name": "高原药草坡",
+          "type": "自然地标",
+          "description": "稀疏药草贴着湿石生长，采集时容易迷失方向。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "emperor_city",
@@ -272,15 +1907,198 @@
         610,
         475
       ],
-      "name": "帝都罗姆",
+      "name": "罗姆城",
       "type": "城市",
-      "description": "赛琳娜帝国的核心都市，充斥着宏伟的黑石建筑与蒸汽机械的轰鸣声，体现着帝国强盛的工业与军事力量。",
+      "description": "赛琳娜帝国西部的皇室军政重城，东接极光织法城，西通艾瑞斯东部商埠。黑石官署、军用魔导库和贵族宅邸沿主道排列，是帝国西境军政与边贸往来的核心城市。",
       "connected_nodes": [
         "southern_trading_post",
         "aurora_weave_city"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "emperor_city_building_01",
+          "name": "罗姆执政官署",
+          "type": "政务建筑",
+          "description": "黑石官署处理西境军政、边贸许可和贵族诉状。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_02",
+          "name": "皇室行宫",
+          "type": "王宫",
+          "description": "皇室成员巡幸西境时居住的宫院，平日戒备森严。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_03",
+          "name": "军用魔导库",
+          "type": "军事建筑",
+          "description": "储存战斗魔导器、充能晶匣和封印运输箱。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_04",
+          "name": "西境军务厅",
+          "type": "军事建筑",
+          "description": "军官在此调度边境巡逻和通往艾瑞斯的护送任务。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_05",
+          "name": "边贸税务所",
+          "type": "政务建筑",
+          "description": "来自艾瑞斯的矿石和粮车必须在此登记纳税。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_06",
+          "name": "使节驿馆",
+          "type": "外交建筑",
+          "description": "接待艾瑞斯商团、使者和被严密监视的访客。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_07",
+          "name": "黑石贵族宅邸",
+          "type": "住宅",
+          "description": "古老家族在罗姆城的宅邸，窗上嵌着暗色符文玻璃。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_08",
+          "name": "黑石贵族宅邸",
+          "type": "住宅",
+          "description": "院墙高而厚，门前有家族雇佣的魔法护卫。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_09",
+          "name": "军需马车行",
+          "type": "交通设施",
+          "description": "负责安排往铁冠城和极光织法城的护送马车。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_10",
+          "name": "符文灯街",
+          "type": "商业街",
+          "description": "街灯由低阶符文维持，商铺售卖帝国制式器具。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_11",
+          "name": "罗姆大剧场",
+          "type": "娱乐建筑",
+          "description": "贵族观看歌剧和政治寓言剧的半圆剧场。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_12",
+          "name": "魔导修缮铺",
+          "type": "工坊",
+          "description": "技师修理护符、照明灯和小型军用魔导部件。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_13",
+          "name": "兵站仓库",
+          "type": "仓储建筑",
+          "description": "帝国军粮、帐篷和备用护甲按军团编号堆放。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_14",
+          "name": "巡城卫队所",
+          "type": "军事建筑",
+          "description": "处理街区治安和盘查外来者的卫队驻地。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_15",
+          "name": "边境商人旅店",
+          "type": "旅店",
+          "description": "艾瑞斯商人和帝国掮客在此交换货单。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_16",
+          "name": "居民公寓",
+          "type": "住宅",
+          "description": "三层公寓装着廉价符文灯，住户多为职员和学徒。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_17",
+          "name": "贵族寓所",
+          "type": "住宅",
+          "description": "小型塔楼住宅，门口设有魔力识别锁。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_18",
+          "name": "魔导杂货铺",
+          "type": "商铺",
+          "description": "售卖基础护符、灯片、墨水和便携晶石。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_19",
+          "name": "符文维修店",
+          "type": "工坊",
+          "description": "修理破损魔导器和家用符文阵。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_20",
+          "name": "城市水塔",
+          "type": "公共设施",
+          "description": "水元素阵列维持供水，塔下常有人排队。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_21",
+          "name": "巡逻岗亭",
+          "type": "军事建筑",
+          "description": "帝国卫兵检查通行牌和夜间许可证。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_22",
+          "name": "小型书店",
+          "type": "商铺",
+          "description": "出售元素入门书、账册和贵族传记。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_23",
+          "name": "晶币兑换铺",
+          "type": "商铺",
+          "description": "兑换帝国晶币、外币和商会票据。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_24",
+          "name": "廉价食铺",
+          "type": "商铺",
+          "description": "供应热汤、面包和魔导炉烤肉。",
+          "isPublic": true
+        },
+        {
+          "id": "emperor_city_building_25",
+          "name": "货运仓库",
+          "type": "仓储建筑",
+          "description": "货箱贴着符文封条，等待魔导车转运。",
+          "isPublic": false
+        },
+        {
+          "id": "emperor_city_building_26",
+          "name": "低阶法师事务所",
+          "type": "商业建筑",
+          "description": "承接清洁、照明、护卫和抄写符文的委托。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "starlight_academy",
@@ -290,12 +2108,209 @@
       ],
       "name": "星辉魔导学院",
       "type": "城市",
-      "description": "赛琳娜帝国最著名的魔法学府，位于首都附近的独立浮空岛上。建筑群由璀璨的白玉石砌成，周围环绕着缓缓流淌的奥术星沙。这里聚集了全大陆最具天赋的年轻法师，日夜钻研着高深的元素法则。",
+      "description": "辉光城北面的魔导学府，与首都保持封闭通道。白塔、星象庭和元素试验场围绕学院展开，贵族子弟和平民天才在此接受筛选。",
       "connected_nodes": [
         "radiant_city"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "starlight_academy_building_01",
+          "name": "星象主塔",
+          "type": "学院建筑",
+          "description": "学院最高白塔，顶部观测星轨与魔力潮汐。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_02",
+          "name": "元素讲堂",
+          "type": "学院建筑",
+          "description": "学生在阶梯教室学习六元素基础理论。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_03",
+          "name": "高阶魔法书库",
+          "type": "图书馆",
+          "description": "书架由防护符文封锁，借阅需导师签名。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_04",
+          "name": "奥术试验场",
+          "type": "实验设施",
+          "description": "地面刻满防爆纹路，用于测试火球、风刃和结界。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_05",
+          "name": "星沙庭院",
+          "type": "公共区域",
+          "description": "漂浮星沙沿环形水渠缓慢流动，学生常在此复习。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_06",
+          "name": "贵族学生宿舍",
+          "type": "住宅",
+          "description": "纯血家族子弟居住的独立楼舍，仆役从侧门进出。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_07",
+          "name": "平民奖学生宿舍",
+          "type": "住宅",
+          "description": "通过考试入学的平民学生合住的窄楼。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_08",
+          "name": "导师研究塔",
+          "type": "研究设施",
+          "description": "高阶导师的私人研究室，门口有隔音与防窥符文。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_09",
+          "name": "魔力测定厅",
+          "type": "学院建筑",
+          "description": "新生在这里接受元素适性和魔力量检查。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_10",
+          "name": "校内医护室",
+          "type": "医疗建筑",
+          "description": "治疗魔力反噬、烧伤和实验事故的白色小楼。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_11",
+          "name": "符文玻璃温室",
+          "type": "实验设施",
+          "description": "培育受魔力影响的药草和微光藤蔓。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_12",
+          "name": "学院食堂",
+          "type": "生活设施",
+          "description": "学生与低阶导师分时用餐，座位等级分明。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_13",
+          "name": "纪律审查室",
+          "type": "学院建筑",
+          "description": "处理作弊、私斗和禁书抄录的小审讯室。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_14",
+          "name": "魔宠观察笼",
+          "type": "兽栏",
+          "description": "关着用于课堂观察的小型元素生物。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_15",
+          "name": "传送阵前厅",
+          "type": "交通设施",
+          "description": "连接辉光城的许可传送阵设在封闭前厅。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_16",
+          "name": "居民公寓",
+          "type": "住宅",
+          "description": "三层公寓装着廉价符文灯，住户多为职员和学徒。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_17",
+          "name": "贵族寓所",
+          "type": "住宅",
+          "description": "小型塔楼住宅，门口设有魔力识别锁。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_18",
+          "name": "魔导杂货铺",
+          "type": "商铺",
+          "description": "售卖基础护符、灯片、墨水和便携晶石。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_19",
+          "name": "符文维修店",
+          "type": "工坊",
+          "description": "修理破损魔导器和家用符文阵。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_20",
+          "name": "城市水塔",
+          "type": "公共设施",
+          "description": "水元素阵列维持供水，塔下常有人排队。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_21",
+          "name": "巡逻岗亭",
+          "type": "军事建筑",
+          "description": "帝国卫兵检查通行牌和夜间许可证。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_22",
+          "name": "小型书店",
+          "type": "商铺",
+          "description": "出售元素入门书、账册和贵族传记。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_23",
+          "name": "晶币兑换铺",
+          "type": "商铺",
+          "description": "兑换帝国晶币、外币和商会票据。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_24",
+          "name": "廉价食铺",
+          "type": "商铺",
+          "description": "供应热汤、面包和魔导炉烤肉。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_25",
+          "name": "货运仓库",
+          "type": "仓储建筑",
+          "description": "货箱贴着符文封条，等待魔导车转运。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_26",
+          "name": "低阶法师事务所",
+          "type": "商业建筑",
+          "description": "承接清洁、照明、护卫和抄写符文的委托。",
+          "isPublic": true
+        },
+        {
+          "id": "starlight_academy_building_27",
+          "name": "居民公寓",
+          "type": "住宅",
+          "description": "三层公寓装着廉价符文灯，住户多为职员和学徒。",
+          "isPublic": false
+        },
+        {
+          "id": "starlight_academy_building_28",
+          "name": "贵族寓所",
+          "type": "住宅",
+          "description": "小型塔楼住宅，门口设有魔力识别锁。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "aurora_weave_city",
@@ -305,7 +2320,7 @@
       ],
       "name": "极光织法城",
       "type": "城市",
-      "description": "辉光城东北侧的副核心城市，以魔法织物、符文玻璃和光桥零件制造闻名。这里不像首都那样奢华，却承担着帝国大量基础魔导工业，是贵族法师、平民工匠与无魔者劳工共同维持的繁忙城市。",
+      "description": "连接罗姆城、辉光城、边境镇与火山带的魔导工业城。符文织机、光桥部件和炼金工坊昼夜运转，是帝国魔法产业的交通枢纽。",
       "connected_nodes": [
         "emperor_city",
         "imperial_border_town",
@@ -313,7 +2328,190 @@
         "radiant_city"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "aurora_weave_city_building_01",
+          "name": "极光织机大厅",
+          "type": "工坊",
+          "description": "大型魔法织机吐出泛光布卷，工匠轮班看守。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_02",
+          "name": "符文玻璃铸坊",
+          "type": "工坊",
+          "description": "熔炉和冷却槽制造光桥零件与玻璃板。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_03",
+          "name": "魔导部件市场",
+          "type": "市场",
+          "description": "商人采购齿轮、晶管、护符外壳和低阶晶石。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_04",
+          "name": "工匠行会馆",
+          "type": "行会建筑",
+          "description": "织工、玻璃匠和炼金师在此登记工单。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_05",
+          "name": "劳工宿舍",
+          "type": "住宅",
+          "description": "无魔者劳工合住的长楼，窗户小而密。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_06",
+          "name": "平民魔法师公寓",
+          "type": "住宅",
+          "description": "低阶魔法师租住的窄楼，屋顶常有练习火花。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_07",
+          "name": "光桥检修站",
+          "type": "交通设施",
+          "description": "检修通向辉光城和各工坊的魔力桥梁部件。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_08",
+          "name": "工业监察署",
+          "type": "政务建筑",
+          "description": "贵族监察官核查产量、事故和工坊税。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_09",
+          "name": "晶石充能所",
+          "type": "工坊",
+          "description": "为魔导器晶匣补充基础魔力，排队者很多。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_10",
+          "name": "冒烟炼金街",
+          "type": "商业街",
+          "description": "小炼金铺密集，空气里有金属和药剂气味。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_11",
+          "name": "火灾抑制塔",
+          "type": "安全设施",
+          "description": "塔内储存水元素结晶，用于压制工坊爆燃。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_12",
+          "name": "城市货运站",
+          "type": "交通设施",
+          "description": "货车往罗姆、边境镇、火山带和辉光城分流。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_13",
+          "name": "廉价食堂",
+          "type": "生活设施",
+          "description": "劳工和学徒在长桌旁吃浓汤与硬面包。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_14",
+          "name": "魔导事故诊所",
+          "type": "医疗建筑",
+          "description": "专治灼伤、符文割伤和魔力失衡的小诊所。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_15",
+          "name": "居民公寓",
+          "type": "住宅",
+          "description": "三层公寓装着廉价符文灯，住户多为职员和学徒。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_16",
+          "name": "贵族寓所",
+          "type": "住宅",
+          "description": "小型塔楼住宅，门口设有魔力识别锁。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_17",
+          "name": "魔导杂货铺",
+          "type": "商铺",
+          "description": "售卖基础护符、灯片、墨水和便携晶石。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_18",
+          "name": "符文维修店",
+          "type": "工坊",
+          "description": "修理破损魔导器和家用符文阵。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_19",
+          "name": "城市水塔",
+          "type": "公共设施",
+          "description": "水元素阵列维持供水，塔下常有人排队。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_20",
+          "name": "巡逻岗亭",
+          "type": "军事建筑",
+          "description": "帝国卫兵检查通行牌和夜间许可证。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_21",
+          "name": "小型书店",
+          "type": "商铺",
+          "description": "出售元素入门书、账册和贵族传记。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_22",
+          "name": "晶币兑换铺",
+          "type": "商铺",
+          "description": "兑换帝国晶币、外币和商会票据。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_23",
+          "name": "廉价食铺",
+          "type": "商铺",
+          "description": "供应热汤、面包和魔导炉烤肉。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_24",
+          "name": "货运仓库",
+          "type": "仓储建筑",
+          "description": "货箱贴着符文封条，等待魔导车转运。",
+          "isPublic": false
+        },
+        {
+          "id": "aurora_weave_city_building_25",
+          "name": "低阶法师事务所",
+          "type": "商业建筑",
+          "description": "承接清洁、照明、护卫和抄写符文的委托。",
+          "isPublic": true
+        },
+        {
+          "id": "aurora_weave_city_building_26",
+          "name": "居民公寓",
+          "type": "住宅",
+          "description": "三层公寓装着廉价符文灯，住户多为职员和学徒。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "radiant_city",
@@ -323,7 +2521,7 @@
       ],
       "name": "辉光城",
       "type": "城市",
-      "description": "赛琳娜帝国的首都。整座都市被虹彩绚丽的魔法光桥连接，无数高耸入云的法师塔在夜空中熠熠生辉。这里的法术能量高度充盈，街头充斥着奇幻的魔法造物，彰显着魔法国度的高傲与繁华。",
+      "description": "赛琳娜帝国的首都，光桥横跨高塔，魔法议事厅与皇室宫殿俯视全城。它直连学院、圣血高塔、符玻镇和极光织法城，汇聚帝国权力与知识。",
       "connected_nodes": [
         "aurora_weave_city",
         "starlight_academy",
@@ -331,7 +2529,232 @@
         "runeglass_town"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "radiant_city_building_01",
+          "name": "皇城光桥宫",
+          "type": "王宫",
+          "description": "皇室宫殿悬在多座光桥交汇处，塔尖映着虹彩。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_02",
+          "name": "帝国魔法议事厅",
+          "type": "政务建筑",
+          "description": "贵族法师与高官在此讨论帝国法案与继承问题。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_03",
+          "name": "中央法师塔",
+          "type": "魔法建筑",
+          "description": "辉光城最高塔之一，负责维持城区大型结界。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_04",
+          "name": "虹彩光桥枢纽",
+          "type": "交通设施",
+          "description": "多条魔法光桥在此交叠，通往学院和工坊区。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_05",
+          "name": "皇室禁书库",
+          "type": "图书馆",
+          "description": "收藏古代魔法、血统研究和危险仪式记录。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_06",
+          "name": "贵族礼仪广场",
+          "type": "公共区域",
+          "description": "贵族车队和仪仗队在白石地面上缓慢通过。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_07",
+          "name": "高阶魔导具店",
+          "type": "商铺",
+          "description": "出售昂贵魔导饰品，只接待受邀客人。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_08",
+          "name": "法师协会会馆",
+          "type": "行会建筑",
+          "description": "注册法师、发布研究委托和仲裁魔法纠纷。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_09",
+          "name": "皇室医院",
+          "type": "医疗建筑",
+          "description": "高阶治愈师服务皇室、贵族和重要官员。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_10",
+          "name": "纯血家族宅邸",
+          "type": "住宅",
+          "description": "古老魔法家族的高塔宅邸，外墙刻满族纹。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_11",
+          "name": "纯血家族宅邸",
+          "type": "住宅",
+          "description": "门前漂浮着家徽灯，访客需接受魔力检查。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_12",
+          "name": "平民魔法师事务所",
+          "type": "商铺",
+          "description": "低阶法师承接照明、清洁和护符维护委托。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_13",
+          "name": "帝国公告厅",
+          "type": "政务建筑",
+          "description": "皇帝谕令、学院考试和血统审查名单张贴于此。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_14",
+          "name": "光元素礼拜堂",
+          "type": "宗教建筑",
+          "description": "小型礼拜堂为光元素法师和贵族妇人开放。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_15",
+          "name": "城市卫队塔",
+          "type": "军事建筑",
+          "description": "卫队从塔内监控光桥入口和贵族街区。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_16",
+          "name": "魔力井广场",
+          "type": "公共设施",
+          "description": "地下魔力脉冲在井口泛光，市民常在外圈围观。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_17",
+          "name": "居民公寓",
+          "type": "住宅",
+          "description": "三层公寓装着廉价符文灯，住户多为职员和学徒。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_18",
+          "name": "贵族寓所",
+          "type": "住宅",
+          "description": "小型塔楼住宅，门口设有魔力识别锁。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_19",
+          "name": "魔导杂货铺",
+          "type": "商铺",
+          "description": "售卖基础护符、灯片、墨水和便携晶石。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_20",
+          "name": "符文维修店",
+          "type": "工坊",
+          "description": "修理破损魔导器和家用符文阵。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_21",
+          "name": "城市水塔",
+          "type": "公共设施",
+          "description": "水元素阵列维持供水，塔下常有人排队。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_22",
+          "name": "巡逻岗亭",
+          "type": "军事建筑",
+          "description": "帝国卫兵检查通行牌和夜间许可证。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_23",
+          "name": "小型书店",
+          "type": "商铺",
+          "description": "出售元素入门书、账册和贵族传记。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_24",
+          "name": "晶币兑换铺",
+          "type": "商铺",
+          "description": "兑换帝国晶币、外币和商会票据。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_25",
+          "name": "廉价食铺",
+          "type": "商铺",
+          "description": "供应热汤、面包和魔导炉烤肉。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_26",
+          "name": "货运仓库",
+          "type": "仓储建筑",
+          "description": "货箱贴着符文封条，等待魔导车转运。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_27",
+          "name": "低阶法师事务所",
+          "type": "商业建筑",
+          "description": "承接清洁、照明、护卫和抄写符文的委托。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_28",
+          "name": "居民公寓",
+          "type": "住宅",
+          "description": "三层公寓装着廉价符文灯，住户多为职员和学徒。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_29",
+          "name": "贵族寓所",
+          "type": "住宅",
+          "description": "小型塔楼住宅，门口设有魔力识别锁。",
+          "isPublic": false
+        },
+        {
+          "id": "radiant_city_building_30",
+          "name": "魔导杂货铺",
+          "type": "商铺",
+          "description": "售卖基础护符、灯片、墨水和便携晶石。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_31",
+          "name": "符文维修店",
+          "type": "工坊",
+          "description": "修理破损魔导器和家用符文阵。",
+          "isPublic": true
+        },
+        {
+          "id": "radiant_city_building_32",
+          "name": "城市水塔",
+          "type": "公共设施",
+          "description": "水元素阵列维持供水，塔下常有人排队。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "blood_purity_spire",
@@ -341,13 +2764,189 @@
       ],
       "name": "圣血高塔",
       "type": "要塞",
-      "description": "坐落在辉光城外围的一座高耸石塔，是帝国正统贵族的聚集地。塔身雕刻着繁复的古老符文，散发着微弱的红光，四周常年有皇家魔法骑士巡逻，防守极为严密。",
+      "description": "位于辉光城与同德里之间的贵族高塔。古老魔法家族在此登记血统、审查学徒和商议法案，塔影长期压在无魔者街区上。",
       "connected_nodes": [
         "radiant_city",
         "equality_suburb"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "blood_purity_spire_building_01",
+          "name": "血统审查大厅",
+          "type": "政务建筑",
+          "description": "家族代表在此提交谱系、魔力证书和婚姻文书。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_02",
+          "name": "圣血议事室",
+          "type": "政务建筑",
+          "description": "正统派贵族闭门商议法案和人事安排。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_03",
+          "name": "谱系档案库",
+          "type": "档案馆",
+          "description": "厚重档案柜保存几十个魔法家族的血统记录。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_04",
+          "name": "魔力检测室",
+          "type": "魔法建筑",
+          "description": "以水晶阵列测定受检者魔力波动与元素亲和。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_05",
+          "name": "贵族接待厅",
+          "type": "礼仪建筑",
+          "description": "等待审查的贵族家庭在帷幕后低声交谈。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_06",
+          "name": "高塔卫队营房",
+          "type": "军事建筑",
+          "description": "皇家魔法骑士在塔下轮值守卫。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_07",
+          "name": "符文升降梯",
+          "type": "交通设施",
+          "description": "刻有家族纹章的升降平台连接高塔各层。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_08",
+          "name": "闭门法庭",
+          "type": "政务建筑",
+          "description": "处理血统争议、继承纠纷和身份剥夺案件。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_09",
+          "name": "红晶祈祷室",
+          "type": "宗教建筑",
+          "description": "贵族在小室内向祖先与魔法之神献烛。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_10",
+          "name": "塔下告示墙",
+          "type": "公共设施",
+          "description": "张贴血统审查公告和平民禁入警示。",
+          "isPublic": true
+        },
+        {
+          "id": "blood_purity_spire_building_11",
+          "name": "贵族候车廊",
+          "type": "交通设施",
+          "description": "带顶长廊供贵族马车停靠，卫兵阻拦闲人。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_12",
+          "name": "魔法卫队营房",
+          "type": "军事建筑",
+          "description": "魔法骑士和塔卫在此轮换休息。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_13",
+          "name": "符文防御阵",
+          "type": "魔法建筑",
+          "description": "地面符文与墙体结界相连，用于封锁入口。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_14",
+          "name": "魔导军械库",
+          "type": "军事建筑",
+          "description": "储存充能晶匣、法杖和制式护符。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_15",
+          "name": "审查室",
+          "type": "政务建筑",
+          "description": "受检者在水晶灯下接受盘问和记录。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_16",
+          "name": "瞭望平台",
+          "type": "军事建筑",
+          "description": "平台装有远视水晶，可监控相邻道路。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_17",
+          "name": "研究小室",
+          "type": "研究设施",
+          "description": "低阶法师维护塔内结界和检测设备。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_18",
+          "name": "档案室",
+          "type": "档案馆",
+          "description": "保存通行牌、审查记录和魔法许可文书。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_19",
+          "name": "医护室",
+          "type": "医疗建筑",
+          "description": "处理魔力灼伤和训练事故的小室。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_20",
+          "name": "升降平台",
+          "type": "交通设施",
+          "description": "符文平台缓慢上下，连接高低楼层。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_21",
+          "name": "值守食堂",
+          "type": "生活设施",
+          "description": "守卫和书记员分批在此用餐。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_22",
+          "name": "魔法卫队营房",
+          "type": "军事建筑",
+          "description": "魔法骑士和塔卫在此轮换休息。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_23",
+          "name": "符文防御阵",
+          "type": "魔法建筑",
+          "description": "地面符文与墙体结界相连，用于封锁入口。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_24",
+          "name": "魔导军械库",
+          "type": "军事建筑",
+          "description": "储存充能晶匣、法杖和制式护符。",
+          "isPublic": false
+        },
+        {
+          "id": "blood_purity_spire_building_25",
+          "name": "审查室",
+          "type": "政务建筑",
+          "description": "受检者在水晶灯下接受盘问和记录。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "imperial_border_town",
@@ -357,12 +2956,132 @@
       ],
       "name": "帝国边境镇",
       "type": "村庄",
-      "description": "赛琳娜帝国前线的贸易集散地，虽然规模不大，但由于各国商旅云集，显得异常繁华与鱼龙混杂。",
+      "description": "极光织法城东面的边境聚落，商旅、巡逻兵和低阶魔法师在此混杂。它规模不大，却是帝国向外试探贸易与情报的前哨。",
       "connected_nodes": [
         "aurora_weave_city"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "imperial_border_town_building_01",
+          "name": "边境巡逻所",
+          "type": "军事建筑",
+          "description": "帝国巡逻兵在这里领取路线和通行令。",
+          "isPublic": false
+        },
+        {
+          "id": "imperial_border_town_building_02",
+          "name": "小型税务棚",
+          "type": "政务建筑",
+          "description": "记录商贩货物和来往旅人的简易税棚。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_03",
+          "name": "边民酒馆",
+          "type": "旅店",
+          "description": "巡逻兵、商旅和低阶法师挤在一间屋里喝酒。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_04",
+          "name": "驮马栏",
+          "type": "交通设施",
+          "description": "驮马和小型货车在尘土院中等待补给。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_05",
+          "name": "廉价魔导铺",
+          "type": "商铺",
+          "description": "出售二手照明护符和修补过的符文灯。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_06",
+          "name": "边境仓库",
+          "type": "仓储建筑",
+          "description": "堆放布匹、矿石样品和被扣押的小货箱。",
+          "isPublic": false
+        },
+        {
+          "id": "imperial_border_town_building_07",
+          "name": "药剂小屋",
+          "type": "医疗建筑",
+          "description": "店主售卖退烧药、抗孢粉和劣质治疗药水。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_08",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "边民家庭居住的低矮房屋，门边挂着帝国牌照。",
+          "isPublic": false
+        },
+        {
+          "id": "imperial_border_town_building_09",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "住着运输脚夫一家，院里堆着空木箱。",
+          "isPublic": false
+        },
+        {
+          "id": "imperial_border_town_building_10",
+          "name": "旅人水井",
+          "type": "公共设施",
+          "description": "过境者补水的石井，井边贴满寻人纸。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_11",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "装有廉价符文灯的小屋，住着工匠和劳工家庭。",
+          "isPublic": false
+        },
+        {
+          "id": "imperial_border_town_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "平民魔法师学徒租住的窄房，桌上堆着笔记。",
+          "isPublic": false
+        },
+        {
+          "id": "imperial_border_town_building_13",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "井口装有低阶水元素符文，时常需要修理。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_14",
+          "name": "廉价食铺",
+          "type": "商铺",
+          "description": "供应面包、热汤和工坊剩下的炖菜。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_15",
+          "name": "小型护符铺",
+          "type": "商铺",
+          "description": "售卖便宜护符、灯片和二手魔导零件。",
+          "isPublic": true
+        },
+        {
+          "id": "imperial_border_town_building_16",
+          "name": "巡逻岗亭",
+          "type": "军事建筑",
+          "description": "帝国巡逻兵检查夜间通行牌。",
+          "isPublic": false
+        },
+        {
+          "id": "imperial_border_town_building_17",
+          "name": "公共告示牌",
+          "type": "公共设施",
+          "description": "贴着招工、审查公告和学院传闻。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "equality_suburb",
@@ -372,12 +3091,132 @@
       ],
       "name": "平民区·同德里",
       "type": "村庄",
-      "description": "虽然是平民与无魔者聚居区，但得益于帝国陛下推行的平等政策，这里的街区整洁有序。居民们虽然没有魔法天赋，却靠着勤劳的双手和基础魔法道具过着安居乐业的生活。",
+      "description": "圣血高塔外的无魔者和平民魔法师聚居区。街道依赖廉价魔导灯和公共水塔维持秩序，居民在贵族审查与平等口号之间生活。",
       "connected_nodes": [
         "blood_purity_spire"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "equality_suburb_building_01",
+          "name": "公共魔导灯塔",
+          "type": "公共设施",
+          "description": "为街区供给基础照明的小塔，常需居民集资维护。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_02",
+          "name": "无魔者工棚",
+          "type": "住宅",
+          "description": "无魔者劳工合住的长棚，墙上挂着工具袋。",
+          "isPublic": false
+        },
+        {
+          "id": "equality_suburb_building_03",
+          "name": "无魔者工棚",
+          "type": "住宅",
+          "description": "几户家庭共用炉灶和水桶，空间拥挤。",
+          "isPublic": false
+        },
+        {
+          "id": "equality_suburb_building_04",
+          "name": "平等派讲演台",
+          "type": "公共区域",
+          "description": "木台设在街口，年轻学生和工人常在此发表演说。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_05",
+          "name": "基础识字教室",
+          "type": "教育建筑",
+          "description": "志愿教师在夜里教无魔者儿童识字算账。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_06",
+          "name": "廉价面包房",
+          "type": "商铺",
+          "description": "供应粗麦面包和热汤，是居民早晚排队的地方。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_07",
+          "name": "二手护符摊",
+          "type": "商铺",
+          "description": "售卖修补过的护身符、灯片和失败魔导品。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_08",
+          "name": "公共水塔",
+          "type": "公共设施",
+          "description": "低矮水塔供应整片街区，水压经常不足。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_09",
+          "name": "街区调解所",
+          "type": "政务建筑",
+          "description": "处理劳资纠纷、欠债和小规模冲突。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_10",
+          "name": "巡逻兵岗亭",
+          "type": "军事建筑",
+          "description": "帝国士兵在此监视集会和过往传单。",
+          "isPublic": false
+        },
+        {
+          "id": "equality_suburb_building_11",
+          "name": "平民医馆",
+          "type": "医疗建筑",
+          "description": "药师用便宜药粉治疗工伤和魔导灯灼伤。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "装有廉价符文灯的小屋，住着工匠和劳工家庭。",
+          "isPublic": false
+        },
+        {
+          "id": "equality_suburb_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "平民魔法师学徒租住的窄房，桌上堆着笔记。",
+          "isPublic": false
+        },
+        {
+          "id": "equality_suburb_building_14",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "井口装有低阶水元素符文，时常需要修理。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_15",
+          "name": "廉价食铺",
+          "type": "商铺",
+          "description": "供应面包、热汤和工坊剩下的炖菜。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_16",
+          "name": "小型护符铺",
+          "type": "商铺",
+          "description": "售卖便宜护符、灯片和二手魔导零件。",
+          "isPublic": true
+        },
+        {
+          "id": "equality_suburb_building_17",
+          "name": "巡逻岗亭",
+          "type": "军事建筑",
+          "description": "帝国巡逻兵检查夜间通行牌。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "runeglass_town",
@@ -387,13 +3226,133 @@
       ],
       "name": "符玻镇",
       "type": "村庄",
-      "description": "位于辉光城外围的工坊聚落，居民多为平民魔法师学徒、符文玻璃匠和搬运工。这里生产的廉价魔法灯具与基础护符会被送往帝都、边境镇和平民区。",
+      "description": "辉光城东侧的工坊镇，连接首都与翠绿魔沼。符文玻璃、护符灯罩和低阶魔导器在这里成批制造，学徒与搬运工填满窄街。",
       "connected_nodes": [
         "radiant_city",
         "emerald_lagoon"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "runeglass_town_building_01",
+          "name": "符文玻璃窑",
+          "type": "工坊",
+          "description": "玻璃窑日夜发红，工匠把符文压入透明板材。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_02",
+          "name": "护符灯具坊",
+          "type": "工坊",
+          "description": "成批制造廉价魔法灯具、门铃和基础护符。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_03",
+          "name": "学徒宿舍",
+          "type": "住宅",
+          "description": "平民魔法学徒和搬运工混住的窄楼。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_04",
+          "name": "玻璃匠行会",
+          "type": "行会建筑",
+          "description": "工匠登记订单、调解工价和招收学徒。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_05",
+          "name": "碎玻璃回收场",
+          "type": "生产设施",
+          "description": "废弃符玻被分类熔回，地面闪着细碎光点。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_06",
+          "name": "魔沼采购站",
+          "type": "仓储建筑",
+          "description": "从翠绿魔沼运来的苔藓、孢粉和湿木箱在此暂存。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_07",
+          "name": "工坊食堂",
+          "type": "生活设施",
+          "description": "学徒和搬运工用铜牌换取热汤。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_08",
+          "name": "小型充能台",
+          "type": "工坊",
+          "description": "低阶魔法师为符玻制品补充微量魔力。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_09",
+          "name": "货车院",
+          "type": "交通设施",
+          "description": "前往辉光城和魔沼边缘的货车在此装卸。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_10",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "玻璃匠家庭的住处，窗边摆着失败样品。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_11",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "搬运工租住的小屋，门口堆着木箱。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "装有廉价符文灯的小屋，住着工匠和劳工家庭。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "平民魔法师学徒租住的窄房，桌上堆着笔记。",
+          "isPublic": false
+        },
+        {
+          "id": "runeglass_town_building_14",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "井口装有低阶水元素符文，时常需要修理。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_15",
+          "name": "廉价食铺",
+          "type": "商铺",
+          "description": "供应面包、热汤和工坊剩下的炖菜。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_16",
+          "name": "小型护符铺",
+          "type": "商铺",
+          "description": "售卖便宜护符、灯片和二手魔导零件。",
+          "isPublic": true
+        },
+        {
+          "id": "runeglass_town_building_17",
+          "name": "巡逻岗亭",
+          "type": "军事建筑",
+          "description": "帝国巡逻兵检查夜间通行牌。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "whispering_volcano_belt",
@@ -403,14 +3362,57 @@
       ],
       "name": "低语火山带",
       "type": "荒野",
-      "description": "赛琳娜帝国境内的远古火山遗迹。此地地表龟裂，滚烫的岩浆在沟壑中流淌，空气中弥漫着刺鼻的硫磺味。尽管环境极其恶劣，但这里蕴藏着极为丰富的火元素结晶，吸引了无数冒险者前来试炼。",
+      "description": "极光织法城南面的火山荒原，通往黑曜石矿场与灰烬藤原。热风、硫磺和火元素晶脉吸引采矿队，也让拉鲁得斯的传闻反复出现。",
       "connected_nodes": [
         "aurora_weave_city",
         "obsidian_mine",
         "cinder_vine_fields"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "whispering_volcano_belt_building_01",
+          "name": "裂岩观测站",
+          "type": "研究设施",
+          "description": "帝国法师用水晶仪记录火元素波动和地面震颤。",
+          "isPublic": false
+        },
+        {
+          "id": "whispering_volcano_belt_building_02",
+          "name": "火晶采集营",
+          "type": "临时营地",
+          "description": "采矿队用耐火布搭成的营地，周围插着警示杆。",
+          "isPublic": false
+        },
+        {
+          "id": "whispering_volcano_belt_building_03",
+          "name": "焦黑路标",
+          "type": "地标",
+          "description": "指向矿场与灰烬藤原的黑木路标，边缘被烧焦。",
+          "isPublic": true
+        },
+        {
+          "id": "whispering_volcano_belt_building_04",
+          "name": "硫磺避难棚",
+          "type": "安全设施",
+          "description": "遇到毒烟和喷发时供冒险者短暂躲避的石棚。",
+          "isPublic": true
+        },
+        {
+          "id": "whispering_volcano_belt_building_05",
+          "name": "远古熔岩祭台",
+          "type": "遗迹",
+          "description": "半埋在凝固熔岩中的黑石平台，纹路已不完整。",
+          "isPublic": true
+        },
+        {
+          "id": "whispering_volcano_belt_building_06",
+          "name": "拉鲁得斯裂痕",
+          "type": "自然地标",
+          "description": "巨大脚印般的裂谷延伸到烟雾中，引来许多传闻。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "cinder_vine_fields",
@@ -420,12 +3422,34 @@
       ],
       "name": "灰烬藤原",
       "type": "荒野",
-      "description": "低语火山带外缘的黑灰色旷野，坚韧的灰烬藤会缠绕在冷却熔岩上生长。炼金师会冒险采集藤籽与火元素灰土，但这里也常有火蜥、裂地气孔和迷路商队的遗骸。",
+      "description": "低语火山带外缘的黑灰旷野，灰烬藤缠绕在冷却熔岩上。炼金师会采集藤籽和火灰，迷路者却很难在裂隙间找到回路。",
       "connected_nodes": [
         "whispering_volcano_belt"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "cinder_vine_fields_building_01",
+          "name": "灰烬藤采集棚",
+          "type": "临时营地",
+          "description": "炼金师临时搭建的棚屋，用来筛选藤籽和火灰。",
+          "isPublic": true
+        },
+        {
+          "id": "cinder_vine_fields_building_02",
+          "name": "冷熔岩石台",
+          "type": "自然地标",
+          "description": "大片冷却熔岩形成黑色平台，藤蔓从缝隙中爬出。",
+          "isPublic": true
+        },
+        {
+          "id": "cinder_vine_fields_building_03",
+          "name": "迷路商队残车",
+          "type": "遗迹",
+          "description": "半截货车陷在灰土中，木轮被藤蔓缠住。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "emerald_lagoon",
@@ -435,12 +3459,41 @@
       ],
       "name": "翠绿魔沼",
       "type": "荒野",
-      "description": "赛琳娜帝国内陆一片充满水与木元素能量的潮湿沼泽。微光苔藓将这里映照得一片莹绿，空气中弥漫着芬芳但带有一丝致幻效果的孢子雾气。这里是许多珍稀水系魔法生物的栖息地。",
+      "description": "符玻镇外的潮湿魔沼，莹绿苔光映在黑水上。水元素生物、药草和致幻孢子共存，是工坊采购珍材时最谨慎的目的地。",
       "connected_nodes": [
         "runeglass_town"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "emerald_lagoon_building_01",
+          "name": "苔光浅滩",
+          "type": "自然地标",
+          "description": "微光苔藓覆盖湿泥，夜里像铺着绿火。",
+          "isPublic": true
+        },
+        {
+          "id": "emerald_lagoon_building_02",
+          "name": "药草采集桩屋",
+          "type": "临时营地",
+          "description": "架在湿地上的木屋，供采药人避开沼水。",
+          "isPublic": true
+        },
+        {
+          "id": "emerald_lagoon_building_03",
+          "name": "孢雾警示牌",
+          "type": "公共设施",
+          "description": "符玻镇工坊立下的木牌，提醒旅人佩戴滤布。",
+          "isPublic": true
+        },
+        {
+          "id": "emerald_lagoon_building_04",
+          "name": "沉没木栈道",
+          "type": "遗迹",
+          "description": "旧栈道半沉在黑水中，只剩几段还能落脚。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "obsidian_mine",
@@ -450,12 +3503,55 @@
       ],
       "name": "黑曜石熔矿场",
       "type": "荒野",
-      "description": "低语火山带边缘的危险矿区。滚烫岩浆、黑曜石矿脉与火晶石裸露在裂谷之间，帝国设有临时护盾和监工据点，但真正决定这里价值的是恶劣环境中的资源与冒险机会。",
+      "description": "低语火山带边缘的矿区，黑曜石和火晶石裸露在热裂谷中。帝国监工设有临时护盾，但矿工仍必须在滚烫地面上作业。",
       "connected_nodes": [
         "whispering_volcano_belt"
       ],
       "country": "赛琳娜帝国",
-      "building": []
+      "building": [
+        {
+          "id": "obsidian_mine_building_01",
+          "name": "黑曜石采掘井",
+          "type": "生产设施",
+          "description": "矿工沿加固斜井进入热裂谷边缘采石。",
+          "isPublic": false
+        },
+        {
+          "id": "obsidian_mine_building_02",
+          "name": "火晶筛选棚",
+          "type": "生产设施",
+          "description": "矿石在铁筛中分类，火晶被单独装入隔热箱。",
+          "isPublic": false
+        },
+        {
+          "id": "obsidian_mine_building_03",
+          "name": "监工石屋",
+          "type": "政务建筑",
+          "description": "帝国监工记录产量、伤亡和逃工名单。",
+          "isPublic": false
+        },
+        {
+          "id": "obsidian_mine_building_04",
+          "name": "临时护盾塔",
+          "type": "魔法建筑",
+          "description": "低阶结界抵挡热浪和飞溅碎石。",
+          "isPublic": false
+        },
+        {
+          "id": "obsidian_mine_building_05",
+          "name": "矿工水棚",
+          "type": "生活设施",
+          "description": "存放淡水、盐片和防热布的小棚。",
+          "isPublic": true
+        },
+        {
+          "id": "obsidian_mine_building_06",
+          "name": "冷却沟渠",
+          "type": "生产设施",
+          "description": "引水冷却部分岩面，水汽终日不散。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "wintergate_city",
@@ -465,13 +3561,196 @@
       ],
       "name": "冬门城",
       "type": "城市",
-      "description": "艾瑞斯王国北境山道入口的矿业与军需城市。它规模不及铁冠城，却控制着通往永冻山脉的盐铁商路，城内有铁匠行会、仓库、佣兵旅店与边防征兵处。",
+      "description": "铁冠城北面的山道城市，连接余烬哨所与王都。矿石、军需和征兵文书在此集散，是进入寒冷北境前最后一座完整城镇。",
       "connected_nodes": [
         "iron_crown_city",
         "ember_watch_outpost"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "wintergate_city_building_01",
+          "name": "冬门城门楼",
+          "type": "军事建筑",
+          "description": "通往北境山道的高大门楼，铁门常结着白霜。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_02",
+          "name": "矿石交易厅",
+          "type": "市场",
+          "description": "矿主、铁匠和军需官在此核对矿石成色。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_03",
+          "name": "边防征兵处",
+          "type": "军事建筑",
+          "description": "青年在此登记入伍，墙上贴满军饷告示。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_04",
+          "name": "军需仓库",
+          "type": "仓储建筑",
+          "description": "盐肉、箭矢、皮靴和厚斗篷堆满木架。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_05",
+          "name": "北境马车站",
+          "type": "交通设施",
+          "description": "前往余烬哨所和铁冠城的马车在此换马。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_06",
+          "name": "铁匠行会",
+          "type": "行会建筑",
+          "description": "铁匠们分配军单和矿石配额。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_07",
+          "name": "寒地药铺",
+          "type": "商铺",
+          "description": "售卖冻伤膏、热酒和驱寒草药。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_08",
+          "name": "边军酒馆",
+          "type": "旅店",
+          "description": "士兵、矿工和佣兵在低矮屋梁下喝烈酒。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_09",
+          "name": "佣兵旅店",
+          "type": "旅店",
+          "description": "承接护送、探矿和寻人委托的粗糙旅店。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_10",
+          "name": "城防官署",
+          "type": "政务建筑",
+          "description": "处理山道通行、矿税和边境纠纷。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_11",
+          "name": "黑炉工坊",
+          "type": "工坊",
+          "description": "为守军修理甲片、长矛和矿车铁件。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_12",
+          "name": "煤石堆场",
+          "type": "仓储建筑",
+          "description": "煤石在围栏内堆成黑丘，常有灰尘飘起。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "矿工家庭居住的石屋，屋内炉火很旺。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_14",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "靠近城墙的普通住户，门边挂着冰镐。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_15",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "黑石与木梁搭成的住屋，壁炉常年不灭。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_16",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通军属家庭的住处，院里放着劈柴。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_17",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "堆放粮袋、皮靴、煤石和备用铁件。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_18",
+          "name": "铁匠铺",
+          "type": "工坊",
+          "description": "炉火映红门口，铁锤声从早到晚不断。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_19",
+          "name": "猎具铺",
+          "type": "商铺",
+          "description": "出售短弓、陷阱、兽皮绳和厚手套。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_20",
+          "name": "酒馆",
+          "type": "旅店",
+          "description": "士兵、矿工和商人围着炉火喝烈酒。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_21",
+          "name": "马车驿站",
+          "type": "交通设施",
+          "description": "往各城镇的马车在此登记和换马。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_22",
+          "name": "治安所",
+          "type": "军事建筑",
+          "description": "处理盗窃、斗殴和逃兵通报的小所。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_23",
+          "name": "粮仓",
+          "type": "仓储建筑",
+          "description": "储存黑麦、腌肉和军队征收粮。",
+          "isPublic": false
+        },
+        {
+          "id": "wintergate_city_building_24",
+          "name": "公告墙",
+          "type": "公共设施",
+          "description": "张贴征兵令、税令和失踪通报。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_25",
+          "name": "皮革工坊",
+          "type": "工坊",
+          "description": "加工马具、靴子、护腕和鞍袋。",
+          "isPublic": true
+        },
+        {
+          "id": "wintergate_city_building_26",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "黑石与木梁搭成的住屋，壁炉常年不灭。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "iron_crown_city",
@@ -481,7 +3760,7 @@
       ],
       "name": "铁冠城",
       "type": "城市",
-      "description": "艾瑞斯王国的首都。这是一座依山而建、规模宏伟的军事要塞都市。高耸的黑色岩石城墙常年有重兵把守，内部建筑风格严谨而冰冷，处处透露着铁血与威严的统治气息，是北方的军事防御核心。",
+      "description": "艾瑞斯王国首都，黑岩城墙与王宫要塞压在山坡上。它连接北矿镇、冬门城、至日村和东部商埠，是军政命令与南北派系争执的核心。",
       "connected_nodes": [
         "north_mine_town",
         "solstice_village",
@@ -489,7 +3768,225 @@
         "wintergate_city"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "iron_crown_city_building_01",
+          "name": "铁冠王宫",
+          "type": "王宫",
+          "description": "黑岩王宫与要塞连为一体，俯视整座首都。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_02",
+          "name": "御前会议厅",
+          "type": "政务建筑",
+          "description": "女皇、亲王、宰相和贵族代表在此争夺发言权。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_03",
+          "name": "北方军务院",
+          "type": "军事建筑",
+          "description": "调度边军、矿镇守军和要塞补给的机构。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_04",
+          "name": "王国财政署",
+          "type": "政务建筑",
+          "description": "税吏和书记员清点南北商路账册。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_05",
+          "name": "黑岩城墙",
+          "type": "军事建筑",
+          "description": "厚重城墙沿山势盘绕，垛口布满弩机。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_06",
+          "name": "王家军械库",
+          "type": "军事建筑",
+          "description": "存放制式甲胄、长枪、弩和攻城器械部件。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_07",
+          "name": "贵族议事廊",
+          "type": "政务建筑",
+          "description": "南北贵族在等候召见时彼此试探。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_08",
+          "name": "铁匠大街",
+          "type": "商业街",
+          "description": "炉火连成一排，锻造声从清晨响到夜里。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_09",
+          "name": "北矿货栈",
+          "type": "仓储建筑",
+          "description": "从北矿镇运来的矿石在此过秤入库。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_10",
+          "name": "王都马车总站",
+          "type": "交通设施",
+          "description": "通往冬门城、至日村、东部商埠和北矿镇。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_11",
+          "name": "灰石大教堂",
+          "type": "宗教建筑",
+          "description": "王都中的神圣教会分堂，气氛比圣山更肃穆。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_12",
+          "name": "军官俱乐部",
+          "type": "娱乐建筑",
+          "description": "中高级军官在壁炉旁谈论战事和升迁。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_13",
+          "name": "平民下城区",
+          "type": "住宅区",
+          "description": "工匠、搬运工和退伍兵居住的拥挤街区。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_14",
+          "name": "贵族宅邸",
+          "type": "住宅",
+          "description": "旧军事贵族的石宅，门口有披甲门卫。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_15",
+          "name": "贵族宅邸",
+          "type": "住宅",
+          "description": "南方派在王都购置的宅邸，车库里常停着货车。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_16",
+          "name": "王都监狱",
+          "type": "司法建筑",
+          "description": "关押欠税者、叛乱嫌疑人和斗殴士兵。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_17",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "黑石与木梁搭成的住屋，壁炉常年不灭。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_18",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通军属家庭的住处，院里放着劈柴。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_19",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "堆放粮袋、皮靴、煤石和备用铁件。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_20",
+          "name": "铁匠铺",
+          "type": "工坊",
+          "description": "炉火映红门口，铁锤声从早到晚不断。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_21",
+          "name": "猎具铺",
+          "type": "商铺",
+          "description": "出售短弓、陷阱、兽皮绳和厚手套。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_22",
+          "name": "酒馆",
+          "type": "旅店",
+          "description": "士兵、矿工和商人围着炉火喝烈酒。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_23",
+          "name": "马车驿站",
+          "type": "交通设施",
+          "description": "往各城镇的马车在此登记和换马。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_24",
+          "name": "治安所",
+          "type": "军事建筑",
+          "description": "处理盗窃、斗殴和逃兵通报的小所。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_25",
+          "name": "粮仓",
+          "type": "仓储建筑",
+          "description": "储存黑麦、腌肉和军队征收粮。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_26",
+          "name": "公告墙",
+          "type": "公共设施",
+          "description": "张贴征兵令、税令和失踪通报。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_27",
+          "name": "皮革工坊",
+          "type": "工坊",
+          "description": "加工马具、靴子、护腕和鞍袋。",
+          "isPublic": true
+        },
+        {
+          "id": "iron_crown_city_building_28",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "黑石与木梁搭成的住屋，壁炉常年不灭。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_29",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通军属家庭的住处，院里放着劈柴。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_30",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "堆放粮袋、皮靴、煤石和备用铁件。",
+          "isPublic": false
+        },
+        {
+          "id": "iron_crown_city_building_31",
+          "name": "铁匠铺",
+          "type": "工坊",
+          "description": "炉火映红门口，铁锤声从早到晚不断。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "ember_watch_outpost",
@@ -499,13 +3996,182 @@
       ],
       "name": "余烬哨所",
       "type": "要塞",
-      "description": "艾瑞斯王国建立在黑岩山脉脊线上的前沿哨所。这里终年寒风呼啸，地势险要，驻守着警惕性极高的王国斥候。从高耸的瞭望塔上可以俯瞰整个北方冻原，任何风吹草动都逃不过守卫的眼睛。",
+      "description": "冬门城北面的山脊哨所，继续向前便是霜息峡谷。守军靠烽火、鹰笼和巡山小队监视冻原，把北境异动传回王都。",
       "connected_nodes": [
         "wintergate_city",
         "frost_breath_valley"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "ember_watch_outpost_building_01",
+          "name": "余烬烽火台",
+          "type": "军事建筑",
+          "description": "黑石烽台储着干柴与油罐，用来向冬门城示警。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_02",
+          "name": "山脊瞭望塔",
+          "type": "军事建筑",
+          "description": "斥候从塔上观察霜息峡谷和北境冻原。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_03",
+          "name": "斥候营房",
+          "type": "军事建筑",
+          "description": "巡山斥候轮流休息的狭窄长屋。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_04",
+          "name": "鹰笼",
+          "type": "军事建筑",
+          "description": "训练信鹰与雪隼的小棚，羽毛散在木板上。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_05",
+          "name": "武器架棚",
+          "type": "军事建筑",
+          "description": "短矛、猎弓和备用皮甲在棚中挂成一排。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_06",
+          "name": "冻伤医室",
+          "type": "医疗建筑",
+          "description": "军医用热石、药膏和烈酒处理冻伤。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_07",
+          "name": "哨所马厩",
+          "type": "交通设施",
+          "description": "几匹耐寒马和驮骡用于巡山和传令。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_08",
+          "name": "风雪储粮窖",
+          "type": "仓储建筑",
+          "description": "半埋地下的粮窖防止风雪夺走补给。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_09",
+          "name": "岩洞避难所",
+          "type": "安全设施",
+          "description": "暴风雪来临时，巡逻队退入岩洞暂避。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_10",
+          "name": "军官小屋",
+          "type": "住宅",
+          "description": "哨所长居住的石屋，桌上摊着山道图。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_11",
+          "name": "营房",
+          "type": "军事建筑",
+          "description": "士兵合住的长屋，墙上挂着湿斗篷。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_12",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "铁剑、弩、盾牌和备用甲片按编号存放。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_13",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "观察山道、矿路和冻原风雪的高塔。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_14",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "耐寒马和驮骡由老兵照看。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_15",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "煤石、黑麦、腌肉和干柴堆得很满。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_16",
+          "name": "军医室",
+          "type": "医疗建筑",
+          "description": "用烈酒、热石和草药处理伤口。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_17",
+          "name": "指挥小楼",
+          "type": "军事建筑",
+          "description": "军官在这里核查巡逻表和军饷文书。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_18",
+          "name": "铁匠棚",
+          "type": "工坊",
+          "description": "军匠修理盔甲、马蹄铁和矿具。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_19",
+          "name": "食堂",
+          "type": "生活设施",
+          "description": "守军围着长桌吃热粥和硬面包。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_20",
+          "name": "禁闭室",
+          "type": "司法建筑",
+          "description": "关押违纪兵和被盘查的陌生人。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_21",
+          "name": "营房",
+          "type": "军事建筑",
+          "description": "士兵合住的长屋，墙上挂着湿斗篷。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_22",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "铁剑、弩、盾牌和备用甲片按编号存放。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_23",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "观察山道、矿路和冻原风雪的高塔。",
+          "isPublic": false
+        },
+        {
+          "id": "ember_watch_outpost_building_24",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "耐寒马和驮骡由老兵照看。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "silver_blade_garrison",
@@ -515,12 +4181,181 @@
       ],
       "name": "银刃要塞",
       "type": "要塞",
-      "description": "位于艾瑞斯王国边境的重要军事驻地。这里不仅驻扎着帝国的精锐中下级军官与士兵，更是扼守交通要道的咽喉。营地内整日回荡着武器锻造的敲击声与士兵的操练呐喊。",
+      "description": "北矿镇外的边防军营，控制矿道与兵站。中下级军官、退役兵和军需商人聚集于此，训练场上的口号常盖过铁锤声。",
       "connected_nodes": [
         "north_mine_town"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "silver_blade_garrison_building_01",
+          "name": "银刃主营房",
+          "type": "军事建筑",
+          "description": "中下级军官和士兵合住的营房，墙上挂着旧旗。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_02",
+          "name": "训练校场",
+          "type": "军事建筑",
+          "description": "士兵日夜操练队列、枪术和弓弩。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_03",
+          "name": "边防军械库",
+          "type": "军事建筑",
+          "description": "军械由老兵看守，出入都需登记。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_04",
+          "name": "军官议事室",
+          "type": "军事建筑",
+          "description": "军官私下讨论军饷、调令和王都传闻。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_05",
+          "name": "矿道关卡",
+          "type": "军事建筑",
+          "description": "通往北矿镇矿道的检查点，设有路障。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_06",
+          "name": "兵站仓库",
+          "type": "仓储建筑",
+          "description": "煤石、铁锭、干粮和旧帐篷堆得很高。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_07",
+          "name": "营地铁匠棚",
+          "type": "工坊",
+          "description": "军中铁匠修理甲片、马蹄铁和枪头。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_08",
+          "name": "伤兵医帐",
+          "type": "医疗建筑",
+          "description": "处理矿难、训练伤和巡逻中的刀伤。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_09",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "军马和驮马挤在低矮棚内。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_10",
+          "name": "士兵食堂",
+          "type": "生活设施",
+          "description": "粗粥、黑面包和腌肉是这里最稳定的补给。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_11",
+          "name": "禁闭室",
+          "type": "司法建筑",
+          "description": "违纪士兵和可疑外来者会被关在这里。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_12",
+          "name": "营房",
+          "type": "军事建筑",
+          "description": "士兵合住的长屋，墙上挂着湿斗篷。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_13",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "铁剑、弩、盾牌和备用甲片按编号存放。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_14",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "观察山道、矿路和冻原风雪的高塔。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_15",
+          "name": "马厩",
+          "type": "交通设施",
+          "description": "耐寒马和驮骡由老兵照看。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_16",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "煤石、黑麦、腌肉和干柴堆得很满。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_17",
+          "name": "军医室",
+          "type": "医疗建筑",
+          "description": "用烈酒、热石和草药处理伤口。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_18",
+          "name": "指挥小楼",
+          "type": "军事建筑",
+          "description": "军官在这里核查巡逻表和军饷文书。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_19",
+          "name": "铁匠棚",
+          "type": "工坊",
+          "description": "军匠修理盔甲、马蹄铁和矿具。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_20",
+          "name": "食堂",
+          "type": "生活设施",
+          "description": "守军围着长桌吃热粥和硬面包。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_21",
+          "name": "禁闭室",
+          "type": "司法建筑",
+          "description": "关押违纪兵和被盘查的陌生人。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_22",
+          "name": "营房",
+          "type": "军事建筑",
+          "description": "士兵合住的长屋，墙上挂着湿斗篷。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_23",
+          "name": "军械库",
+          "type": "军事建筑",
+          "description": "铁剑、弩、盾牌和备用甲片按编号存放。",
+          "isPublic": false
+        },
+        {
+          "id": "silver_blade_garrison_building_24",
+          "name": "瞭望塔",
+          "type": "军事建筑",
+          "description": "观察山道、矿路和冻原风雪的高塔。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "north_mine_town",
@@ -530,14 +4365,134 @@
       ],
       "name": "北矿镇",
       "type": "村庄",
-      "description": "铁冠城与银刃要塞之间的矿工镇，居民依靠铁矿、煤石和军需运输生活。这里是普通士兵、矿工家庭和南来商贩交汇的地方，适合承接护送、采购和矿难调查类事件。",
+      "description": "铁冠城、银刃要塞与圣光城之间的矿工镇。铁矿、煤石和跨境马队让这里忙碌，也让艾瑞斯士兵与圣山商旅频繁相遇。",
       "connected_nodes": [
         "holy_light_city",
         "silver_blade_garrison",
         "iron_crown_city"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "north_mine_town_building_01",
+          "name": "北矿井口",
+          "type": "生产设施",
+          "description": "木架支撑的矿井入口，矿车轨道延伸到黑暗中。",
+          "isPublic": false
+        },
+        {
+          "id": "north_mine_town_building_02",
+          "name": "矿工工棚",
+          "type": "住宅",
+          "description": "矿工轮班休息的长棚，空气里都是煤尘。",
+          "isPublic": false
+        },
+        {
+          "id": "north_mine_town_building_03",
+          "name": "矿工工棚",
+          "type": "住宅",
+          "description": "几户矿工家庭共住的棚屋，门口晾着厚衣。",
+          "isPublic": false
+        },
+        {
+          "id": "north_mine_town_building_04",
+          "name": "矿石称量场",
+          "type": "生产设施",
+          "description": "铁矿和煤石在这里过秤，再送往王都和要塞。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_05",
+          "name": "军需转运仓",
+          "type": "仓储建筑",
+          "description": "兵站货物在这里换车，送往银刃要塞。",
+          "isPublic": false
+        },
+        {
+          "id": "north_mine_town_building_06",
+          "name": "矿镇酒馆",
+          "type": "旅店",
+          "description": "矿工、士兵和圣山商旅在同一炉火旁喝酒。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_07",
+          "name": "井下医棚",
+          "type": "医疗建筑",
+          "description": "专治砸伤、肺病和冻裂伤的小医棚。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_08",
+          "name": "铁轨修理铺",
+          "type": "工坊",
+          "description": "修理矿车、铁轨和井下支架。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_09",
+          "name": "跨境马队棚",
+          "type": "交通设施",
+          "description": "往圣光城的小马队在此装货换草。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_10",
+          "name": "矿镇告示板",
+          "type": "公共设施",
+          "description": "贴着招工、欠债、失踪矿工和护送委托。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_11",
+          "name": "小神龛",
+          "type": "宗教建筑",
+          "description": "矿工下井前会摸一下石龛里的旧圣徽。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "木石小屋里炉火很旺，门前放着劈柴。",
+          "isPublic": false
+        },
+        {
+          "id": "north_mine_town_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通村民住处，屋檐挂着兽皮和工具。",
+          "isPublic": false
+        },
+        {
+          "id": "north_mine_town_building_14",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "村民取水和谈论王都消息的地方。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_15",
+          "name": "小酒馆",
+          "type": "旅店",
+          "description": "猎人、矿工和过路兵会在这里喝热酒。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_16",
+          "name": "铁匠棚",
+          "type": "工坊",
+          "description": "修理农具、猎刀、马蹄铁和车轴。",
+          "isPublic": true
+        },
+        {
+          "id": "north_mine_town_building_17",
+          "name": "木柴棚",
+          "type": "仓储建筑",
+          "description": "越冬木柴整齐堆在棚内。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "southern_trading_post",
@@ -547,13 +4502,196 @@
       ],
       "name": "东部商埠",
       "type": "城市",
-      "description": "紧邻艾瑞斯南部边境的繁华贸易集散地。由南方商业贵族注资兴建，往来客商络绎不绝，堆满了来自各地的香料、丝绸与矿石，是王国在冰冷冰雪中少有的、充满喧嚣活力的地方。",
+      "description": "艾瑞斯王国东境的边贸城市，西接铁冠城，东通赛琳娜帝国的罗姆城。税所、仓库、马车行和使节驿馆夹在官道两侧，矿石、粮食与魔导器在这里换手。",
       "connected_nodes": [
         "iron_crown_city",
         "emperor_city"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "southern_trading_post_building_01",
+          "name": "东境税所",
+          "type": "政务建筑",
+          "description": "艾瑞斯税吏在此登记通往罗姆城的货单。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_02",
+          "name": "边贸公证厅",
+          "type": "政务建筑",
+          "description": "商人签订跨境契约，书记员收取印章费。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_03",
+          "name": "矿石货栈",
+          "type": "仓储建筑",
+          "description": "从铁冠城运来的铁矿、煤石和金属锭在此堆放。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_04",
+          "name": "魔导器货栈",
+          "type": "仓储建筑",
+          "description": "来自赛琳娜的灯具、护符和符文零件暂存于此。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_05",
+          "name": "使节驿馆",
+          "type": "外交建筑",
+          "description": "接待赛琳娜使者和艾瑞斯官员的封闭院落。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_06",
+          "name": "马车行",
+          "type": "交通设施",
+          "description": "往铁冠城和罗姆城的商队在此雇车换马。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_07",
+          "name": "商埠旅店",
+          "type": "旅店",
+          "description": "跨境商人、护卫和译员常住的热闹旅店。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_08",
+          "name": "翻译行会",
+          "type": "行会建筑",
+          "description": "译员代写合同、解读帝国货单和魔导说明。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_09",
+          "name": "银币兑换铺",
+          "type": "商铺",
+          "description": "兑换艾瑞斯银币、帝国晶币和商会票据。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_10",
+          "name": "边贸酒馆",
+          "type": "旅店",
+          "description": "酒馆墙上贴满护送、寻货和讨债委托。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_11",
+          "name": "巡检卫队所",
+          "type": "军事建筑",
+          "description": "负责盘查走私、护送税银和处理斗殴。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_12",
+          "name": "仓库街",
+          "type": "商业街",
+          "description": "连排木石仓库夹着小铺，昼夜都有车轮声。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_13",
+          "name": "商人宅邸",
+          "type": "住宅",
+          "description": "富商购置的院宅，后门直通货栈巷。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_14",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "搬运工和账房学徒租住的狭窄房屋。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_15",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "黑石与木梁搭成的住屋，壁炉常年不灭。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_16",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通军属家庭的住处，院里放着劈柴。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_17",
+          "name": "军需仓",
+          "type": "仓储建筑",
+          "description": "堆放粮袋、皮靴、煤石和备用铁件。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_18",
+          "name": "铁匠铺",
+          "type": "工坊",
+          "description": "炉火映红门口，铁锤声从早到晚不断。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_19",
+          "name": "猎具铺",
+          "type": "商铺",
+          "description": "出售短弓、陷阱、兽皮绳和厚手套。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_20",
+          "name": "酒馆",
+          "type": "旅店",
+          "description": "士兵、矿工和商人围着炉火喝烈酒。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_21",
+          "name": "马车驿站",
+          "type": "交通设施",
+          "description": "往各城镇的马车在此登记和换马。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_22",
+          "name": "治安所",
+          "type": "军事建筑",
+          "description": "处理盗窃、斗殴和逃兵通报的小所。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_23",
+          "name": "粮仓",
+          "type": "仓储建筑",
+          "description": "储存黑麦、腌肉和军队征收粮。",
+          "isPublic": false
+        },
+        {
+          "id": "southern_trading_post_building_24",
+          "name": "公告墙",
+          "type": "公共设施",
+          "description": "张贴征兵令、税令和失踪通报。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_25",
+          "name": "皮革工坊",
+          "type": "工坊",
+          "description": "加工马具、靴子、护腕和鞍袋。",
+          "isPublic": true
+        },
+        {
+          "id": "southern_trading_post_building_26",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "黑石与木梁搭成的住屋，壁炉常年不灭。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "solstice_village",
@@ -563,13 +4701,133 @@
       ],
       "name": "至日村",
       "type": "村庄",
-      "description": "依傍着南部森林建立的艾瑞斯边缘村落。这里的居民主要以砍伐红杉木和狩猎为生。村庄里保留着古老的丰收祭祀传统，在冰天雪地的王国中，这里醇厚的小麦酒和热情的篝火深受过往旅人的喜爱。",
+      "description": "铁冠城西侧的林边村庄，通往红杉猎林。村民靠砍伐、狩猎和给王都供应木材维生，冬季篝火与村祭仍保留旧北境习俗。",
       "connected_nodes": [
         "iron_crown_city",
         "redcedar_wilds"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "solstice_village_building_01",
+          "name": "至日祭场",
+          "type": "公共区域",
+          "description": "村民在冬季围绕大火举行旧北境祭仪。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_02",
+          "name": "红杉木仓",
+          "type": "仓储建筑",
+          "description": "伐下的红杉木被削皮堆放，等待运往王都。",
+          "isPublic": false
+        },
+        {
+          "id": "solstice_village_building_03",
+          "name": "猎人会屋",
+          "type": "行会建筑",
+          "description": "猎人交换兽踪、陷阱和林中传闻。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_04",
+          "name": "村长木屋",
+          "type": "住宅",
+          "description": "村长处理伐木配额和王都征发文书的地方。",
+          "isPublic": false
+        },
+        {
+          "id": "solstice_village_building_05",
+          "name": "砍伐工棚",
+          "type": "生产设施",
+          "description": "伐木工存放斧头、绳索和滑木架。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_06",
+          "name": "麦酒小屋",
+          "type": "旅店",
+          "description": "村民自酿的小麦酒温热辛辣，旅人常来避寒。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_07",
+          "name": "木匠铺",
+          "type": "工坊",
+          "description": "制作木桶、车轮、雪橇和简单家具。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_08",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "红杉板搭成的住家，屋顶压着厚木条。",
+          "isPublic": false
+        },
+        {
+          "id": "solstice_village_building_09",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "猎户家小屋，门口吊着风干兽肉。",
+          "isPublic": false
+        },
+        {
+          "id": "solstice_village_building_10",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "井口用木棚遮雪，旁边常摆着水桶。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_11",
+          "name": "雪橇棚",
+          "type": "交通设施",
+          "description": "冬季运木材用的雪橇集中存放在此。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "木石小屋里炉火很旺，门前放着劈柴。",
+          "isPublic": false
+        },
+        {
+          "id": "solstice_village_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "普通村民住处，屋檐挂着兽皮和工具。",
+          "isPublic": false
+        },
+        {
+          "id": "solstice_village_building_14",
+          "name": "公共水井",
+          "type": "公共设施",
+          "description": "村民取水和谈论王都消息的地方。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_15",
+          "name": "小酒馆",
+          "type": "旅店",
+          "description": "猎人、矿工和过路兵会在这里喝热酒。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_16",
+          "name": "铁匠棚",
+          "type": "工坊",
+          "description": "修理农具、猎刀、马蹄铁和车轴。",
+          "isPublic": true
+        },
+        {
+          "id": "solstice_village_building_17",
+          "name": "木柴棚",
+          "type": "仓储建筑",
+          "description": "越冬木柴整齐堆在棚内。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "redcedar_wilds",
@@ -579,12 +4837,34 @@
       ],
       "name": "红杉猎林",
       "type": "荒野",
-      "description": "艾瑞斯南部边缘的大片红杉林，猎人、伐木工和逃兵都可能在林中留下踪迹。森林连接南方村落与中立低语森林，是进入王国腹地前的一段缓冲地带。",
+      "description": "至日村外的大片红杉林，是猎人、伐木工和逃兵的活动地带。林中旧路逐渐消失，只有熟悉树痕的人能找到回村方向。",
       "connected_nodes": [
         "solstice_village"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "redcedar_wilds_building_01",
+          "name": "伐木人营地",
+          "type": "临时营地",
+          "description": "几座木棚围着火堆，斧头和绳索挂在树干上。",
+          "isPublic": true
+        },
+        {
+          "id": "redcedar_wilds_building_02",
+          "name": "猎径标记树",
+          "type": "地标",
+          "description": "树皮上刻着旧猎径符号，只有本地人看得懂。",
+          "isPublic": true
+        },
+        {
+          "id": "redcedar_wilds_building_03",
+          "name": "废弃逃兵窝棚",
+          "type": "隐蔽建筑",
+          "description": "倒塌半边的小棚，角落还留着破靴和空酒瓶。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "frost_breath_valley",
@@ -594,12 +4874,34 @@
       ],
       "name": "霜息峡谷",
       "type": "荒野",
-      "description": "位于艾瑞斯王国深处的一片寒冷山谷。两侧峭壁如刀削般陡峭，谷底堆积着万年不化的坚冰。这里不仅生存着耐寒的野生魔兽，还盛产一种能散发微弱热量的“冬暖草”，时常有采药人冒着严寒前来采集。",
+      "description": "余烬哨所以西的冻谷，冰雾从岩缝中缓慢吐出。采药人寻找冬暖草，斥候寻找魔物踪迹，寒冷让每次深入都像一次赌注。",
       "connected_nodes": [
         "ember_watch_outpost"
       ],
       "country": "艾瑞斯王国",
-      "building": []
+      "building": [
+        {
+          "id": "frost_breath_valley_building_01",
+          "name": "冰雾裂口",
+          "type": "自然地标",
+          "description": "白雾从岩缝中吐出，靠近时能听见冰层细响。",
+          "isPublic": true
+        },
+        {
+          "id": "frost_breath_valley_building_02",
+          "name": "采药人避风洞",
+          "type": "临时营地",
+          "description": "洞口用兽皮遮挡，里面留着干柴和旧药篓。",
+          "isPublic": true
+        },
+        {
+          "id": "frost_breath_valley_building_03",
+          "name": "魔兽骨堆",
+          "type": "自然遗迹",
+          "description": "被雪半埋的巨大骨骼，斥候常用它辨认方向。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "tidewatch_city",
@@ -609,13 +4911,196 @@
       ],
       "name": "望潮城",
       "type": "城市",
-      "description": "自由城邦联盟东南海岸的自治城邦，依靠灯塔、船坞修理和潮汐观测站维持繁荣。它比白帆港安静，却是远航船只离港前最后确认风向、海况和雇佣水手的重要城市。",
+      "description": "自由城邦东部海岸的灯塔城市，连接金秤大商会与盐风渔村。潮汐观测站、船坞和水手市场让远航船只在此决定出港时机。",
       "connected_nodes": [
         "golden_weight_house",
         "saltwind_village"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "tidewatch_city_building_01",
+          "name": "望潮大灯塔",
+          "type": "航海建筑",
+          "description": "高塔夜里点亮蓝白灯火，为远航船只指示港口。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_02",
+          "name": "潮汐观测站",
+          "type": "研究设施",
+          "description": "祭司和水手记录潮位、风向和暗流变化。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_03",
+          "name": "船坞修理场",
+          "type": "工坊",
+          "description": "木匠和帆匠修补船壳、桅杆和舵片。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_04",
+          "name": "水手雇佣所",
+          "type": "行会建筑",
+          "description": "船长在此招募水手、舵手和护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_05",
+          "name": "海图交易铺",
+          "type": "商铺",
+          "description": "出售潮汐图、海妖浅滩标记和远海传闻。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_06",
+          "name": "风帆仓库",
+          "type": "仓储建筑",
+          "description": "帆布、缆绳和桐油桶整齐堆放。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_07",
+          "name": "潮汐教团祈祷所",
+          "type": "宗教建筑",
+          "description": "出海前的船员在此献上海盐和银币。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_08",
+          "name": "港务税亭",
+          "type": "政务建筑",
+          "description": "城邦官员登记入港船只和货物。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_09",
+          "name": "海风酒馆",
+          "type": "旅店",
+          "description": "船员、气象师和商贩挤在窗边谈风暴。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_10",
+          "name": "东岸鱼市",
+          "type": "市场",
+          "description": "清晨鱼货在石台上拍卖，空气里全是盐腥味。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_11",
+          "name": "船长宅邸",
+          "type": "住宅",
+          "description": "富有船长的木石宅院，屋顶挂着旧船铃。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "晒网人家的海边小屋，门口堆着浮木。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_13",
+          "name": "救生艇棚",
+          "type": "安全设施",
+          "description": "存放小艇、救生绳和风暴旗的木棚。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_14",
+          "name": "商人会馆",
+          "type": "商业建筑",
+          "description": "小商号在此租桌谈判、寄存账册和雇佣护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_15",
+          "name": "货物仓库",
+          "type": "仓储建筑",
+          "description": "木箱、麻袋和封蜡货单堆在阴凉处。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_16",
+          "name": "兑换铺",
+          "type": "商铺",
+          "description": "兑换金币、外币、商会票据和欠条。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_17",
+          "name": "酒馆",
+          "type": "旅店",
+          "description": "船员、脚夫和商人围着桌子交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_18",
+          "name": "旅店",
+          "type": "旅店",
+          "description": "接待外地客商和护卫队的两层木楼。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_19",
+          "name": "私人卫队所",
+          "type": "军事建筑",
+          "description": "富商雇佣的卫队在这里轮班休息。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_20",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "商贩家庭居住的小屋，楼下常兼作铺面。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_21",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "靠近市场的住户，窗边晾着渔网和布匹。",
+          "isPublic": false
+        },
+        {
+          "id": "tidewatch_city_building_22",
+          "name": "市场棚",
+          "type": "市场",
+          "description": "摊位出售海货、香料、布匹和杂货。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_23",
+          "name": "票据公证桌",
+          "type": "商业建筑",
+          "description": "书记员为商人代写契约和债务文书。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_24",
+          "name": "码头水井",
+          "type": "公共设施",
+          "description": "过路船员和脚夫补水的公共井。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_25",
+          "name": "商人会馆",
+          "type": "商业建筑",
+          "description": "小商号在此租桌谈判、寄存账册和雇佣护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "tidewatch_city_building_26",
+          "name": "货物仓库",
+          "type": "仓储建筑",
+          "description": "木箱、麻袋和封蜡货单堆在阴凉处。",
+          "isPublic": false
+        }
+      ]
     },
     {
       "id": "white_sail_port",
@@ -625,7 +5110,7 @@
       ],
       "name": "白帆港",
       "type": "城市",
-      "description": "自由城邦联盟的首都与核心。大陆最庞大的贸易与航运中枢，港口停泊着数以万计、来自世界各地的白帆商船。这里商贾云集，街道两旁林立着大大小小的交易所与酒馆，是金钱与自由的乐园。",
+      "description": "自由城邦联盟最大港口，连通海妖浅滩、铁锚老码头、黑玫瑰下街和金秤大商会。白帆、账本、私兵和传闻共同维持它的繁荣。",
       "connected_nodes": [
         "siren_shoals",
         "black_rose_alley",
@@ -633,7 +5118,232 @@
         "golden_weight_house"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "white_sail_port_building_01",
+          "name": "商人议会大厅",
+          "type": "政务建筑",
+          "description": "联盟代表在此争论税率、航线和封港提案。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_02",
+          "name": "白帆主码头",
+          "type": "港口设施",
+          "description": "来自各地的商船在这里装卸货物，帆影遮住海面。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_03",
+          "name": "远洋船坞",
+          "type": "工坊",
+          "description": "大型船体在木架上修造，锯木声从早到晚不停。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_04",
+          "name": "联盟海关楼",
+          "type": "政务建筑",
+          "description": "货单、船籍和通行税在这里被逐项核查。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_05",
+          "name": "大宗货物交易所",
+          "type": "市场",
+          "description": "粮食、矿石、布匹和魔导零件在大厅中报价。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_06",
+          "name": "航海保险行",
+          "type": "商铺",
+          "description": "商人用高额保费换取沉船和海盗损失担保。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_07",
+          "name": "洛根议长官邸",
+          "type": "住宅",
+          "description": "议长接见城邦代表的宅邸，外表朴素但守卫严密。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_08",
+          "name": "潮汐教团大祈祷所",
+          "type": "宗教建筑",
+          "description": "船员和寡妇向潮汐之母献盐、贝壳和短祷文。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_09",
+          "name": "佣兵公会白帆分会",
+          "type": "行会建筑",
+          "description": "商队护卫、海上护航和追债委托都在此登记。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_10",
+          "name": "富商宅邸",
+          "type": "住宅",
+          "description": "高墙内有花园、私人卫队和独立货账房。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_11",
+          "name": "富商宅邸",
+          "type": "住宅",
+          "description": "临港的三层宅邸，顶层能看见所有码头。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_12",
+          "name": "码头旅店",
+          "type": "旅店",
+          "description": "水手和搬运工常住，墙壁浸着潮气和酒味。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_13",
+          "name": "票据兑换所",
+          "type": "商铺",
+          "description": "兑换各城邦票据、金秤凭证和外币。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_14",
+          "name": "公共仓库区",
+          "type": "仓储建筑",
+          "description": "可租用仓库一排排延伸到港口内街。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_15",
+          "name": "城市卫队哨楼",
+          "type": "军事建筑",
+          "description": "少量卫队看守主街，更多治安依赖私人护卫。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_16",
+          "name": "白帆公告墙",
+          "type": "公共设施",
+          "description": "贴满船期、债务、悬赏和失踪启事。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_17",
+          "name": "商人会馆",
+          "type": "商业建筑",
+          "description": "小商号在此租桌谈判、寄存账册和雇佣护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_18",
+          "name": "货物仓库",
+          "type": "仓储建筑",
+          "description": "木箱、麻袋和封蜡货单堆在阴凉处。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_19",
+          "name": "兑换铺",
+          "type": "商铺",
+          "description": "兑换金币、外币、商会票据和欠条。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_20",
+          "name": "酒馆",
+          "type": "旅店",
+          "description": "船员、脚夫和商人围着桌子交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_21",
+          "name": "旅店",
+          "type": "旅店",
+          "description": "接待外地客商和护卫队的两层木楼。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_22",
+          "name": "私人卫队所",
+          "type": "军事建筑",
+          "description": "富商雇佣的卫队在这里轮班休息。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_23",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "商贩家庭居住的小屋，楼下常兼作铺面。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_24",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "靠近市场的住户，窗边晾着渔网和布匹。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_25",
+          "name": "市场棚",
+          "type": "市场",
+          "description": "摊位出售海货、香料、布匹和杂货。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_26",
+          "name": "票据公证桌",
+          "type": "商业建筑",
+          "description": "书记员为商人代写契约和债务文书。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_27",
+          "name": "码头水井",
+          "type": "公共设施",
+          "description": "过路船员和脚夫补水的公共井。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_28",
+          "name": "商人会馆",
+          "type": "商业建筑",
+          "description": "小商号在此租桌谈判、寄存账册和雇佣护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_29",
+          "name": "货物仓库",
+          "type": "仓储建筑",
+          "description": "木箱、麻袋和封蜡货单堆在阴凉处。",
+          "isPublic": false
+        },
+        {
+          "id": "white_sail_port_building_30",
+          "name": "兑换铺",
+          "type": "商铺",
+          "description": "兑换金币、外币、商会票据和欠条。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_31",
+          "name": "酒馆",
+          "type": "旅店",
+          "description": "船员、脚夫和商人围着桌子交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "white_sail_port_building_32",
+          "name": "旅店",
+          "type": "旅店",
+          "description": "接待外地客商和护卫队的两层木楼。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "golden_weight_house",
@@ -643,7 +5353,7 @@
       ],
       "name": "金秤大商会",
       "type": "城市",
-      "description": "自由城邦联盟内各大商团联合设立的武装金库与公证所。这座建筑由坚固的花岗岩和精钢铸成，内部设有的大型魔法天平可以精准测量各类稀有矿石与魔法金币。商会雇佣了大量高级佣兵，戒备等级堪比军事要塞。",
+      "description": "白帆港外的商会重镇，连接望潮城、珊瑚湾与迷雾山脉。公证厅、金库和佣兵驻所挤满石街，是联盟贸易规则最坚硬的地方。",
       "connected_nodes": [
         "white_sail_port",
         "tidewatch_city",
@@ -651,7 +5361,204 @@
         "misty_mountains"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "golden_weight_house_building_01",
+          "name": "金秤公证大厅",
+          "type": "商会建筑",
+          "description": "大型魔法天平在大厅中央称量矿石和金币。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_02",
+          "name": "商会金库",
+          "type": "仓储建筑",
+          "description": "厚门后存放金币、契约和贵重魔导材料。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_03",
+          "name": "佣兵驻所",
+          "type": "军事建筑",
+          "description": "受雇佣兵在此轮班守卫商会与押运车队。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_04",
+          "name": "契约文书馆",
+          "type": "档案馆",
+          "description": "保存商会仲裁书、债务契约和城邦协议。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_05",
+          "name": "贵宾谈判室",
+          "type": "商业建筑",
+          "description": "大商号代表在隔音房间里进行秘密谈判。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_06",
+          "name": "拍卖厅",
+          "type": "市场",
+          "description": "稀有珍珠、遗物部件和整船货物在此拍卖。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_07",
+          "name": "钱币鉴定室",
+          "type": "商铺",
+          "description": "鉴定外币、假币和古代金属片的小室。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_08",
+          "name": "武装货车院",
+          "type": "交通设施",
+          "description": "护送车队在院中更换车轴和雇佣护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_09",
+          "name": "商会食宿楼",
+          "type": "旅店",
+          "description": "供认证商人和押运队暂住的整洁楼房。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_10",
+          "name": "石街市场",
+          "type": "市场",
+          "description": "小商贩围绕商会出售样品、工具和账本。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_11",
+          "name": "审计官办公室",
+          "type": "政务建筑",
+          "description": "商会审计官检查账簿和席位交易。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_12",
+          "name": "保管箱长廊",
+          "type": "仓储建筑",
+          "description": "一排排独立铁柜出租给商人和冒险者。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_13",
+          "name": "护卫训练院",
+          "type": "军事建筑",
+          "description": "佣兵在小院中练习盾阵与押运队形。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_14",
+          "name": "商人宅邸",
+          "type": "住宅",
+          "description": "大商号代表临时居住的庭院，门口有私卫。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_15",
+          "name": "商人会馆",
+          "type": "商业建筑",
+          "description": "小商号在此租桌谈判、寄存账册和雇佣护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_16",
+          "name": "货物仓库",
+          "type": "仓储建筑",
+          "description": "木箱、麻袋和封蜡货单堆在阴凉处。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_17",
+          "name": "兑换铺",
+          "type": "商铺",
+          "description": "兑换金币、外币、商会票据和欠条。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_18",
+          "name": "酒馆",
+          "type": "旅店",
+          "description": "船员、脚夫和商人围着桌子交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_19",
+          "name": "旅店",
+          "type": "旅店",
+          "description": "接待外地客商和护卫队的两层木楼。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_20",
+          "name": "私人卫队所",
+          "type": "军事建筑",
+          "description": "富商雇佣的卫队在这里轮班休息。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_21",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "商贩家庭居住的小屋，楼下常兼作铺面。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_22",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "靠近市场的住户，窗边晾着渔网和布匹。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_23",
+          "name": "市场棚",
+          "type": "市场",
+          "description": "摊位出售海货、香料、布匹和杂货。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_24",
+          "name": "票据公证桌",
+          "type": "商业建筑",
+          "description": "书记员为商人代写契约和债务文书。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_25",
+          "name": "码头水井",
+          "type": "公共设施",
+          "description": "过路船员和脚夫补水的公共井。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_26",
+          "name": "商人会馆",
+          "type": "商业建筑",
+          "description": "小商号在此租桌谈判、寄存账册和雇佣护卫。",
+          "isPublic": true
+        },
+        {
+          "id": "golden_weight_house_building_27",
+          "name": "货物仓库",
+          "type": "仓储建筑",
+          "description": "木箱、麻袋和封蜡货单堆在阴凉处。",
+          "isPublic": false
+        },
+        {
+          "id": "golden_weight_house_building_28",
+          "name": "兑换铺",
+          "type": "商铺",
+          "description": "兑换金币、外币、商会票据和欠条。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "coral_bay",
@@ -661,13 +5568,133 @@
       ],
       "name": "珊瑚湾集市",
       "type": "村庄",
-      "description": "位于自由城邦联盟沿海的一座美丽渔村，以出产珍贵的七彩珊瑚和珍珠闻名。半透明的浅滩上搭建着错落有致的高脚木屋，潮汐教团在村中心设立了温和的祈福神龛，常年为远航的渔民祈求风平浪静。",
+      "description": "金秤大商会西侧的海湾聚落，外接珍珠暗礁群。渔民、采珠人和小商贩在潮汐木台上交易海货，也供奉潮汐教团的神龛。",
       "connected_nodes": [
         "golden_weight_house",
         "pearl_reef_wilds"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "coral_bay_building_01",
+          "name": "潮汐木台集市",
+          "type": "市场",
+          "description": "高脚木台随潮水起落，渔民在此交易海货。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_02",
+          "name": "七彩珊瑚摊",
+          "type": "商铺",
+          "description": "摊主出售打磨后的珊瑚枝和贝壳饰品。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_03",
+          "name": "采珠人棚屋",
+          "type": "住宅",
+          "description": "采珠人合住的海边棚屋，墙上挂着潜水绳。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_04",
+          "name": "采珠人棚屋",
+          "type": "住宅",
+          "description": "潮湿小屋里堆满贝篮和旧网。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_05",
+          "name": "潮汐神龛",
+          "type": "宗教建筑",
+          "description": "村民向潮汐之母献上盐水和珍珠碎片。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_06",
+          "name": "鱼干晒架",
+          "type": "生产设施",
+          "description": "鱼肉和海藻铺在木架上，被海风慢慢吹干。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_07",
+          "name": "小船修补棚",
+          "type": "工坊",
+          "description": "修补采珠小船、桨和浮筒的棚屋。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_08",
+          "name": "海湾酒棚",
+          "type": "旅店",
+          "description": "外来商贩和渔民喝淡酒、谈潮汐变化。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_09",
+          "name": "贝壳仓",
+          "type": "仓储建筑",
+          "description": "按大小分类的贝壳和珍珠母被堆放在木箱中。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_10",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "高脚木屋立在浅滩边，下面拴着小船。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_11",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "渔民家小屋，窗边挂满晒干的海草。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "木屋靠近海风或市场，门口常堆着货筐。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "商贩或渔民家庭的住处，窗边挂着网具。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_14",
+          "name": "小酒馆",
+          "type": "旅店",
+          "description": "水手、渔民和小贩在此交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_15",
+          "name": "货物棚",
+          "type": "仓储建筑",
+          "description": "短期堆放海货、盐袋和布匹的小棚。",
+          "isPublic": false
+        },
+        {
+          "id": "coral_bay_building_16",
+          "name": "修船棚",
+          "type": "工坊",
+          "description": "修补小船、木桶、桨和滑轮。",
+          "isPublic": true
+        },
+        {
+          "id": "coral_bay_building_17",
+          "name": "鱼市摊",
+          "type": "市场",
+          "description": "新鲜鱼、贝类和海藻摆在湿木板上。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "saltwind_village",
@@ -677,12 +5704,132 @@
       ],
       "name": "盐风渔村",
       "type": "村庄",
-      "description": "珊瑚湾以东的海风村落，居民晒盐、捕鱼，也为过路商船提供淡水和修补帆布。这里适合承接海货买卖、潮汐教团传闻和远海失踪线索。",
+      "description": "望潮城北侧的海风村落，盐田、渔网和帆布棚沿岸展开。这里为小船补水修帆，也把外海失踪和风暴预兆传进城里。",
       "connected_nodes": [
         "tidewatch_city"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "saltwind_village_building_01",
+          "name": "盐田晒场",
+          "type": "生产设施",
+          "description": "浅池中海水被阳光晒成盐晶，风中有咸味。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_02",
+          "name": "帆布修补棚",
+          "type": "工坊",
+          "description": "妇人和老水手缝补破帆、麻绳和渔网。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_03",
+          "name": "淡水井屋",
+          "type": "公共设施",
+          "description": "为过路小船补给淡水的井屋，常有人排队。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_04",
+          "name": "渔网棚",
+          "type": "仓储建筑",
+          "description": "渔网、鱼叉和浮标堆在防潮木架上。",
+          "isPublic": false
+        },
+        {
+          "id": "saltwind_village_building_05",
+          "name": "盐仓",
+          "type": "仓储建筑",
+          "description": "粗盐装入麻袋，等待商队运往望潮城。",
+          "isPublic": false
+        },
+        {
+          "id": "saltwind_village_building_06",
+          "name": "海边小酒屋",
+          "type": "旅店",
+          "description": "渔民和小船船长在此谈论远海失踪。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_07",
+          "name": "风暴祈愿龛",
+          "type": "宗教建筑",
+          "description": "潮汐教团的小龛面向海面，供人挂贝壳。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_08",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "晒盐人家的木屋，屋檐挂着盐袋。",
+          "isPublic": false
+        },
+        {
+          "id": "saltwind_village_building_09",
+          "name": "村民房",
+          "type": "住宅",
+          "description": "渔夫家庭的屋舍，门口晾着湿靴。",
+          "isPublic": false
+        },
+        {
+          "id": "saltwind_village_building_10",
+          "name": "小船拖坡",
+          "type": "港口设施",
+          "description": "小船从这里被拖上岸修补和避风。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_11",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "木屋靠近海风或市场，门口常堆着货筐。",
+          "isPublic": false
+        },
+        {
+          "id": "saltwind_village_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "商贩或渔民家庭的住处，窗边挂着网具。",
+          "isPublic": false
+        },
+        {
+          "id": "saltwind_village_building_13",
+          "name": "小酒馆",
+          "type": "旅店",
+          "description": "水手、渔民和小贩在此交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_14",
+          "name": "货物棚",
+          "type": "仓储建筑",
+          "description": "短期堆放海货、盐袋和布匹的小棚。",
+          "isPublic": false
+        },
+        {
+          "id": "saltwind_village_building_15",
+          "name": "修船棚",
+          "type": "工坊",
+          "description": "修补小船、木桶、桨和滑轮。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_16",
+          "name": "鱼市摊",
+          "type": "市场",
+          "description": "新鲜鱼、贝类和海藻摆在湿木板上。",
+          "isPublic": true
+        },
+        {
+          "id": "saltwind_village_building_17",
+          "name": "水井",
+          "type": "公共设施",
+          "description": "供村民和小船补给淡水的公共井。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "anchor_docks",
@@ -692,12 +5839,132 @@
       ],
       "name": "铁锚老码头",
       "type": "村庄",
-      "description": "白帆港最具历史的货运码头区。这里随处可见堆积如山的货箱与忙碌的装卸工人。码头民风彪悍，由当地庞大的工人帮派自主维持基本秩序，是海运任务、走私传闻与底层人情往来的集中地。",
+      "description": "白帆港东侧的旧货运码头，铁锚兄弟会在仓库与吊桥间维持秩序。搬运工、走私箱和船员债务让这里从不真正安静。",
       "connected_nodes": [
         "white_sail_port"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "anchor_docks_building_01",
+          "name": "铁锚兄弟会会屋",
+          "type": "帮派建筑",
+          "description": "码头工头和兄弟会骨干在此分配装卸活计。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_02",
+          "name": "旧货运栈桥",
+          "type": "港口设施",
+          "description": "木板被海水泡黑，货箱从早到晚滚过。",
+          "isPublic": true
+        },
+        {
+          "id": "anchor_docks_building_03",
+          "name": "装卸工棚",
+          "type": "生活设施",
+          "description": "搬运工在此吃饭、睡觉和等待雇主点名。",
+          "isPublic": true
+        },
+        {
+          "id": "anchor_docks_building_04",
+          "name": "绞盘塔",
+          "type": "港口设施",
+          "description": "粗绳和齿轮吊起沉重货箱，塔身吱呀作响。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_05",
+          "name": "走私暗仓",
+          "type": "仓储建筑",
+          "description": "夹在合法仓库后的密室，入口藏在木桶后。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_06",
+          "name": "码头酒馆",
+          "type": "旅店",
+          "description": "债主、船员和打手在黏腻桌面旁谈价。",
+          "isPublic": true
+        },
+        {
+          "id": "anchor_docks_building_07",
+          "name": "破帆仓库",
+          "type": "仓储建筑",
+          "description": "旧帆布、湿绳和来路不明的货包堆在一起。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_08",
+          "name": "兄弟会医棚",
+          "type": "医疗建筑",
+          "description": "老船医为搬运工处理骨折和刀伤。",
+          "isPublic": true
+        },
+        {
+          "id": "anchor_docks_building_09",
+          "name": "债务登记桌",
+          "type": "帮派建筑",
+          "description": "欠工钱、欠保护费和欠船票的人名写在黑板上。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_10",
+          "name": "码头民居",
+          "type": "住宅",
+          "description": "搬运工家庭住在潮湿木楼里，楼下就是货道。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_11",
+          "name": "码头民居",
+          "type": "住宅",
+          "description": "低矮棚屋挤在仓库后，夜里能听见浪声。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "木屋靠近海风或市场，门口常堆着货筐。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "商贩或渔民家庭的住处，窗边挂着网具。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_14",
+          "name": "小酒馆",
+          "type": "旅店",
+          "description": "水手、渔民和小贩在此交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "anchor_docks_building_15",
+          "name": "货物棚",
+          "type": "仓储建筑",
+          "description": "短期堆放海货、盐袋和布匹的小棚。",
+          "isPublic": false
+        },
+        {
+          "id": "anchor_docks_building_16",
+          "name": "修船棚",
+          "type": "工坊",
+          "description": "修补小船、木桶、桨和滑轮。",
+          "isPublic": true
+        },
+        {
+          "id": "anchor_docks_building_17",
+          "name": "鱼市摊",
+          "type": "市场",
+          "description": "新鲜鱼、贝类和海藻摆在湿木板上。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "black_rose_alley",
@@ -707,12 +5974,132 @@
       ],
       "name": "黑玫瑰下街",
       "type": "村庄",
-      "description": "白帆港繁华阴影下的错综街区。白日里看似是普通的廉价集市与居民区，到了夜晚，琳琅满目的地下酒吧与黑市交易所便悄然开张，是各类情报贩子、走私商人和冒险者汇聚的无序地带。",
+      "description": "白帆港南面的阴影街区，白日是廉价市集，夜里换成密谈酒馆和地下交易。情报、赃物和雇佣委托沿窄巷缓慢流动。",
       "connected_nodes": [
         "white_sail_port"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "black_rose_alley_building_01",
+          "name": "黑玫瑰酒馆",
+          "type": "地下设施",
+          "description": "表面是廉价酒馆，后室常有人低声交易消息。",
+          "isPublic": true
+        },
+        {
+          "id": "black_rose_alley_building_02",
+          "name": "地下拍卖间",
+          "type": "地下设施",
+          "description": "入口藏在布店地窖，拍卖赃物和遗物碎片。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_03",
+          "name": "情报中介铺",
+          "type": "商铺",
+          "description": "柜台出售普通传闻，真正委托从后门进入。",
+          "isPublic": true
+        },
+        {
+          "id": "black_rose_alley_building_04",
+          "name": "假证刻印坊",
+          "type": "工坊",
+          "description": "刻印船票、通行牌和商会临时凭证。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_05",
+          "name": "暗巷诊所",
+          "type": "医疗建筑",
+          "description": "无执照医师为水手、刺客和走私者缝合伤口。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_06",
+          "name": "廉价公寓",
+          "type": "住宅",
+          "description": "狭窄楼房里住着赌徒、脚夫和无名外乡人。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_07",
+          "name": "廉价公寓",
+          "type": "住宅",
+          "description": "墙壁潮湿，楼梯每踩一步都会响。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_08",
+          "name": "赃物寄卖铺",
+          "type": "商铺",
+          "description": "旧首饰、魔导零件和不问出处的工具摆在柜中。",
+          "isPublic": true
+        },
+        {
+          "id": "black_rose_alley_building_09",
+          "name": "暗门仓库",
+          "type": "仓储建筑",
+          "description": "仓库墙后有夹层，可短暂藏人或藏货。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_10",
+          "name": "下街赌桌",
+          "type": "娱乐建筑",
+          "description": "几张桌子藏在布帘后，筹码从铜币到宝石不等。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_11",
+          "name": "逃亡者旅舍",
+          "type": "旅店",
+          "description": "不问姓名的住宿点，钥匙用木牌编号。",
+          "isPublic": true
+        },
+        {
+          "id": "black_rose_alley_building_12",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "木屋靠近海风或市场，门口常堆着货筐。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_13",
+          "name": "居民房",
+          "type": "住宅",
+          "description": "商贩或渔民家庭的住处，窗边挂着网具。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_14",
+          "name": "小酒馆",
+          "type": "旅店",
+          "description": "水手、渔民和小贩在此交换消息。",
+          "isPublic": true
+        },
+        {
+          "id": "black_rose_alley_building_15",
+          "name": "货物棚",
+          "type": "仓储建筑",
+          "description": "短期堆放海货、盐袋和布匹的小棚。",
+          "isPublic": false
+        },
+        {
+          "id": "black_rose_alley_building_16",
+          "name": "修船棚",
+          "type": "工坊",
+          "description": "修补小船、木桶、桨和滑轮。",
+          "isPublic": true
+        },
+        {
+          "id": "black_rose_alley_building_17",
+          "name": "鱼市摊",
+          "type": "市场",
+          "description": "新鲜鱼、贝类和海藻摆在湿木板上。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "siren_shoals",
@@ -722,13 +6109,49 @@
       ],
       "name": "海妖浅滩",
       "type": "荒野",
-      "description": "白帆港外海一片礁石密布的危险海域。这里的暗礁在落潮时会如利齿般暴露在水面上，由于洋流复杂，常年伴有浓雾。这里虽然经常发生沉船事故，但也因散落着无数未被发掘的古代商船遗宝而吸引着亡命之徒。",
+      "description": "白帆港与圣山边境要塞之间的危险海岸。雾中暗礁、沉船残骸和走私小舟交错出现，是商路、逃亡路与海盗传闻的交汇处。",
       "connected_nodes": [
         "border_fortress",
         "white_sail_port"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "siren_shoals_building_01",
+          "name": "雾中礁灯",
+          "type": "航海遗迹",
+          "description": "破旧礁灯时亮时灭，常让船只误判方向。",
+          "isPublic": true
+        },
+        {
+          "id": "siren_shoals_building_02",
+          "name": "沉船残骸",
+          "type": "遗迹",
+          "description": "半截商船卡在暗礁上，货舱入口只在退潮时露出。",
+          "isPublic": true
+        },
+        {
+          "id": "siren_shoals_building_03",
+          "name": "走私小码头",
+          "type": "港口设施",
+          "description": "藏在礁石背面的木桩码头，只能停靠小船。",
+          "isPublic": false
+        },
+        {
+          "id": "siren_shoals_building_04",
+          "name": "潮汐洞穴",
+          "type": "自然地标",
+          "description": "涨潮时完全淹没的洞穴，墙上有旧绳痕。",
+          "isPublic": true
+        },
+        {
+          "id": "siren_shoals_building_05",
+          "name": "海妖石像",
+          "type": "遗迹",
+          "description": "被盐雾腐蚀的旧石像，面朝白帆港方向。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "pearl_reef_wilds",
@@ -738,13 +6161,49 @@
       ],
       "name": "珍珠暗礁群",
       "type": "荒野",
-      "description": "自由城邦联盟外海的暗礁水域，退潮时会露出闪烁贝床与古旧船骸。这里既是采珠人与冒险者眼中的宝地，也是海雾、暗流和海兽出没的危险探索区。",
+      "description": "珊瑚湾外的暗礁水域，继续远行可抵米拉克外海岛。退潮时贝床与船骸露出水面，采珠人和冒险者都要与暗流争速。",
       "connected_nodes": [
         "coral_bay",
         "mirac_island"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "pearl_reef_wilds_building_01",
+          "name": "退潮贝床",
+          "type": "自然地标",
+          "description": "退潮后露出大片闪光贝床，采珠人争分夺秒。",
+          "isPublic": true
+        },
+        {
+          "id": "pearl_reef_wilds_building_02",
+          "name": "采珠浮棚",
+          "type": "临时营地",
+          "description": "用木桶和绳索固定的小棚，随浪轻轻晃动。",
+          "isPublic": true
+        },
+        {
+          "id": "pearl_reef_wilds_building_03",
+          "name": "旧船骸",
+          "type": "遗迹",
+          "description": "船骨被珊瑚包住，货舱里偶尔能找到铜器。",
+          "isPublic": true
+        },
+        {
+          "id": "pearl_reef_wilds_building_04",
+          "name": "暗流警示桩",
+          "type": "公共设施",
+          "description": "桩身刻着潮汐记号，提醒小船避开暗流。",
+          "isPublic": true
+        },
+        {
+          "id": "pearl_reef_wilds_building_05",
+          "name": "海兽骨架",
+          "type": "自然遗迹",
+          "description": "巨大骨架横在礁石间，被贝壳和藤壶覆盖。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "mirac_island",
@@ -754,12 +6213,41 @@
       ],
       "name": "米拉克外海岛",
       "type": "荒野",
-      "description": "位于自由联盟外海的一座神秘移动岛屿。岛上怪石嶙峋，植被奇特，常年伴随着温柔却诡异的潮汐声。传说岛上有远古时代的遗迹残骸，偶尔会有寻求古老智慧的法师冒险登岛考察。",
+      "description": "珍珠暗礁外的移动岛影，岩礁、潮声和古代遗迹残片时隐时现。自由城邦的水手敬畏此地，很少有人能两次从同一方向抵达。",
       "connected_nodes": [
         "pearl_reef_wilds"
       ],
       "country": "自由城邦联盟",
-      "building": []
+      "building": [
+        {
+          "id": "mirac_island_building_01",
+          "name": "移动礁岸",
+          "type": "自然地标",
+          "description": "岛岸像黑色礁石般缓慢变化，旧路很快消失。",
+          "isPublic": true
+        },
+        {
+          "id": "mirac_island_building_02",
+          "name": "远古石环",
+          "type": "遗迹",
+          "description": "石环上刻着无法辨认的古代符号，潮声在其中回荡。",
+          "isPublic": true
+        },
+        {
+          "id": "mirac_island_building_03",
+          "name": "临时登陆营",
+          "type": "临时营地",
+          "description": "法师和水手留下的破帐篷，被海风撕开一角。",
+          "isPublic": true
+        },
+        {
+          "id": "mirac_island_building_04",
+          "name": "沉默观潮台",
+          "type": "遗迹",
+          "description": "面向外海的石台，站上去能听见异常规律的潮声。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "whispering_forest",
@@ -769,10 +6257,25 @@
       ],
       "name": "低语森林",
       "type": "荒野",
-      "description": "古老的茂密森林，常年雾气缭绕，风吹过树叶时发出类似低语的声音，隐藏着许多未知的魔兽。",
+      "description": "位于多国道路之外的孤立古林，目前没有稳定通路。雾气、树声和旧界碑遮蔽方向，使它更像一块被地图遗忘的中立阴影。",
       "connected_nodes": [],
       "country": "中立地域",
-      "building": []
+      "building": [
+        {
+          "id": "whispering_forest_building_01",
+          "name": "无路树碑",
+          "type": "遗迹",
+          "description": "被藤蔓缠住的界碑，文字像被人为刮去。",
+          "isPublic": true
+        },
+        {
+          "id": "whispering_forest_building_02",
+          "name": "苔覆猎屋",
+          "type": "废弃建筑",
+          "description": "荒废猎屋被苔藓盖住，门槛上留着兽爪印。",
+          "isPublic": true
+        }
+      ]
     },
     {
       "id": "misty_mountains",
@@ -782,12 +6285,41 @@
       ],
       "name": "迷雾山脉",
       "type": "荒野",
-      "description": "绵延万里的险峻山脉，是圣山王国与赛琳娜帝国的天然国界，山中气候恶劣，常有盗贼与古老遗迹出没。",
+      "description": "金秤大商会通往内陆的中立山脉，云雾常封住山口。商队、遗迹猎人和避难者沿临时栈道前进，但真正安全的路线只掌握在少数向导手中。",
       "connected_nodes": [
         "golden_weight_house"
       ],
       "country": "中立地域",
-      "building": []
+      "building": [
+        {
+          "id": "misty_mountains_building_01",
+          "name": "雾山向导棚",
+          "type": "临时营地",
+          "description": "少数向导在此等待愿意付高价的商队。",
+          "isPublic": true
+        },
+        {
+          "id": "misty_mountains_building_02",
+          "name": "断裂栈道",
+          "type": "遗迹",
+          "description": "旧木栈道沿山壁断开，下面是深雾。",
+          "isPublic": true
+        },
+        {
+          "id": "misty_mountains_building_03",
+          "name": "山中遗迹门",
+          "type": "遗迹",
+          "description": "半埋在碎石里的石门，表面有古代凹槽。",
+          "isPublic": true
+        },
+        {
+          "id": "misty_mountains_building_04",
+          "name": "避难石屋",
+          "type": "安全设施",
+          "description": "商队遇到暴雨和落石时短暂躲避的石屋。",
+          "isPublic": true
+        }
+      ]
     }
   ]
 }

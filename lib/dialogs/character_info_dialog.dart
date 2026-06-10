@@ -37,6 +37,19 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
 
   Player get _p => widget.player;
 
+  String get _dialogTitle {
+    switch (_selectedTab) {
+      case 0:
+        return '角色信息';
+      case 1:
+        return '人脉关系';
+      case 2:
+        return '人生经历';
+      default:
+        return '角色信息';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -45,6 +58,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
       math.min(size.width * 0.74, size.width - _tabWidth - 28),
     );
     final panelH = math.min(size.height * 2 / 3, size.height - 92);
+    final contentH = panelH - 58;
 
     return Material(
       color: Colors.transparent,
@@ -94,7 +108,12 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                                     size.width * 0.04,
                                     0,
                                   ),
-                                  child: _buildContent(size),
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      minHeight: contentH,
+                                    ),
+                                    child: _buildContent(size, contentH),
+                                  ),
                                 ),
                               ),
                               Container(height: 1, color: _border),
@@ -150,9 +169,9 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                                   ),
                                 ],
                               ),
-                              child: const Text(
-                                '角色信息',
-                                style: TextStyle(
+                              child: Text(
+                                _dialogTitle,
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                   color: _text,
@@ -163,7 +182,11 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                         ),
                       ],
                     ),
-                    _buildSideTabs(panelH),
+                    SizedBox(
+                      height: panelH,
+                      width: _tabWidth,
+                      child: _buildSideTabs(panelH),
+                    ),
                   ],
                 ),
               ),
@@ -176,70 +199,81 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
 
   Widget _buildSideTabs(double panelH) {
     final tabHeight = math.min(78.0, (panelH - 18) / _tabs.length);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(_tabs.length, (i) {
-        final selected = _selectedTab == i;
-        return Padding(
-          padding: EdgeInsets.only(bottom: i == _tabs.length - 1 ? 0 : 6),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              key: ValueKey('character_info_tab_${_tabs[i]}'),
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(8),
-                bottomRight: Radius.circular(8),
-              ),
-              onTap: () => setState(() => _selectedTab = i),
-              child: Container(
-                width: _tabWidth,
-                height: tabHeight,
-                decoration: BoxDecoration(
-                  color: selected ? _accent.withValues(alpha: 0.16) : _card,
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                  ),
-                  border: Border.all(
-                    color: selected ? _accent : _border,
-                    width: 1,
-                  ),
-                  boxShadow: selected
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4,
-                            offset: const Offset(1, 1),
-                          ),
-                        ]
-                      : null,
+    final totalTabsHeight = tabHeight * _tabs.length + 6 * (_tabs.length - 1);
+    final targetCenterY = panelH * 0.4;
+    final topOffset = math.max(0.0, targetCenterY - totalTabsHeight / 2);
+
+    return Padding(
+      padding: EdgeInsets.only(top: topOffset),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(_tabs.length, (i) {
+          final selected = _selectedTab == i;
+          return Padding(
+            padding: EdgeInsets.only(bottom: i == _tabs.length - 1 ? 0 : 6),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                key: ValueKey('character_info_tab_${_tabs[i]}'),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
                 ),
-                child: Center(
-                  child: Text(
-                    _tabs[i],
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: selected ? _accent : _textSecondary,
+                onTap: () => setState(() => _selectedTab = i),
+                child: Container(
+                  width: _tabWidth,
+                  height: tabHeight,
+                  decoration: BoxDecoration(
+                    color: selected ? _accent.withValues(alpha: 0.16) : _card,
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
+                    border: Border.all(
+                      color: selected ? _accent : _border,
+                      width: 1,
+                    ),
+                    boxShadow: selected
+                        ? [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                              offset: const Offset(1, 1),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Center(
+                    child: Text(
+                      _tabs[i],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: selected ? _accent : _textSecondary,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
-  Widget _buildContent(Size size) {
+  Widget _buildContent(Size size, double contentH) {
     switch (_selectedTab) {
       case 0:
         return CharacterInfoTab(player: _p, size: size);
       case 1:
-        return CharacterRelationshipTab(player: _p, size: size);
+        return CharacterRelationshipTab(
+          player: _p,
+          size: size,
+          minHeight: contentH,
+        );
       case 2:
-        return CharacterHistoryTab(player: _p, size: size);
+        return CharacterHistoryTab(player: _p, size: size, minHeight: contentH);
       default:
         return CharacterInfoTab(player: _p, size: size);
     }
