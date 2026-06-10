@@ -37,6 +37,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   DateTime? _lastTipTime;
 
   final TransformationController _controller = TransformationController();
+  final GlobalKey _mapViewportKey = GlobalKey();
   final Map<int, Offset> _mapPointerDownPositions = {};
   Map<String, Offset> _lastLabelOffsets = {};
 
@@ -211,7 +212,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
         _nodes = nodes;
         _nodeMapCache = null;
       });
-      WidgetsBinding.instance.addPostFrameCallback((_) => _centerMap());
+      _scheduleCenterOnCurrentLocation();
     } catch (e) {
       if (kMapDebugMode) debugPrint('[WorldMap] 加载地图数据失败: $e');
       if (!mounted) return;
@@ -219,12 +220,26 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     }
   }
 
-  void _centerMap() {
+  void _scheduleCenterOnCurrentLocation() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _centerOnCurrentLocation();
+      });
+    });
+  }
+
+  void _centerOnCurrentLocation() {
     final target = _currentLocationNode;
     if (target == null || target.coordinates.length < 2) return;
 
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null) return;
+    final viewportContext = _mapViewportKey.currentContext;
+    if (viewportContext == null) return;
+
+    final renderBox = viewportContext.findRenderObject() as RenderBox?;
+    if (renderBox == null || !renderBox.hasSize) return;
+
     final viewW = renderBox.size.width;
     final viewH = renderBox.size.height;
     if (viewW <= 0 || viewH <= 0) return;
@@ -232,8 +247,10 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final cx = target.coordinates[0].toDouble() + _mapCanvasPadding;
     final cy = target.coordinates[1].toDouble() + _mapCanvasPadding;
 
-    _controller.value = Matrix4.identity()
-      ..translate(-cx + viewW / 2, -cy + viewH / 2);
+    final tx = -cx + viewW / 2;
+    final ty = -cy + viewH / 2;
+
+    _controller.value = Matrix4.identity()..translateByDouble(tx, ty, 0, 1);
   }
 
   void _handleMapPointerDown(PointerDownEvent event) {
@@ -375,6 +392,17 @@ class _WorldMapContentState extends State<_WorldMapContent> {
                         ],
                       ),
                     ),
+                    TextButton.icon(
+                      onPressed: _centerOnCurrentLocation,
+                      icon: const Icon(Icons.my_location_outlined, size: 16),
+                      label: const Text('重置'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: _textSecondary,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        minimumSize: const Size(0, 32),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
                     IconButton(
                       key: const ValueKey('world_map_close_button'),
                       onPressed: () => Navigator.of(context).pop(_player),
@@ -423,6 +451,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
         final side = math.min(constraints.maxWidth, constraints.maxHeight);
         return Center(
           child: SizedBox(
+            key: _mapViewportKey,
             width: side,
             height: side,
             child: Listener(
@@ -512,8 +541,8 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final borderColor = isCurrent
         ? _accent
         : canMove
-            ? _accent.withValues(alpha: 0.7)
-            : (_nodeBorderColors[node.type] ?? _border);
+        ? _accent.withValues(alpha: 0.7)
+        : (_nodeBorderColors[node.type] ?? _border);
     final textColor = isCurrent
         ? const Color(0xFF2E7D32)
         : (_nodeTextColors[node.type] ?? _text);
@@ -554,11 +583,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
                 if (isCurrent)
                   const Padding(
                     padding: EdgeInsets.only(right: 4),
-                    child: Icon(
-                      Icons.location_on,
-                      size: 12,
-                      color: _accent,
-                    ),
+                    child: Icon(Icons.location_on, size: 12, color: _accent),
                   ),
                 Flexible(
                   child: Text(

@@ -626,7 +626,14 @@ class _GameMainPageState extends State<GameMainPage> {
       return b.createdAt.compareTo(a.createdAt);
     });
 
-    return logs.take(30).toList();
+    final recentLogs = logs.take(30).toList();
+    recentLogs.sort((a, b) {
+      if (a.year != b.year) return a.year.compareTo(b.year);
+      if (a.day != b.day) return a.day.compareTo(b.day);
+      return a.createdAt.compareTo(b.createdAt);
+    });
+
+    return recentLogs;
   }
 
   @override
@@ -883,14 +890,12 @@ class _GameMainPageState extends State<GameMainPage> {
           Expanded(
             child: Row(
               children: [
-                SizedBox(width: 74, child: _buildItemPanel()),
+                SizedBox(
+                  width: 77,
+                  child: _buildScenePanel(building, buildingNpcs),
+                ),
                 const SizedBox(width: 8),
                 Expanded(child: _buildActionLogPanel(building)),
-                const SizedBox(width: 8),
-                SizedBox(
-                  width: 92,
-                  child: _buildNpcNamePanel(building, buildingNpcs),
-                ),
               ],
             ),
           ),
@@ -943,62 +948,76 @@ class _GameMainPageState extends State<GameMainPage> {
     );
   }
 
-  Widget _buildItemPanel() {
+  Widget _buildScenePanel(Building building, List<Npc> npcs) {
     return _sidePanel(
-      title: '物品',
-      child: const Center(
-        child: Text(
-          '空',
-          style: TextStyle(fontSize: 13, color: _textSecondary),
+      title: '场景',
+      child: ListView(
+        padding: const EdgeInsets.all(8),
+        children: [
+          _sceneGroupTitle('物品'),
+          _emptySceneText('暂无物品'),
+          const SizedBox(height: 10),
+          _sceneGroupTitle('人物'),
+          if (npcs.isEmpty)
+            _emptySceneText('暂无人物')
+          else
+            ...npcs.map((npc) => _sceneNpcButton(building, npc)),
+        ],
+      ),
+    );
+  }
+
+  Widget _sceneGroupTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 12,
+          color: _accent,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
   }
 
-  Widget _buildNpcNamePanel(Building building, List<Npc> npcs) {
-    return _sidePanel(
-      title: '人物',
-      child: npcs.isEmpty
-          ? const Center(
-              child: Text(
-                '暂无',
-                style: TextStyle(fontSize: 13, color: _textSecondary),
-              ),
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              itemCount: npcs.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 6),
-              itemBuilder: (context, index) {
-                final npc = npcs[index];
-                return InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () => _showNpcInfoDialog(building, npc),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _softCard,
-                      border: Border.all(color: _border),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      npc.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: _text,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                );
-              },
+  Widget _emptySceneText(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 12, color: _textSecondary),
+      ),
+    );
+  }
+
+  Widget _sceneNpcButton(Building building, Npc npc) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => _showNpcInfoDialog(building, npc),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+          decoration: BoxDecoration(
+            color: _softCard,
+            border: Border.all(color: _border),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            npc.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 12,
+              color: _text,
+              fontWeight: FontWeight.w600,
             ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -1010,103 +1029,58 @@ class _GameMainPageState extends State<GameMainPage> {
         border: Border.all(color: _border),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    '行动日志',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: _text,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                Text(
-                  '记录 ${logs.length}',
-                  style: const TextStyle(fontSize: 11, color: _textSecondary),
-                ),
-              ],
+      child: logs.isEmpty
+          ? _emptyActionLogText(building)
+          : ListView.separated(
+              padding: EdgeInsets.zero,
+              itemCount: logs.length,
+              separatorBuilder: (_, _) =>
+                  const Divider(height: 1, color: _border),
+              itemBuilder: (context, index) => _actionLogTextItem(logs[index]),
             ),
-          ),
-          const Divider(height: 1, color: _border),
-          Expanded(
-            child: logs.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Text(
-                      '你进入了${building.name}。这里还没有新的行动记录，后续可以接入 AI 生成环境描写、物品发现和人物行动。',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        height: 1.55,
-                        color: _textSecondary,
-                      ),
-                    ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: logs.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) => _actionLogCard(logs[index]),
-                  ),
-          ),
-        ],
+    );
+  }
+
+  Widget _emptyActionLogText(Building building) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Text(
+        '你进入了${building.name}。\n这里还没有新的行动记录。\n后续可以接入 AI 生成环境描写、物品发现和人物行动。',
+        style: const TextStyle(
+          fontSize: 13,
+          height: 1.6,
+          color: _textSecondary,
+        ),
       ),
     );
   }
 
-  Widget _actionLogCard(GameEventRecord event) {
-    return Container(
-      padding: const EdgeInsets.all(9),
-      decoration: BoxDecoration(
-        color: _card,
-        border: Border.all(color: _border),
-        borderRadius: BorderRadius.circular(9),
-      ),
+  Widget _actionLogTextItem(GameEventRecord event) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  event.title.isEmpty ? event.typeLabel : event.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: _text,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 6),
-              _tag(event.typeLabel),
-            ],
-          ),
-          if (event.summary.isNotEmpty) ...[
-            const SizedBox(height: 5),
-            Text(
-              event.summary,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 12,
-                color: _textSecondary,
-                height: 1.45,
-              ),
-            ),
-          ],
-          const SizedBox(height: 5),
           Text(
             '${event.year}年${event.season}${event.day}日',
-            style: const TextStyle(fontSize: 11, color: Color(0xFFAAAAAA)),
+            style: const TextStyle(fontSize: 11, color: _textSecondary),
           ),
+          const SizedBox(height: 3),
+          Text(
+            event.title.isEmpty ? event.typeLabel : event.title,
+            style: const TextStyle(
+              fontSize: 13,
+              color: _text,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          if (event.summary.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              event.summary,
+              style: const TextStyle(fontSize: 13, color: _text, height: 1.45),
+            ),
+          ],
         ],
       ),
     );
@@ -1159,17 +1133,6 @@ class _GameMainPageState extends State<GameMainPage> {
         ),
         child: Text(text, style: const TextStyle(fontSize: 12)),
       ),
-    );
-  }
-
-  Widget _tag(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: _accent.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(text, style: const TextStyle(fontSize: 10, color: _accent)),
     );
   }
 
