@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../models/player.dart';
+import '../widgets/elderland_pressable.dart';
 import 'character_history_tab.dart';
 import 'character_info_tab.dart';
 import 'character_relationship_tab.dart';
@@ -122,26 +123,15 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                                   bottom: 14,
                                   top: 10,
                                 ),
-                                child: GestureDetector(
+                                child: ElderlandPressableButton(
+                                  label: '关闭',
                                   onTap: () => Navigator.of(context).pop(),
-                                  child: Container(
-                                    width: 90,
-                                    height: 34,
-                                    decoration: BoxDecoration(
-                                      color: _accent,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        '关闭',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  filled: true,
+                                  accentColor: _accent,
+                                  textColor: _textSecondary,
+                                  borderColor: _border,
+                                  width: 90,
+                                  height: 34,
                                 ),
                               ),
                             ],
@@ -211,47 +201,23 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
           final selected = _selectedTab == i;
           return Padding(
             padding: EdgeInsets.only(bottom: i == _tabs.length - 1 ? 0 : 6),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                key: ValueKey('character_info_tab_${_tabs[i]}'),
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
-                ),
-                onTap: () => setState(() => _selectedTab = i),
-                child: Container(
-                  width: _tabWidth,
-                  height: tabHeight,
-                  decoration: BoxDecoration(
-                    color: selected ? _accent.withValues(alpha: 0.16) : _card,
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
-                    border: Border.all(
-                      color: selected ? _accent : _border,
-                      width: 1,
-                    ),
-                    boxShadow: selected
-                        ? [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                              offset: const Offset(1, 1),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Center(
-                    child: Text(
-                      _tabs[i],
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: selected ? _accent : _textSecondary,
-                      ),
-                    ),
+            child: ElderlandPressableCard(
+              key: ValueKey('character_info_tab_${_tabs[i]}'),
+              onTap: () => setState(() => _selectedTab = i),
+              backgroundColor: selected ? _accent.withValues(alpha: 0.16) : _card,
+              borderColor: selected ? _accent : _border,
+              overlayColor: _accent,
+              borderRadius: 8,
+              width: _tabWidth,
+              height: tabHeight,
+              padding: EdgeInsets.zero,
+              child: Center(
+                child: Text(
+                  _tabs[i],
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: selected ? _accent : _textSecondary,
                   ),
                 ),
               ),
