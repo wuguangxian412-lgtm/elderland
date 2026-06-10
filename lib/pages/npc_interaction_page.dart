@@ -352,11 +352,11 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     return Container(
       margin: EdgeInsets.fromLTRB(
         16,
-        compact ? 6 : 8,
+        compact ? 4 : 6,
         16,
-        keyboardVisible ? 0 : (compact ? 6 : 8),
+        keyboardVisible ? 0 : (compact ? 4 : 6),
       ),
-      padding: EdgeInsets.fromLTRB(10, compact ? 4 : 6, 10, compact ? 4 : 6),
+      padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
       decoration: BoxDecoration(
         color: _card,
         border: Border.all(color: _border),
@@ -368,31 +368,40 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
             child: TextField(
               controller: _inputController,
               minLines: 1,
-              maxLines: keyboardVisible ? 1 : (compact ? 1 : 2),
+              maxLines: 1,
+              style: const TextStyle(fontSize: 14, height: 1.2),
               textInputAction: TextInputAction.send,
+              textAlignVertical: TextAlignVertical.center,
               onSubmitted: (_) => _sendMessage(),
               decoration: const InputDecoration(
                 hintText: '输入你想说的话，或想做的事……',
                 border: InputBorder.none,
-                isDense: true,
+                isCollapsed: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 6),
               ),
             ),
           ),
           const SizedBox(width: 8),
-          ElevatedButton(
-            onPressed: _sendMessage,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _accent,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(
-                horizontal: compact ? 14 : 18,
-                vertical: compact ? 10 : 12,
+          SizedBox(
+            height: compact ? 34 : 36,
+            child: ElevatedButton(
+              onPressed: _sendMessage,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _accent,
+                foregroundColor: Colors.white,
+                minimumSize: Size(compact ? 52 : 58, compact ? 30 : 32),
+                padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 14),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9),
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+              child: const Text(
+                '发送',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
             ),
-            child: const Text('发送'),
           ),
         ],
       ),
