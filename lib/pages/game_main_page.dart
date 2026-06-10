@@ -9,8 +9,8 @@ import '../models/quest.dart';
 import '../models/timeline_entry.dart';
 import '../dialogs/character_info_dialog.dart';
 import '../dialogs/bag_dialog.dart';
-import '../dialogs/relationship_dialog.dart';
-import '../dialogs/history_dialog.dart';
+import '../dialogs/magic_dialog.dart';
+import '../dialogs/equipment_dialog.dart';
 import '../dialogs/quest_offer_dialog.dart';
 import '../dialogs/settings_dialog.dart';
 import '../pages/npc_interaction_page.dart';
@@ -1167,16 +1167,15 @@ class _GameMainPageState extends State<GameMainPage> {
               ),
               _navDivider(),
               _navItem(
-                Icons.people_outlined,
-                '人脉',
-                () => RelationshipDialog.show(context, _player),
+                Icons.auto_fix_high_outlined,
+                '魔法',
+                () => MagicDialog.show(context),
               ),
               _navDivider(),
               _navItem(
-                Icons.history_outlined,
-                '经历',
-                () => HistoryDialog.show(context, _player),
-                key: const ValueKey('open_history_button'),
+                Icons.shield_outlined,
+                '装备',
+                () => EquipmentDialog.show(context),
               ),
               _navDivider(),
               _navItem(

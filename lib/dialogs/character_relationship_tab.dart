@@ -37,13 +37,9 @@ class CharacterRelationshipTab extends StatelessWidget {
               Icon(Icons.people_outline, size: 40, color: _textSecondary),
               SizedBox(height: 8),
               Text(
-                '暂无人脉记录\n与 NPC 互动，或接受 NPC 的委托后会出现在这里。',
+                '暂无人脉记录',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: _textSecondary,
-                  height: 1.5,
-                ),
+                style: TextStyle(fontSize: 15, color: _textSecondary),
               ),
             ],
           ),
