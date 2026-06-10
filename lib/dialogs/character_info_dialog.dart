@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../models/game_event_record.dart';
@@ -28,6 +30,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
   static const Color _text = Color(0xFF333333);
   static const Color _textSecondary = Color(0xFF777777);
   static const Color _accent = Color(0xFF7BAE7F);
+  static const double _tabWidth = 48;
   static const _tabs = ['信息', '人脉', '经历'];
   int _selectedTab = 0;
 
@@ -36,8 +39,12 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final panelW = size.width * 0.74;
-    final maxPanelH = size.height * 0.78;
+    final panelW = math.max(
+      230.0,
+      math.min(size.width * 0.74, size.width - _tabWidth - 28),
+    );
+    final maxPanelH = math.min(size.height * 0.76, size.height - 92);
+    final minPanelH = math.min(size.height * 0.38, maxPanelH);
 
     return Material(
       color: Colors.transparent,
@@ -45,187 +52,124 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
         style: const TextStyle(color: _text, decoration: TextDecoration.none),
         child: Stack(
           children: [
-            // 半透明遮罩
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {},
                 child: Container(color: Colors.black54),
               ),
             ),
-
-            // 居中布局
             Center(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // ========== 主面板 ==========
-                  Container(
-                    width: panelW,
-                    constraints: BoxConstraints(
-                      maxHeight: maxPanelH,
-                      minHeight: size.height * 0.38,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _card,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: _border),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 18,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 40, 12, 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
                       children: [
-                        Container(height: 1, color: _border),
-
-                        // 内容区
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: SingleChildScrollView(
-                            padding: EdgeInsets.fromLTRB(
-                              size.width * 0.04,
-                              8,
-                              size.width * 0.04,
-                              0,
-                            ),
-                            child: _buildContent(size),
+                        Container(
+                          width: panelW,
+                          constraints: BoxConstraints(
+                            maxHeight: maxPanelH,
+                            minHeight: minPanelH,
                           ),
-                        ),
-
-                        // 底部关闭按钮
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 14, top: 8),
-                          child: GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              width: 90,
-                              height: 34,
-                              decoration: BoxDecoration(
-                                color: _accent,
-                                borderRadius: BorderRadius.circular(8),
+                          decoration: BoxDecoration(
+                            color: _card,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: _border),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 18,
+                                offset: const Offset(0, 4),
                               ),
-                              child: const Center(
-                                child: Text(
-                                  '关闭',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(height: 1, color: _border),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: SingleChildScrollView(
+                                  padding: EdgeInsets.fromLTRB(
+                                    size.width * 0.04,
+                                    8,
+                                    size.width * 0.04,
+                                    0,
                                   ),
+                                  child: _buildContent(size),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // ========== 顶部标题 ==========
-                  Positioned(
-                    top: -30,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _card,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: _border),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.06),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              '角色信息',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: _text,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // ========== 右侧标签 ==========
-                  Positioned(
-                    right: -44,
-                    top: 0,
-                    bottom: 0,
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(_tabs.length, (i) {
-                          final selected = _selectedTab == i;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 6),
-                            child: GestureDetector(
-                              onTap: () => setState(() => _selectedTab = i),
-                              child: Container(
-                                width: 48,
-                                height: 78,
-                                decoration: BoxDecoration(
-                                  color: selected
-                                      ? _accent.withValues(alpha: 0.16)
-                                      : _card,
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(8),
-                                    bottomRight: Radius.circular(8),
-                                  ),
-                                  border: Border.all(
-                                    color: selected ? _accent : _border,
-                                    width: 1,
-                                  ),
-                                  boxShadow: selected
-                                      ? [
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.1,
-                                            ),
-                                            blurRadius: 4,
-                                            offset: const Offset(1, 1),
-                                          ),
-                                        ]
-                                      : null,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 14,
+                                  top: 8,
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    _tabs[i],
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: selected
-                                          ? _accent
-                                          : _textSecondary,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.of(context).pop(),
+                                  child: Container(
+                                    width: 90,
+                                    height: 34,
+                                    decoration: BoxDecoration(
+                                      color: _accent,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        '关闭',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          top: -30,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _card,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: _border),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.06),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Text(
+                                '角色信息',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: _text,
+                                ),
+                              ),
                             ),
-                          );
-                        }),
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    _buildSideTabs(),
+                  ],
+                ),
               ),
             ),
           ],
@@ -234,9 +178,63 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
     );
   }
 
-  // ============================
-  // 内容区
-  // ============================
+  Widget _buildSideTabs() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(_tabs.length, (i) {
+        final selected = _selectedTab == i;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              key: ValueKey('character_info_tab_${_tabs[i]}'),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
+              onTap: () => setState(() => _selectedTab = i),
+              child: Container(
+                width: _tabWidth,
+                height: 78,
+                decoration: BoxDecoration(
+                  color: selected ? _accent.withValues(alpha: 0.16) : _card,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                  ),
+                  border: Border.all(
+                    color: selected ? _accent : _border,
+                    width: 1,
+                  ),
+                  boxShadow: selected
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                            offset: const Offset(1, 1),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Center(
+                  child: Text(
+                    _tabs[i],
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: selected ? _accent : _textSecondary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   Widget _buildContent(Size size) {
     switch (_selectedTab) {
       case 0:
@@ -250,11 +248,8 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
     }
   }
 
-  // ============================
-  // 信息页
-  // ============================
   Widget _buildInfoTab(Size size) {
-    final currentHp = _p.hp.clamp(0, _p.maxHp);
+    final currentHp = _p.hp.clamp(0, _p.maxHp).toInt();
     final hpPercent = _p.maxHp > 0 ? currentHp / _p.maxHp : 0.0;
 
     return Column(
@@ -262,13 +257,9 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildProfileHeader(size, currentHp, hpPercent),
-
         const SizedBox(height: 14),
-
         _buildAttributes(size),
-
         const SizedBox(height: 14),
-
         _buildSectionTitle('家族身份'),
         const SizedBox(height: 4),
         const Padding(
@@ -278,9 +269,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
             style: TextStyle(fontSize: 13, color: _textSecondary),
           ),
         ),
-
         const SizedBox(height: 14),
-
         _buildSectionTitle('人物背景'),
         const SizedBox(height: 4),
         const Padding(
@@ -290,7 +279,6 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
             style: TextStyle(fontSize: 13, color: _textSecondary),
           ),
         ),
-
         const SizedBox(height: 8),
       ],
     );
@@ -332,7 +320,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'HP：${_p.hp} / ${_p.maxHp}',
+                  'HP：$currentHp / ${_p.maxHp}',
                   style: const TextStyle(fontSize: 13, color: _textSecondary),
                 ),
                 const SizedBox(height: 3),
@@ -441,9 +429,6 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
     );
   }
 
-  // ============================
-  // 人脉页
-  // ============================
   Widget _buildRelationshipTab(Size size) {
     final rels = _p.relationships;
 
@@ -505,7 +490,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                 '好感：${rel.affinity}',
                 style: TextStyle(
                   fontSize: 13,
-                  color: rel.affinity >= 0 ? _accent : Color(0xFFD48383),
+                  color: rel.affinity >= 0 ? _accent : const Color(0xFFD48383),
                 ),
               ),
               const SizedBox(width: 12),
@@ -537,9 +522,6 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
     );
   }
 
-  // ============================
-  // 经历页
-  // ============================
   Widget _buildHistoryTab(Size size) {
     final events = _p.eventRecords;
 
@@ -605,7 +587,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                 ),
                 child: Text(
                   event.typeLabel,
-                  style: TextStyle(fontSize: 11, color: _accent),
+                  style: const TextStyle(fontSize: 11, color: _accent),
                 ),
               ),
             ],
