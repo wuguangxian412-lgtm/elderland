@@ -44,8 +44,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
       230.0,
       math.min(size.width * 0.74, size.width - _tabWidth - 28),
     );
-    final maxPanelH = math.min(size.height * 0.76, size.height - 92);
-    final minPanelH = math.min(size.height * 0.38, maxPanelH);
+    final panelH = math.min(size.height * 2 / 3, size.height - 92);
 
     return Material(
       color: Colors.transparent,
@@ -71,10 +70,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                       children: [
                         Container(
                           width: panelW,
-                          constraints: BoxConstraints(
-                            maxHeight: maxPanelH,
-                            minHeight: minPanelH,
-                          ),
+                          height: panelH,
                           decoration: BoxDecoration(
                             color: _card,
                             borderRadius: BorderRadius.circular(10),
@@ -88,11 +84,9 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                             ],
                           ),
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(height: 1, color: _border),
-                              Flexible(
-                                fit: FlexFit.loose,
+                              Expanded(
                                 child: SingleChildScrollView(
                                   padding: EdgeInsets.fromLTRB(
                                     size.width * 0.04,
@@ -103,10 +97,11 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                                   child: _buildContent(size),
                                 ),
                               ),
+                              Container(height: 1, color: _border),
                               Padding(
                                 padding: const EdgeInsets.only(
                                   bottom: 14,
-                                  top: 8,
+                                  top: 10,
                                 ),
                                 child: GestureDetector(
                                   onTap: () => Navigator.of(context).pop(),
@@ -168,7 +163,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
                         ),
                       ],
                     ),
-                    _buildSideTabs(),
+                    _buildSideTabs(panelH),
                   ],
                 ),
               ),
@@ -179,13 +174,14 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
     );
   }
 
-  Widget _buildSideTabs() {
+  Widget _buildSideTabs(double panelH) {
+    final tabHeight = math.min(78.0, (panelH - 18) / _tabs.length);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(_tabs.length, (i) {
         final selected = _selectedTab == i;
         return Padding(
-          padding: const EdgeInsets.only(bottom: 6),
+          padding: EdgeInsets.only(bottom: i == _tabs.length - 1 ? 0 : 6),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -197,7 +193,7 @@ class _CharacterInfoDialogState extends State<CharacterInfoDialog> {
               onTap: () => setState(() => _selectedTab = i),
               child: Container(
                 width: _tabWidth,
-                height: 78,
+                height: tabHeight,
                 decoration: BoxDecoration(
                   color: selected ? _accent.withValues(alpha: 0.16) : _card,
                   borderRadius: const BorderRadius.only(
