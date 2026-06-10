@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/elderland_pressable.dart';
+
 class BagDialog extends StatefulWidget {
   const BagDialog({super.key});
 
@@ -14,6 +16,7 @@ class BagDialog extends StatefulWidget {
 class _BagDialogState extends State<BagDialog> {
   static const Color _border = Color(0xFFE5E5E5);
   static const Color _accent = Color(0xFF7BAE7F);
+  static const Color _textSecondary = Color(0xFF777777);
 
   String _selectedCategory = '全部';
   final List<String> _categories = ['全部', '武器', '材料', '其它'];
@@ -50,32 +53,25 @@ class _BagDialogState extends State<BagDialog> {
                           itemBuilder: (context, index) {
                             final category = _categories[index];
                             final selected = category == _selectedCategory;
-                            return GestureDetector(
+                            return ElderlandPressableCard(
                               onTap: () =>
                                   setState(() => _selectedCategory = category),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: selected
-                                      ? _accent.withValues(alpha: 0.16)
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: selected ? _accent : _border,
-                                  ),
-                                ),
-                                child: Text(
-                                  category,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: selected
-                                        ? _accent
-                                        : const Color(0xFF777777),
-                                  ),
+                              backgroundColor: selected
+                                  ? _accent.withValues(alpha: 0.16)
+                                  : Colors.white,
+                              borderColor: selected ? _accent : _border,
+                              overlayColor: _accent,
+                              borderRadius: 8,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 8,
+                              ),
+                              child: Text(
+                                category,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: selected ? _accent : _textSecondary,
                                 ),
                               ),
                             );
@@ -118,26 +114,15 @@ class _BagDialogState extends State<BagDialog> {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 14, top: 10),
-                child: GestureDetector(
+                child: ElderlandPressableButton(
+                  label: '关闭',
                   onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    width: 90,
-                    height: 34,
-                    decoration: BoxDecoration(
-                      color: _accent,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        '关闭',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
+                  filled: true,
+                  accentColor: _accent,
+                  textColor: _textSecondary,
+                  borderColor: _border,
+                  width: 90,
+                  height: 34,
                 ),
               ),
             ],
