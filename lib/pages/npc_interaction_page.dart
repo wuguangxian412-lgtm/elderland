@@ -124,6 +124,8 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
+
     return PopScope<InteractionRecord?>(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -132,25 +134,31 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
       },
       child: Scaffold(
         backgroundColor: _bg,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(child: _buildMessageList()),
-              _buildInputArea(),
-              _buildPlayerBar(),
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final compact = keyboardVisible || constraints.maxHeight < 560;
+              return Column(
+                children: [
+                  _buildHeader(compact: compact),
+                  Expanded(child: _buildMessageList(compact: compact)),
+                  _buildInputArea(compact: compact),
+                  _buildPlayerBar(compact: compact),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader({required bool compact}) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+      margin: EdgeInsets.fromLTRB(16, compact ? 6 : 10, 16, compact ? 4 : 6),
+      padding: EdgeInsets.fromLTRB(12, compact ? 7 : 10, 12, compact ? 8 : 12),
       decoration: BoxDecoration(
         color: _card,
         border: Border.all(color: _border),
@@ -193,47 +201,57 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: compact ? 2 : 4),
           Text(
             widget.npc.name,
-            style: const TextStyle(
-              fontSize: 21,
+            style: TextStyle(
+              fontSize: compact ? 20 : 21,
               fontWeight: FontWeight.w700,
               color: _text,
             ),
           ),
-          const SizedBox(height: 8),
-          _npcInfoGrid(),
+          SizedBox(height: compact ? 6 : 8),
+          _npcInfoGrid(compact: compact),
         ],
       ),
     );
   }
 
-  Widget _npcInfoGrid() {
+  Widget _npcInfoGrid({required bool compact}) {
+    final verticalGap = compact ? 4.0 : 6.0;
     return Column(
       children: [
         Row(
           children: [
-            Expanded(child: _infoTile('所在地点', widget.player.location)),
+            Expanded(
+              child: _infoTile('所在地点', widget.player.location, compact: compact),
+            ),
             const SizedBox(width: 8),
-            Expanded(child: _infoTile('所在建筑', widget.building.name)),
+            Expanded(
+              child: _infoTile('所在建筑', widget.building.name, compact: compact),
+            ),
           ],
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: verticalGap),
         Row(
           children: [
-            Expanded(child: _infoTile('建筑类型', widget.building.type)),
+            Expanded(
+              child: _infoTile('建筑类型', widget.building.type, compact: compact),
+            ),
             const SizedBox(width: 8),
-            Expanded(child: _infoTile('性格', _personalityText)),
+            Expanded(child: _infoTile('性格', _personalityText, compact: compact)),
           ],
         ),
       ],
     );
   }
 
-  Widget _infoTile(String label, String value) {
+  Widget _infoTile(String label, String value, {required bool compact}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+      padding: EdgeInsets.symmetric(
+        horizontal: 9,
+        vertical: compact ? 4 : 6,
+      ),
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         border: Border.all(color: _border),
@@ -262,7 +280,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     );
   }
 
-  Widget _buildMessageList() {
+  Widget _buildMessageList({required bool compact}) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -272,9 +290,9 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
         borderRadius: BorderRadius.circular(14),
       ),
       child: ListView.separated(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(compact ? 10 : 12),
         itemCount: _messages.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
+        separatorBuilder: (_, _) => SizedBox(height: compact ? 8 : 10),
         itemBuilder: (context, index) {
           final message = _messages[index];
           return _buildMessageRow(message.speaker, message.text);
@@ -324,10 +342,10 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     );
   }
 
-  Widget _buildInputArea() {
+  Widget _buildInputArea({required bool compact}) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
+      margin: EdgeInsets.fromLTRB(16, compact ? 6 : 8, 16, compact ? 6 : 8),
+      padding: EdgeInsets.fromLTRB(10, compact ? 4 : 6, 10, compact ? 4 : 6),
       decoration: BoxDecoration(
         color: _card,
         border: Border.all(color: _border),
@@ -339,7 +357,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
             child: TextField(
               controller: _inputController,
               minLines: 1,
-              maxLines: 2,
+              maxLines: compact ? 1 : 2,
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => _sendMessage(),
               decoration: const InputDecoration(
@@ -355,7 +373,10 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: _accent,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: compact ? 14 : 18,
+                vertical: compact ? 10 : 12,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -367,84 +388,166 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     );
   }
 
-  Widget _buildPlayerBar() {
+  Widget _buildPlayerBar({required bool compact}) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, compact ? 6 : 12),
+      padding: EdgeInsets.all(compact ? 9 : 14),
       decoration: BoxDecoration(
         color: _card,
         border: Border.all(color: _border),
         borderRadius: BorderRadius.circular(14),
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  widget.player.name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: _text,
-                  ),
-                ),
-              ),
-              _hpPill(),
-              const SizedBox(width: 10),
-              SizedBox(
-                height: 38,
-                child: OutlinedButton.icon(
-                  onPressed: () => BagDialog.show(context),
-                  icon: const Icon(Icons.backpack_outlined, size: 17),
-                  label: const Text('背包'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: _text,
-                    side: const BorderSide(color: _border),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(child: _playerStat('攻击', widget.player.strength)),
-              const SizedBox(width: 8),
-              Expanded(child: _playerStat('防御', widget.player.defense)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(child: _playerStat('敏捷', widget.player.agility)),
-              const SizedBox(width: 8),
-              Expanded(child: _playerStat('魅力', widget.player.charm)),
-            ],
-          ),
-        ],
-      ),
+      child: compact ? _compactPlayerBarContent() : _fullPlayerBarContent(),
     );
   }
 
-  Widget _hpPill() {
+  Widget _compactPlayerBarContent() {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            widget.player.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: _text,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        _hpPill(compact: true),
+        const SizedBox(width: 8),
+        Flexible(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _miniStat('攻', widget.player.strength),
+                const SizedBox(width: 6),
+                _miniStat('防', widget.player.defense),
+                const SizedBox(width: 6),
+                _miniStat('敏', widget.player.agility),
+                const SizedBox(width: 6),
+                _miniStat('魅', widget.player.charm),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          height: 32,
+          child: OutlinedButton.icon(
+            onPressed: () => BagDialog.show(context),
+            icon: const Icon(Icons.backpack_outlined, size: 16),
+            label: const Text('背包'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: _text,
+              side: const BorderSide(color: _border),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _fullPlayerBarContent() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                widget.player.name,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: _text,
+                ),
+              ),
+            ),
+            _hpPill(),
+            const SizedBox(width: 10),
+            SizedBox(
+              height: 38,
+              child: OutlinedButton.icon(
+                onPressed: () => BagDialog.show(context),
+                icon: const Icon(Icons.backpack_outlined, size: 17),
+                label: const Text('背包'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: _text,
+                  side: const BorderSide(color: _border),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(child: _playerStat('攻击', widget.player.strength)),
+            const SizedBox(width: 8),
+            Expanded(child: _playerStat('防御', widget.player.defense)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(child: _playerStat('敏捷', widget.player.agility)),
+            const SizedBox(width: 8),
+            Expanded(child: _playerStat('魅力', widget.player.charm)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _hpPill({bool compact = false}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 7 : 9,
+        vertical: compact ? 4 : 5,
+      ),
       decoration: BoxDecoration(
         color: _accent.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(7),
       ),
       child: Text(
         'HP: ${widget.player.hp}/${widget.player.maxHp}',
-        style: const TextStyle(
-          fontSize: 13,
+        style: TextStyle(
+          fontSize: compact ? 12 : 13,
           color: _accent,
           fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
+  Widget _miniStat(String label, int value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAFAFA),
+        border: Border.all(color: _border),
+        borderRadius: BorderRadius.circular(7),
+      ),
+      child: Text(
+        '$label $value',
+        style: const TextStyle(
+          fontSize: 11,
+          color: _textSecondary,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
