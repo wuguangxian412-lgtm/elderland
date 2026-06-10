@@ -62,7 +62,9 @@ class _CreateRolePageState extends State<CreateRolePage> {
 
   Future<void> _loadFactions() async {
     try {
-      final jsonStr = await rootBundle.loadString('assets/data/world_lore.json');
+      final jsonStr = await rootBundle.loadString(
+        'assets/data/world_lore.json',
+      );
       final data = json.decode(jsonStr) as Map<String, dynamic>;
       final factionsRaw = data['factions'] as List<dynamic>? ?? [];
       final names = factionsRaw
@@ -169,7 +171,9 @@ class _CreateRolePageState extends State<CreateRolePage> {
       return;
     }
     _lastTipTime = now;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showEditNameDialog(BuildContext context) {
@@ -255,8 +259,8 @@ class _CreateRolePageState extends State<CreateRolePage> {
                             location: '银叶村',
                             locationId: 'silver_leaf_village',
                             country: '圣山王国',
-                            year: 276,
-                            season: '春',
+                            year: 275,
+                            season: '冬',
                             day: 1,
                             money: 0,
                             triggeredTimelineEvents: const [],
@@ -281,7 +285,10 @@ class _CreateRolePageState extends State<CreateRolePage> {
                         ),
                         child: const Text(
                           '创建角色',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
@@ -302,7 +309,11 @@ class _CreateRolePageState extends State<CreateRolePage> {
         children: [
           const Text(
             '角色属性',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: _text),
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: _text,
+            ),
           ),
           const Spacer(),
           _smallActionButton('平均', _distributeEvenly),
@@ -344,7 +355,11 @@ class _CreateRolePageState extends State<CreateRolePage> {
                     const SizedBox(width: 6),
                     GestureDetector(
                       onTap: () => _showEditNameDialog(context),
-                      child: const Icon(Icons.edit, size: 16, color: _textSecondary),
+                      child: const Icon(
+                        Icons.edit,
+                        size: 16,
+                        color: _textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -431,7 +446,10 @@ class _CreateRolePageState extends State<CreateRolePage> {
       ),
       child: Row(
         children: [
-          Text(label, style: const TextStyle(fontSize: 14, color: _textSecondary)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14, color: _textSecondary),
+          ),
           const Spacer(),
           _circleButton('-', onDecrement, key: decrementKey),
           Padding(
@@ -482,7 +500,11 @@ class _CreateRolePageState extends State<CreateRolePage> {
         children: [
           const Text(
             '出生地(必选)',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: _text),
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: _text,
+            ),
           ),
           const Spacer(),
           _smallActionButton('随机', () {
@@ -516,7 +538,11 @@ class _CreateRolePageState extends State<CreateRolePage> {
         children: [
           const Text(
             '家族身份(必选)',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: _text),
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: _text,
+            ),
           ),
           const Spacer(),
           _smallActionButton('随机', () {
@@ -536,7 +562,11 @@ class _CreateRolePageState extends State<CreateRolePage> {
     return _buildSectionCard(size, [
       const Text(
         '家族成员(可多选或不选)',
-        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: _text),
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+          color: _text,
+        ),
       ),
       SizedBox(height: size.height * 0.012),
       Wrap(
@@ -636,7 +666,11 @@ class _CreateRolePageState extends State<CreateRolePage> {
         ),
         child: Text(
           text,
-          style: const TextStyle(fontSize: 13, color: _text, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+            fontSize: 13,
+            color: _text,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

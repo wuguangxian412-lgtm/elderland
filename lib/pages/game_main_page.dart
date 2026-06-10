@@ -626,14 +626,7 @@ class _GameMainPageState extends State<GameMainPage> {
       return b.createdAt.compareTo(a.createdAt);
     });
 
-    final recentLogs = logs.take(30).toList();
-    recentLogs.sort((a, b) {
-      if (a.year != b.year) return a.year.compareTo(b.year);
-      if (a.day != b.day) return a.day.compareTo(b.day);
-      return a.createdAt.compareTo(b.createdAt);
-    });
-
-    return recentLogs;
+    return logs.take(30).toList();
   }
 
   @override
@@ -885,8 +878,6 @@ class _GameMainPageState extends State<GameMainPage> {
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       child: Column(
         children: [
-          _interiorHeader(building),
-          const SizedBox(height: 8),
           Expanded(
             child: Row(
               children: [
@@ -899,6 +890,8 @@ class _GameMainPageState extends State<GameMainPage> {
               ],
             ),
           ),
+          const SizedBox(height: 8),
+          _interiorHeader(building),
         ],
       ),
     );
@@ -1023,21 +1016,27 @@ class _GameMainPageState extends State<GameMainPage> {
 
   Widget _buildActionLogPanel(Building building) {
     final logs = _buildingActionLogs(building);
-    return Container(
-      decoration: BoxDecoration(
-        color: _softCard,
-        border: Border.all(color: _border),
-        borderRadius: BorderRadius.circular(12),
+    return SizedBox.expand(
+      child: Container(
+        decoration: BoxDecoration(
+          color: _softCard,
+          border: Border.all(color: _border),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: logs.isEmpty
+            ? ListView(
+                padding: EdgeInsets.zero,
+                children: [_emptyActionLogText(building)],
+              )
+            : ListView.separated(
+                padding: EdgeInsets.zero,
+                itemCount: logs.length,
+                separatorBuilder: (_, _) =>
+                    const Divider(height: 1, color: _border),
+                itemBuilder: (context, index) =>
+                    _actionLogTextItem(logs[index]),
+              ),
       ),
-      child: logs.isEmpty
-          ? _emptyActionLogText(building)
-          : ListView.separated(
-              padding: EdgeInsets.zero,
-              itemCount: logs.length,
-              separatorBuilder: (_, _) =>
-                  const Divider(height: 1, color: _border),
-              itemBuilder: (context, index) => _actionLogTextItem(logs[index]),
-            ),
     );
   }
 
@@ -1047,7 +1046,7 @@ class _GameMainPageState extends State<GameMainPage> {
       child: Text(
         '你进入了${building.name}。\n这里还没有新的行动记录。\n后续可以接入 AI 生成环境描写、物品发现和人物行动。',
         style: const TextStyle(
-          fontSize: 13,
+          fontSize: 12.5,
           height: 1.6,
           color: _textSecondary,
         ),
@@ -1061,24 +1060,35 @@ class _GameMainPageState extends State<GameMainPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${event.year}年${event.season}${event.day}日',
-            style: const TextStyle(fontSize: 11, color: _textSecondary),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            event.title.isEmpty ? event.typeLabel : event.title,
-            style: const TextStyle(
-              fontSize: 13,
-              color: _text,
-              fontWeight: FontWeight.w700,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  event.title.isEmpty ? event.typeLabel : event.title,
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    color: _text,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${event.year}年${event.season}${event.day}日',
+                style: const TextStyle(fontSize: 10.5, color: _textSecondary),
+              ),
+            ],
           ),
           if (event.summary.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
               event.summary,
-              style: const TextStyle(fontSize: 13, color: _text, height: 1.45),
+              style: const TextStyle(
+                fontSize: 12.5,
+                color: _text,
+                height: 1.45,
+              ),
             ),
           ],
         ],
