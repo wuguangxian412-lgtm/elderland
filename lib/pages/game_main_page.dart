@@ -1033,8 +1033,10 @@ class _GameMainPageState extends State<GameMainPage> {
                 itemCount: logs.length,
                 separatorBuilder: (_, _) =>
                     const Divider(height: 1, color: _border),
-                itemBuilder: (context, index) =>
-                    _actionLogTextItem(logs[index]),
+                itemBuilder: (context, index) => _actionLogTextItem(
+                  logs[index],
+                  isLatest: index == 0,
+                ),
               ),
       ),
     );
@@ -1054,7 +1056,7 @@ class _GameMainPageState extends State<GameMainPage> {
     );
   }
 
-  Widget _actionLogTextItem(GameEventRecord event) {
+  Widget _actionLogTextItem(GameEventRecord event, {bool isLatest = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       child: Column(
@@ -1064,13 +1066,42 @@ class _GameMainPageState extends State<GameMainPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(
-                  event.title.isEmpty ? event.typeLabel : event.title,
-                  style: const TextStyle(
-                    fontSize: 12.5,
-                    color: _text,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        event.title.isEmpty ? event.typeLabel : event.title,
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                          color: _text,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    if (isLatest) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _accent,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: const Text(
+                          'new',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            height: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               const SizedBox(width: 8),
