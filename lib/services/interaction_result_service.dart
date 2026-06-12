@@ -41,6 +41,8 @@ class InteractionResultService {
       year: record.year,
       season: record.season,
       day: record.day,
+      naturalHour: record.naturalHour,
+      naturalMinute: record.naturalMinute,
       locationId: record.locationId,
       locationName: record.locationName,
       buildingId: record.buildingId,
@@ -65,6 +67,8 @@ class InteractionResultService {
       year: record.year,
       season: record.season,
       day: record.day,
+      naturalHour: record.naturalHour,
+      naturalMinute: record.naturalMinute,
       locationId: record.locationId,
       locationName: record.locationName,
       buildingId: record.buildingId,
@@ -132,7 +136,8 @@ class InteractionResultService {
         : affinityDelta < 0
             ? '印象略有下降'
             : '印象暂未明显变化';
-    return '神圣历${record.year}年${record.season} Day ${record.day}，玩家在${record.locationName}${record.buildingName.isEmpty ? '' : '的${record.buildingName}'}与我交谈，玩家发言 $playerMessageCount 次，$result。';
+    final clock = "${record.naturalHour.toString().padLeft(2, '0')}:${record.naturalMinute.toString().padLeft(2, '0')}";
+    return '神圣历${record.year}年${record.season} Day ${record.day} $clock，玩家在${record.locationName}${record.buildingName.isEmpty ? '' : '的${record.buildingName}'}与我交谈，玩家发言 $playerMessageCount 次，$result。';
   }
 
   String _knownIdentityOf(Npc npc) {
