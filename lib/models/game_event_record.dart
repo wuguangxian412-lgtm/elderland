@@ -19,6 +19,8 @@ class GameEventRecord {
   final int year;
   final String season;
   final int day;
+  final int naturalHour;
+  final int naturalMinute;
   final String locationId;
   final String locationName;
   final String buildingId;
@@ -38,6 +40,8 @@ class GameEventRecord {
     required this.year,
     required String season,
     required this.day,
+    int naturalHour = 8,
+    int naturalMinute = 0,
     String locationId = '',
     String locationName = '',
     String buildingId = '',
@@ -55,6 +59,8 @@ class GameEventRecord {
        title = title.trim(),
        summary = summary.trim(),
        season = season.trim(),
+       naturalHour = naturalHour.clamp(0, 23).toInt(),
+       naturalMinute = naturalMinute.clamp(0, 59).toInt(),
        locationId = locationId.trim(),
        locationName = locationName.trim(),
        buildingId = buildingId.trim(),
@@ -80,6 +86,8 @@ class GameEventRecord {
       year: (json['year'] as num?)?.toInt() ?? 0,
       season: json['season'] as String? ?? '',
       day: (json['day'] as num?)?.toInt() ?? 0,
+      naturalHour: (json['naturalHour'] as num?)?.toInt() ?? 8,
+      naturalMinute: (json['naturalMinute'] as num?)?.toInt() ?? 0,
       locationId: json['locationId'] as String? ?? '',
       locationName: json['locationName'] as String? ?? '',
       buildingId: json['buildingId'] as String? ?? '',
@@ -101,6 +109,8 @@ class GameEventRecord {
     'year': year,
     'season': season,
     'day': day,
+    'naturalHour': naturalHour,
+    'naturalMinute': naturalMinute,
     'locationId': locationId,
     'locationName': locationName,
     'buildingId': buildingId,
@@ -134,7 +144,10 @@ class GameEventRecord {
     }
   }
 
-  String get timeLabel => '神圣历$year年 $season Day $day';
+  String get naturalClockLabel =>
+      "${naturalHour.toString().padLeft(2, '0')}:${naturalMinute.toString().padLeft(2, '0')}";
+
+  String get timeLabel => '神圣历$year年 $season Day $day $naturalClockLabel';
 
   static List<String> _parseStringList(dynamic raw) {
     if (raw is! List) return [];
