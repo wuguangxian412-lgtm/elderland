@@ -19,6 +19,8 @@ class Player {
   final int year;
   final String season;
   final int day;
+  final int naturalHour;
+  final int naturalMinute;
   final int money;
   final String country;
   final List<String> triggeredTimelineEvents;
@@ -62,6 +64,8 @@ class Player {
     required this.year,
     required this.season,
     required this.day,
+    this.naturalHour = 8,
+    this.naturalMinute = 0,
     required this.money,
     this.country = '圣山王国',
     this.triggeredTimelineEvents = const [],
@@ -90,6 +94,8 @@ class Player {
       year: (json['year'] as num?)?.toInt() ?? 0,
       season: json['season'] as String? ?? '',
       day: (json['day'] as num?)?.toInt() ?? 0,
+      naturalHour: (json['naturalHour'] as num?)?.toInt() ?? 8,
+      naturalMinute: (json['naturalMinute'] as num?)?.toInt() ?? 0,
       money: (json['money'] as num?)?.toInt() ?? 0,
       triggeredTimelineEvents:
           (json['triggeredTimelineEvents'] as List<dynamic>?)
@@ -122,6 +128,8 @@ class Player {
       'year': year,
       'season': season,
       'day': day,
+      'naturalHour': naturalHour,
+      'naturalMinute': naturalMinute,
       'money': money,
       'triggeredTimelineEvents': triggeredTimelineEvents,
       'interactionRecords': interactionRecords.map((e) => e.toJson()).toList(),
@@ -151,6 +159,8 @@ class Player {
     int? year,
     String? season,
     int? day,
+    int? naturalHour,
+    int? naturalMinute,
     int? money,
     List<String>? triggeredTimelineEvents,
     List<InteractionRecord>? interactionRecords,
@@ -175,6 +185,8 @@ class Player {
       year: year ?? this.year,
       season: season ?? this.season,
       day: day ?? this.day,
+      naturalHour: naturalHour ?? this.naturalHour,
+      naturalMinute: naturalMinute ?? this.naturalMinute,
       money: money ?? this.money,
       triggeredTimelineEvents:
           triggeredTimelineEvents ?? this.triggeredTimelineEvents,
