@@ -39,5 +39,37 @@
         "points": 50
       }
     ]
-  }
+  },
+  "time_consume_rules": [
+    {
+      "id": "npc_message",
+      "name": "NPC互动发送消息",
+      "minutes": 3,
+      "description": "玩家在NPC互动页面每发送一条消息消耗的自然时间。"
+    },
+    {
+      "id": "building_switch",
+      "name": "建筑之间移动",
+      "minutes": 10,
+      "description": "玩家在同一地点的不同建筑之间切换时消耗的自然时间。"
+    },
+    {
+      "id": "building_observation",
+      "name": "观察建筑",
+      "minutes": 5,
+      "description": "玩家观察当前建筑一次消耗的自然时间。"
+    },
+    {
+      "id": "wander",
+      "name": "随便逛逛",
+      "minutes": 30,
+      "description": "玩家在当前地点或建筑附近随便逛逛一次消耗的自然时间。"
+    },
+    {
+      "id": "map_location_travel",
+      "name": "地图地点移动",
+      "minutes": 120,
+      "description": "玩家通过世界地图前往其他地点时消耗的自然时间。"
+    }
+  ]
 }
