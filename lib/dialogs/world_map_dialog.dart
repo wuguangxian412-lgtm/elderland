@@ -39,7 +39,7 @@ class _WorldMapContentState extends State<_WorldMapContent> {
   final TransformationController _controller = TransformationController();
   final GlobalKey _mapViewportKey = GlobalKey();
   final Map<int, Offset> _mapPointerDownPositions = {};
-  Map<String, Offset> _lastLabelOffsets = {};
+  final Map<String, Offset> _lastLabelOffsets = {};
 
   static const double _mapCanvasSize = 1600.0;
   static const double _mapCanvasPadding = 300.0;
@@ -313,10 +313,11 @@ class _WorldMapContentState extends State<_WorldMapContent> {
       context,
       node,
       isCurrentLocation: false,
-      onMove: () async {
-        Navigator.of(context).pop();
+      canMoveHere: true,
+      onMoveHere: () async {
         await _movePlayerToNode(node);
       },
+      moveHintText: '前往${node.name}',
     );
   }
 
