@@ -1,1 +1,0 @@
-/mnt/data/elderland_work/elderland-test/lib/models/npc_interaction_result.dart
