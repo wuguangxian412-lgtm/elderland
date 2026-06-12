@@ -11,6 +11,8 @@ class InteractionRecord {
   final int year;
   final String season;
   final int day;
+  final int naturalHour;
+  final int naturalMinute;
   final String summary;
   final List<DialogueMessage> messages;
   final String createdAt;
@@ -26,6 +28,8 @@ class InteractionRecord {
     required this.year,
     required String season,
     required this.day,
+    int naturalHour = 8,
+    int naturalMinute = 0,
     required String summary,
     required List<DialogueMessage> messages,
     String? createdAt,
@@ -39,6 +43,8 @@ class InteractionRecord {
        buildingId = buildingId.trim(),
        buildingName = buildingName.trim(),
        season = season.trim(),
+       naturalHour = naturalHour.clamp(0, 23).toInt(),
+       naturalMinute = naturalMinute.clamp(0, 59).toInt(),
        summary = summary.trim(),
        messages = List.unmodifiable(messages),
        createdAt = (createdAt == null || createdAt.trim().isEmpty)
@@ -57,6 +63,8 @@ class InteractionRecord {
       year: (json['year'] as num?)?.toInt() ?? 0,
       season: json['season'] as String? ?? '',
       day: (json['day'] as num?)?.toInt() ?? 0,
+      naturalHour: (json['naturalHour'] as num?)?.toInt() ?? 8,
+      naturalMinute: (json['naturalMinute'] as num?)?.toInt() ?? 0,
       summary: json['summary'] as String? ?? '',
       messages: _parseMessages(json['messages']),
       createdAt: json['createdAt'] as String?,
@@ -74,6 +82,8 @@ class InteractionRecord {
     'year': year,
     'season': season,
     'day': day,
+    'naturalHour': naturalHour,
+    'naturalMinute': naturalMinute,
     'summary': summary,
     'messages': messages.map((m) => m.toJson()).toList(),
     'createdAt': createdAt,
