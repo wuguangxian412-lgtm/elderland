@@ -5,7 +5,6 @@ import '../models/building.dart';
 import '../models/dialogue_message.dart';
 import '../models/interaction_record.dart';
 import '../models/npc.dart';
-import '../models/npc_interaction_result.dart';
 import '../models/player.dart';
 import '../services/natural_time_service.dart';
 
@@ -60,10 +59,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     _isLeaving = true;
     debugPrint('[NpcInteraction] 离开互动页面 npc=${widget.npc.id}');
     final record = _buildInteractionRecord();
-    Navigator.pop(
-      context,
-      NpcInteractionResult(player: _player, record: record),
-    );
+    Navigator.pop(context, record);
   }
 
   Future<void> _sendMessage() async {
@@ -146,7 +142,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
   Widget build(BuildContext context) {
     final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
-    return PopScope<NpcInteractionResult?>(
+    return PopScope<InteractionRecord?>(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
