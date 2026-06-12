@@ -5,7 +5,9 @@ import '../models/building.dart';
 import '../models/dialogue_message.dart';
 import '../models/interaction_record.dart';
 import '../models/npc.dart';
+import '../models/npc_interaction_result.dart';
 import '../models/player.dart';
+import '../services/natural_time_service.dart';
 
 class NpcInteractionPage extends StatefulWidget {
   final Player player;
@@ -26,7 +28,9 @@ class NpcInteractionPage extends StatefulWidget {
 class _NpcInteractionPageState extends State<NpcInteractionPage> {
   final TextEditingController _inputController = TextEditingController();
   final List<DialogueMessage> _messages = [];
+  late Player _player;
   bool _isLeaving = false;
+  bool _isSending = false;
 
   static const Color _bg = Color(0xFFF7F5F2);
   static const Color _card = Color(0xFFFFFFFF);
@@ -38,6 +42,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
   @override
   void initState() {
     super.initState();
+    _player = widget.player;
     debugPrint('[NpcInteraction] 进入互动页面 npc=${widget.npc.id}');
     _messages.add(
       DialogueMessage(speaker: '系统', text: '你正在与【${widget.npc.name}】互动。'),
@@ -55,18 +60,31 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     _isLeaving = true;
     debugPrint('[NpcInteraction] 离开互动页面 npc=${widget.npc.id}');
     final record = _buildInteractionRecord();
-    Navigator.pop(context, record);
+    Navigator.pop(
+      context,
+      NpcInteractionResult(player: _player, record: record),
+    );
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
+    if (_isSending) return;
     final text = _inputController.text.trim();
     if (text.isEmpty) return;
 
+    _isSending = true;
     debugPrint('[NpcInteraction] 玩家输入: $text');
     final reply = _mockNpcReply();
+    final updatedPlayer = await NaturalTimeService.consumeAction(
+      _player,
+      NaturalTimeAction.npcMessage,
+      fallbackMinutes: 3,
+    );
+    if (!mounted) return;
     setState(() {
+      _player = updatedPlayer;
       _messages.add(DialogueMessage(speaker: '你', text: text));
       _messages.add(DialogueMessage(speaker: widget.npc.name, text: reply));
+      _isSending = false;
     });
     _inputController.clear();
   }
@@ -81,13 +99,15 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
     final record = InteractionRecord(
       npcId: widget.npc.id,
       npcName: widget.npc.name,
-      locationId: widget.player.locationId,
-      locationName: widget.player.location,
+      locationId: _player.locationId,
+      locationName: _player.location,
       buildingId: widget.building.id,
       buildingName: widget.building.name,
-      year: widget.player.year,
-      season: widget.player.season,
-      day: widget.player.day,
+      year: _player.year,
+      season: _player.season,
+      day: _player.day,
+      naturalHour: _player.naturalHour,
+      naturalMinute: _player.naturalMinute,
       summary: '你与【${widget.npc.name}】进行了一次交谈，共记录 ${_messages.length} 条消息。',
       messages: _messages,
     );
@@ -126,7 +146,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
   Widget build(BuildContext context) {
     final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
-    return PopScope<InteractionRecord?>(
+    return PopScope<NpcInteractionResult?>(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
@@ -227,7 +247,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
         Row(
           children: [
             Expanded(
-              child: _infoTile('所在地点', widget.player.location, compact: compact),
+              child: _infoTile('所在地点', _player.location, compact: compact),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -385,7 +405,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
           SizedBox(
             height: compact ? 34 : 36,
             child: ElevatedButton(
-              onPressed: _sendMessage,
+              onPressed: _isSending ? null : _sendMessage,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _accent,
                 foregroundColor: Colors.white,
@@ -427,7 +447,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
       children: [
         Expanded(
           child: Text(
-            widget.player.name,
+            _player.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -445,13 +465,13 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _miniStat('攻', widget.player.strength),
+                _miniStat('攻', _player.strength),
                 const SizedBox(width: 6),
-                _miniStat('防', widget.player.defense),
+                _miniStat('防', _player.defense),
                 const SizedBox(width: 6),
-                _miniStat('敏', widget.player.agility),
+                _miniStat('敏', _player.agility),
                 const SizedBox(width: 6),
-                _miniStat('魅', widget.player.charm),
+                _miniStat('魅', _player.charm),
               ],
             ),
           ),
@@ -485,7 +505,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
           children: [
             Expanded(
               child: Text(
-                widget.player.name,
+                _player.name,
                 style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
@@ -516,17 +536,17 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
         const SizedBox(height: 10),
         Row(
           children: [
-            Expanded(child: _playerStat('攻击', widget.player.strength)),
+            Expanded(child: _playerStat('攻击', _player.strength)),
             const SizedBox(width: 8),
-            Expanded(child: _playerStat('防御', widget.player.defense)),
+            Expanded(child: _playerStat('防御', _player.defense)),
           ],
         ),
         const SizedBox(height: 8),
         Row(
           children: [
-            Expanded(child: _playerStat('敏捷', widget.player.agility)),
+            Expanded(child: _playerStat('敏捷', _player.agility)),
             const SizedBox(width: 8),
-            Expanded(child: _playerStat('魅力', widget.player.charm)),
+            Expanded(child: _playerStat('魅力', _player.charm)),
           ],
         ),
       ],
@@ -544,7 +564,7 @@ class _NpcInteractionPageState extends State<NpcInteractionPage> {
         borderRadius: BorderRadius.circular(7),
       ),
       child: Text(
-        'HP: ${widget.player.hp}/${widget.player.maxHp}',
+        'HP: ${_player.hp}/${_player.maxHp}',
         style: TextStyle(
           fontSize: compact ? 12 : 13,
           color: _accent,
