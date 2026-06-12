@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/map_node.dart';
 import '../models/player.dart';
 import '../services/map_service.dart';
-import '../services/time_service.dart';
+import '../services/natural_time_service.dart';
 import 'location_detail_dialog.dart';
 
 /// 世界地图对话框
@@ -178,7 +178,11 @@ class _WorldMapContentState extends State<_WorldMapContent> {
       location: targetNode.name,
       country: targetNode.country,
     );
-    final advancedPlayer = TimeService.advanceOneDay(movedPlayer);
+    final advancedPlayer = await NaturalTimeService.consumeAction(
+      movedPlayer,
+      NaturalTimeAction.mapLocationTravel,
+      fallbackMinutes: 120,
+    );
 
     if (!mounted) return;
     setState(() => _player = advancedPlayer);
@@ -261,421 +265,428 @@ class _WorldMapContentState extends State<_WorldMapContent> {
     final downPosition = _mapPointerDownPositions.remove(event.pointer);
     if (downPosition == null) return;
 
-    final movedDistance = (event.localPosition - downPosition).distance;
-    if (movedDistance > _mapTapMoveTolerance) return;
-
-    final scenePoint = _controller.toScene(event.localPosition);
-    final hitNode = _hitTestNode(scenePoint);
-    if (hitNode == null) return;
-
-    debugPrint('[MapHitTest] 命中地图节点: ${hitNode.id} / ${hitNode.name}');
-    _openLocationDetail(hitNode);
-  }
-
-  void _handleMapPointerCancel(PointerCancelEvent event) {
-    _mapPointerDownPositions.remove(event.pointer);
-  }
-
-  MapNode? _hitTestNode(Offset scenePoint) {
-    final nodes = _visibleNodes;
-
-    for (final node in nodes.reversed) {
-      if (node.coordinates.length < 2) continue;
-      final x = node.coordinates[0].toDouble() + _mapCanvasPadding;
-      final y = node.coordinates[1].toDouble() + _mapCanvasPadding;
-      final labelOffset = _lastLabelOffsets[node.id] ?? Offset.zero;
-      final rect = Rect.fromCenter(
-        center: Offset(x + labelOffset.dx, y + labelOffset.dy),
-        width: _nodeButtonWidth,
-        height: _nodeButtonHeight,
-      ).inflate(_nodeHitExtraPadding);
-
-      if (rect.contains(scenePoint)) return node;
+    if ((event.localPosition - downPosition).distance > _mapTapMoveTolerance) {
+      return;
     }
 
+    final inverseMatrix = Matrix4.inverted(_controller.value);
+    final local = MatrixUtils.transformPoint(inverseMatrix, event.localPosition);
+    final tappedNode = _hitTestNode(local);
+    if (tappedNode != null) {
+      _onNodeTap(tappedNode);
+    }
+  }
+
+  MapNode? _hitTestNode(Offset local) {
+    final nodes = _visibleNodes;
+    for (final node in nodes.reversed) {
+      final nodeRect = Rect.fromLTWH(
+        node.coordinates[0].toDouble() +
+            _mapCanvasPadding -
+            _nodeButtonWidth / 2,
+        node.coordinates[1].toDouble() +
+            _mapCanvasPadding -
+            _nodeButtonHeight / 2,
+        _nodeButtonWidth,
+        _nodeButtonHeight,
+      ).inflate(_nodeHitExtraPadding);
+
+      if (nodeRect.contains(local)) return node;
+    }
     return null;
   }
 
-  Future<void> _openLocationDetail(MapNode node) async {
-    final isCurrent = node.id == _player.locationId;
-    final canMove = _isAdjacentToCurrentLocation(node);
-    final entered = await LocationDetailDialog.show(
+  void _onNodeTap(MapNode node) {
+    if (node.id == _player.locationId) {
+      LocationDetailDialog.show(context, node, isCurrentLocation: true);
+      return;
+    }
+
+    if (!_isAdjacentToCurrentLocation(node)) {
+      final currentNode = _currentLocationNode;
+      final currentName = currentNode?.name ?? _player.location;
+      _showTip('只能从$currentName前往相邻地点');
+      return;
+    }
+
+    LocationDetailDialog.show(
       context,
       node,
-      isCurrentLocation: isCurrent,
-      canMoveHere: canMove,
-      moveHintText: '前往此地',
-      onMoveHere: canMove
-          ? () async {
-              await _movePlayerToNode(node);
-            }
-          : null,
-    );
-    if (entered == true && mounted) {
-      Navigator.of(context).pop(_player);
-    }
-  }
-
-  void addDynamicNode(MapNode node) {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.add(node));
-  }
-
-  void addDynamicNodes(List<MapNode> nodes) {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.addAll(nodes));
-  }
-
-  void clearDynamicNodes() {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.clear());
-  }
-
-  void removeDynamicNode(String id) {
-    _nodeMapCache = null;
-    setState(() => _dynamicNodes.removeWhere((n) => n.id == id));
-  }
-
-  void updateDynamicNode(MapNode node) {
-    _nodeMapCache = null;
-    setState(() {
-      final idx = _dynamicNodes.indexWhere((n) => n.id == node.id);
-      if (idx != -1) _dynamicNodes[idx] = node;
-    });
-  }
-
-  MapNode? findNodeById(String id) => _nodeMap[id];
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final dialogSize = math.min(size.width * 0.82, size.height * 0.72);
-
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: SizedBox(
-        width: dialogSize,
-        height: dialogSize,
-        child: Container(
-          decoration: BoxDecoration(
-            color: _card,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 12, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '世界地图',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: _text,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${_player.location} · ${_player.country}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: _textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: _centerOnCurrentLocation,
-                      icon: const Icon(Icons.my_location_outlined, size: 16),
-                      label: const Text('重置'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: _textSecondary,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        minimumSize: const Size(0, 32),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                    ),
-                    IconButton(
-                      key: const ValueKey('world_map_close_button'),
-                      onPressed: () => Navigator.of(context).pop(_player),
-                      icon: const Icon(Icons.close, color: _textSecondary),
-                      tooltip: '关闭',
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1, color: _border),
-              Expanded(child: _buildMapContent()),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMapContent() {
-    if (_error != null) {
-      return const Center(
-        child: Text(
-          '地图数据加载失败',
-          style: TextStyle(fontSize: 16, color: _textSecondary),
-        ),
-      );
-    }
-
-    if (_nodes == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_nodes!.isEmpty) {
-      return const Center(
-        child: Text(
-          '暂无地图数据',
-          style: TextStyle(fontSize: 16, color: _textSecondary),
-        ),
-      );
-    }
-
-    final visibleNodes = _visibleNodes;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final side = math.min(constraints.maxWidth, constraints.maxHeight);
-        return Center(
-          child: SizedBox(
-            key: _mapViewportKey,
-            width: side,
-            height: side,
-            child: Listener(
-              behavior: HitTestBehavior.opaque,
-              onPointerDown: _handleMapPointerDown,
-              onPointerUp: _handleMapPointerUp,
-              onPointerCancel: _handleMapPointerCancel,
-              child: InteractiveViewer(
-                transformationController: _controller,
-                minScale: 1.0,
-                maxScale: 1.0,
-                scaleEnabled: false,
-                constrained: false,
-                boundaryMargin: const EdgeInsets.all(_mapBoundaryMargin),
-                child: RepaintBoundary(
-                  child: SizedBox(
-                    width: _mapCanvasSize,
-                    height: _mapCanvasSize,
-                    child: CustomPaint(
-                      painter: _LinePainter(
-                        nodes: visibleNodes,
-                        canvasPadding: _mapCanvasPadding,
-                      ),
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: _buildNodeWidgets(visibleNodes),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
+      isCurrentLocation: false,
+      onMove: () async {
+        Navigator.of(context).pop();
+        await _movePlayerToNode(node);
       },
     );
   }
 
-  List<Widget> _buildNodeWidgets(List<MapNode> nodes) {
-    if (nodes.isEmpty) {
-      _lastLabelOffsets = {};
-      return [];
-    }
+  Offset _offsetForLabel({
+    required Rect buttonRect,
+    required MapNode node,
+    required Map<String, Rect> occupiedRects,
+  }) {
+    final candidates = [
+      const Offset(0, -54),
+      const Offset(0, 54),
+      const Offset(-124, 0),
+      const Offset(124, 0),
+      const Offset(-94, -44),
+      const Offset(94, -44),
+      const Offset(-94, 44),
+      const Offset(94, 44),
+    ];
 
-    final positions = <String, Offset>{};
-    for (final n in nodes) {
-      if (n.coordinates.length >= 2) {
-        positions[n.id] = Offset(
-          n.coordinates[0].toDouble() + _mapCanvasPadding,
-          n.coordinates[1].toDouble() + _mapCanvasPadding,
-        );
+    Offset best = candidates.first;
+    var bestScore = double.negativeInfinity;
+
+    for (final candidate in candidates) {
+      final labelRect = _labelRectFor(buttonRect, candidate);
+      final insideCanvas = _canvasRect.contains(labelRect.topLeft) &&
+          _canvasRect.contains(labelRect.bottomRight);
+      final overlaps = occupiedRects.values.any((r) => r.overlaps(labelRect));
+      final distanceFromNode = (candidate.distance).clamp(1.0, 999.0);
+      final score =
+          (insideCanvas ? 1000.0 : -1000.0) -
+          (overlaps ? 600.0 : 0.0) -
+          distanceFromNode;
+
+      if (score > bestScore) {
+        bestScore = score;
+        best = candidate;
       }
     }
 
-    final labelOffsets = <String, Offset>{};
-    const minDist = 50.0;
-    final ids = nodes.map((n) => n.id).toList();
-    for (var i = 0; i < ids.length; i++) {
-      final aPos = positions[ids[i]];
-      if (aPos == null) continue;
-      for (var j = i + 1; j < ids.length; j++) {
-        final bPos = positions[ids[j]];
-        if (bPos == null) continue;
-        if ((aPos - bPos).distance < minDist) {
-          labelOffsets[ids[i]] = const Offset(-24, 0);
-          labelOffsets[ids[j]] = const Offset(24, 0);
-        }
-      }
+    final last = _lastLabelOffsets[node.id];
+    if (last != null) {
+      final lastRect = _labelRectFor(buttonRect, last);
+      final stillOk = _canvasRect.contains(lastRect.topLeft) &&
+          _canvasRect.contains(lastRect.bottomRight) &&
+          !occupiedRects.values.any((r) => r.overlaps(lastRect));
+      if (stillOk) return last;
     }
 
-    _lastLabelOffsets = labelOffsets;
-    return nodes
-        .map((n) => _buildNodeWidget(n, labelOffset: labelOffsets[n.id]))
-        .toList();
+    _lastLabelOffsets[node.id] = best;
+    return best;
   }
 
-  Widget _buildNodeWidget(MapNode node, {Offset? labelOffset}) {
-    if (node.coordinates.length < 2) return const SizedBox.shrink();
+  Rect get _canvasRect => Rect.fromLTWH(0, 0, _mapCanvasSize, _mapCanvasSize);
 
-    final x = node.coordinates[0].toDouble() + _mapCanvasPadding;
-    final y = node.coordinates[1].toDouble() + _mapCanvasPadding;
+  Rect _labelRectFor(Rect buttonRect, Offset offset) {
+    const labelW = 180.0;
+    const labelH = 42.0;
+    final center = buttonRect.center + offset;
+    return Rect.fromCenter(center: center, width: labelW, height: labelH);
+  }
+
+  Widget _buildNodeButton(MapNode node) {
     final isCurrent = node.id == _player.locationId;
-    final canMove = _isAdjacentToCurrentLocation(node);
-    final bgColor = isCurrent
-        ? const Color(0xFFE8F5E9)
-        : (_nodeBgColors[node.type] ?? _card);
-    final borderColor = isCurrent
+    final canMove = !isCurrent && _isAdjacentToCurrentLocation(node);
+    final bg = isCurrent
         ? _accent
-        : canMove
-        ? _accent.withValues(alpha: 0.7)
-        : (_nodeBorderColors[node.type] ?? _border);
+        : _nodeBgColors[node.type] ?? const Color(0xFFF3F4F6);
+    final border = isCurrent
+        ? _accent
+        : (canMove
+              ? _accent
+              : _nodeBorderColors[node.type] ?? const Color(0xFFD1D5DB));
     final textColor = isCurrent
-        ? const Color(0xFF2E7D32)
-        : (_nodeTextColors[node.type] ?? _text);
-    final leftOffset = labelOffset?.dx ?? 0;
-    final topOffset = labelOffset?.dy ?? 0;
+        ? Colors.white
+        : _nodeTextColors[node.type] ?? _text;
 
-    return Positioned(
-      key: ValueKey('map_location_${node.id}'),
-      left: x - _nodeButtonWidth / 2 + leftOffset,
-      top: y - _nodeButtonHeight / 2 + topOffset,
+    return SizedBox(
       width: _nodeButtonWidth,
       height: _nodeButtonHeight,
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
+      child: IgnorePointer(
+        ignoring: true,
         child: Container(
-          width: _nodeButtonWidth,
-          height: _nodeButtonHeight,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-            color: bgColor,
-            border: Border.all(
-              color: borderColor,
-              width: isCurrent || canMove ? 2 : 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isCurrent ? 0.10 : 0.05),
-                blurRadius: isCurrent ? 8 : 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isCurrent)
-                  const Padding(
-                    padding: EdgeInsets.only(right: 4),
-                    child: Icon(Icons.location_on, size: 12, color: _accent),
-                  ),
-                Flexible(
-                  child: Text(
-                    node.name,
-                    softWrap: false,
-                    overflow: TextOverflow.visible,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: textColor,
-                      fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w500,
+            color: bg,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: border, width: isCurrent ? 2 : 1.2),
+            boxShadow: isCurrent
+                ? [
+                    BoxShadow(
+                      color: _accent.withValues(alpha: 0.25),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
-                  ),
-                ),
-              ],
+                  ]
+                : null,
+          ),
+          child: Text(
+            node.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
+              color: textColor,
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildNodeLabel(MapNode node, Offset offset) {
+    return SizedBox(
+      width: 180,
+      child: IgnorePointer(
+        ignoring: true,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.92),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: _border),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                node.type,
+                style: const TextStyle(
+                  fontSize: 10.5,
+                  color: _textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                canMoveLabel(node),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: _nodeTextColors[node.type] ?? _text,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String canMoveLabel(MapNode node) {
+    if (node.id == _player.locationId) return '当前位置';
+    if (_isAdjacentToCurrentLocation(node)) return '可前往';
+    return '未连通';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final dialogW = math.min(size.width * 0.92, 700.0);
+    final dialogH = math.min(size.height * 0.78, 760.0);
+
+    return Dialog(
+      backgroundColor: _card,
+      insetPadding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: SizedBox(
+        width: dialogW,
+        height: dialogH,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      '世界地图',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: _text,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(_player),
+                    child: const Text('关闭'),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1, color: _border),
+            Expanded(
+              child: _error != null
+                  ? Center(child: Text(_error!))
+                  : _nodes == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : Listener(
+                          onPointerDown: _handleMapPointerDown,
+                          onPointerUp: _handleMapPointerUp,
+                          child: InteractiveViewer(
+                            key: _mapViewportKey,
+                            transformationController: _controller,
+                            boundaryMargin: const EdgeInsets.all(
+                              _mapBoundaryMargin,
+                            ),
+                            minScale: 0.3,
+                            maxScale: 1.5,
+                            constrained: false,
+                            child: SizedBox(
+                              width: _mapCanvasSize,
+                              height: _mapCanvasSize,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Positioned.fill(
+                                    child: CustomPaint(
+                                      painter: _MapConnectionPainter(
+                                        nodes: _visibleNodes,
+                                        allNodes: _allNodes,
+                                        padding: _mapCanvasPadding,
+                                        currentLocationId: _player.locationId,
+                                      ),
+                                    ),
+                                  ),
+                                  ..._visibleNodes.map((node) {
+                                    final left =
+                                        node.coordinates[0].toDouble() +
+                                        _mapCanvasPadding -
+                                        _nodeButtonWidth / 2;
+                                    final top =
+                                        node.coordinates[1].toDouble() +
+                                        _mapCanvasPadding -
+                                        _nodeButtonHeight / 2;
+                                    return Positioned(
+                                      left: left,
+                                      top: top,
+                                      child: _buildNodeButton(node),
+                                    );
+                                  }),
+                                  ..._buildLabels(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildLabels() {
+    final occupied = <String, Rect>{};
+    final widgets = <Widget>[];
+    for (final node in _visibleNodes) {
+      final left =
+          node.coordinates[0].toDouble() + _mapCanvasPadding - _nodeButtonWidth / 2;
+      final top =
+          node.coordinates[1].toDouble() + _mapCanvasPadding - _nodeButtonHeight / 2;
+      final buttonRect = Rect.fromLTWH(
+        left,
+        top,
+        _nodeButtonWidth,
+        _nodeButtonHeight,
+      );
+      final offset = _offsetForLabel(
+        buttonRect: buttonRect,
+        node: node,
+        occupiedRects: occupied,
+      );
+      final rect = _labelRectFor(buttonRect, offset);
+      occupied[node.id] = rect;
+      widgets.add(
+        Positioned(
+          left: rect.left,
+          top: rect.top,
+          child: _buildNodeLabel(node, offset),
+        ),
+      );
+    }
+    return widgets;
+  }
 }
 
-/// 连线绘制器 — 只接收可见节点，因此不会通过线条暴露未知地图。
-class _LinePainter extends CustomPainter {
+class _MapConnectionPainter extends CustomPainter {
   final List<MapNode> nodes;
-  final double canvasPadding;
+  final List<MapNode> allNodes;
+  final double padding;
+  final String currentLocationId;
 
-  _LinePainter({required this.nodes, required this.canvasPadding});
-
-  static const _neutralCountries = ['中立地域'];
+  const _MapConnectionPainter({
+    required this.nodes,
+    required this.allNodes,
+    required this.padding,
+    required this.currentLocationId,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final nodeMap = {for (final n in nodes) n.id: n};
-    final drawnPairs = <String>{};
+    final visibleMap = {for (final n in nodes) n.id: n};
+    final allMap = {for (final n in allNodes) n.id: n};
+    final drawn = <String>{};
+    final paint = Paint()
+      ..color = const Color(0xFFD7D3CE)
+      ..strokeWidth = 1.4
+      ..style = PaintingStyle.stroke;
 
     for (final node in nodes) {
-      if (node.coordinates.length < 2) continue;
-      final from = Offset(
-        node.coordinates[0].toDouble() + canvasPadding,
-        node.coordinates[1].toDouble() + canvasPadding,
-      );
-
       for (final targetId in node.connectedNodes) {
-        final target = nodeMap[targetId];
-        if (target == null || target.coordinates.length < 2) continue;
+        final target = visibleMap[targetId];
+        if (target == null) {
+          continue;
+        }
+        final key = [node.id, targetId]..sort();
+        final lineKey = key.join('_');
+        if (drawn.contains(lineKey)) continue;
+        drawn.add(lineKey);
 
-        final pairKey = node.id.compareTo(target.id) < 0
-            ? '${node.id}::$targetId'
-            : '$targetId::${node.id}';
-        if (!drawnPairs.add(pairKey)) continue;
-
-        final to = Offset(
-          target.coordinates[0].toDouble() + canvasPadding,
-          target.coordinates[1].toDouble() + canvasPadding,
+        final p1 = Offset(
+          node.coordinates[0].toDouble() + padding,
+          node.coordinates[1].toDouble() + padding,
         );
-        final paint = _linePaintFor(node, target);
-        if (paint == null) continue;
-        canvas.drawLine(from, to, paint);
+        final p2 = Offset(
+          target.coordinates[0].toDouble() + padding,
+          target.coordinates[1].toDouble() + padding,
+        );
+        canvas.drawLine(p1, p2, paint);
       }
     }
-  }
 
-  Paint? _linePaintFor(MapNode a, MapNode b) {
-    if (_neutralCountries.contains(a.country) ||
-        _neutralCountries.contains(b.country)) {
-      return Paint()
-        ..color = const Color(0xFFBBBBBB)
-        ..strokeWidth = 1.0
-        ..style = PaintingStyle.stroke;
-    }
+    final current = allMap[currentLocationId];
+    if (current == null) return;
+    final currentVisible = visibleMap[currentLocationId] != null;
+    if (!currentVisible) return;
 
-    if (a.country == b.country) {
-      return Paint()
-        ..color = const Color(0xFFCC3333)
-        ..strokeWidth = 1.0
-        ..style = PaintingStyle.stroke;
-    }
-
-    return Paint()
-      ..color = const Color(0xFFE67E22)
-      ..strokeWidth = 1.2
+    final highlightPaint = Paint()
+      ..color = const Color(0xFF7BAE7F).withValues(alpha: 0.45)
+      ..strokeWidth = 2.2
       ..style = PaintingStyle.stroke;
+
+    for (final targetId in current.connectedNodes) {
+      final target = visibleMap[targetId];
+      if (target == null) continue;
+      final p1 = Offset(
+        current.coordinates[0].toDouble() + padding,
+        current.coordinates[1].toDouble() + padding,
+      );
+      final p2 = Offset(
+        target.coordinates[0].toDouble() + padding,
+        target.coordinates[1].toDouble() + padding,
+      );
+      canvas.drawLine(p1, p2, highlightPaint);
+    }
   }
 
   @override
-  bool shouldRepaint(covariant _LinePainter oldDelegate) {
-    if (oldDelegate.canvasPadding != canvasPadding) return true;
-    if (oldDelegate.nodes.length != nodes.length) return true;
-    for (var i = 0; i < nodes.length; i++) {
-      if (oldDelegate.nodes[i].id != nodes[i].id) return true;
-    }
-    return false;
+  bool shouldRepaint(covariant _MapConnectionPainter oldDelegate) {
+    return oldDelegate.nodes != nodes ||
+        oldDelegate.allNodes != allNodes ||
+        oldDelegate.padding != padding ||
+        oldDelegate.currentLocationId != currentLocationId;
   }
 }
