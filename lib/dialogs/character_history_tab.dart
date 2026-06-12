@@ -252,6 +252,8 @@ class CharacterHistoryTab extends StatelessWidget {
       year: record.year,
       season: record.season,
       day: record.day,
+      naturalHour: record.naturalHour,
+      naturalMinute: record.naturalMinute,
       locationId: record.locationId,
       locationName: record.locationName,
       buildingId: record.buildingId,
