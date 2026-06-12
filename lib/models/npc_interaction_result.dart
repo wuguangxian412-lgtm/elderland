@@ -4,7 +4,7 @@ import 'player.dart';
 
 /// NPC 互动页面返回结果。
 ///
-/// 继承 InteractionRecord，是为了兼容旧的 Navigator.push<InteractionRecord?>
+/// 继承 InteractionRecord，是为了兼容旧的 `Navigator.push<InteractionRecord?>`
 /// 接收方式；同时额外携带已推进自然时间后的 Player。
 class NpcInteractionResult extends InteractionRecord {
   final Player player;
