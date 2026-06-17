@@ -139,7 +139,7 @@ class CharacterInfoTab extends StatelessWidget {
             children: [
               Expanded(child: _attrCell('敏捷', player.agility)),
               SizedBox(width: size.width * 0.03),
-              Expanded(child: _attrCell('魅力', player.charm)),
+              Expanded(child: _attrCell('魔力', player.magic)),
             ],
           ),
         ],
