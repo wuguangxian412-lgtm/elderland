@@ -13,7 +13,7 @@ class Player {
   final int strength;
   final int defense;
   final int agility;
-  final int charm;
+  final int magic;
   final String location;
   final String locationId;
   final int year;
@@ -23,6 +23,23 @@ class Player {
   final int naturalMinute;
   final int money;
   final String country;
+
+  /// 玩家出生地。
+  ///
+  /// 当前创建角色页从 world_lore.json 的 factions 中选择出生地。
+  final String birthplace;
+
+  /// 玩家家族身份，例如市井平民、没落贵族、魔法世家等。
+  final String familyIdentity;
+
+  /// 玩家创建角色时选择的家族成员。
+  final List<String> familyMembers;
+
+  /// 人物背景。
+  ///
+  /// 目前作为预留字段，后续可以接入更完整的角色背景生成/编辑系统。
+  final String characterBackground;
+
   final List<String> triggeredTimelineEvents;
 
   /// 旧版 NPC 对话详情记录。
@@ -58,7 +75,7 @@ class Player {
     required this.strength,
     required this.defense,
     required this.agility,
-    required this.charm,
+    required this.magic,
     required this.location,
     this.locationId = 'silver_leaf_village',
     required this.year,
@@ -68,6 +85,10 @@ class Player {
     this.naturalMinute = 0,
     required this.money,
     this.country = '圣山王国',
+    this.birthplace = '',
+    this.familyIdentity = '',
+    this.familyMembers = const [],
+    this.characterBackground = '',
     this.triggeredTimelineEvents = const [],
     this.interactionRecords = const [],
     this.eventRecords = const [],
@@ -87,10 +108,19 @@ class Player {
       strength: (json['strength'] as num?)?.toInt() ?? 0,
       defense: (json['defense'] as num?)?.toInt() ?? 0,
       agility: (json['agility'] as num?)?.toInt() ?? 0,
-      charm: (json['charm'] as num?)?.toInt() ?? 0,
+      // 兼容旧存档：旧字段 charm 会自动迁移为 magic。
+      magic:
+          (json['magic'] as num?)?.toInt() ??
+          (json['charm'] as num?)?.toInt() ??
+          0,
       location: json['location'] as String? ?? '',
       locationId: json['locationId'] as String? ?? 'silver_leaf_village',
       country: json['country'] as String? ?? '圣山王国',
+      birthplace:
+          json['birthplace'] as String? ?? json['country'] as String? ?? '',
+      familyIdentity: json['familyIdentity'] as String? ?? '',
+      familyMembers: _parseStringList(json['familyMembers']),
+      characterBackground: json['characterBackground'] as String? ?? '',
       year: (json['year'] as num?)?.toInt() ?? 0,
       season: json['season'] as String? ?? '',
       day: (json['day'] as num?)?.toInt() ?? 0,
@@ -121,10 +151,14 @@ class Player {
       'strength': strength,
       'defense': defense,
       'agility': agility,
-      'charm': charm,
+      'magic': magic,
       'location': location,
       'locationId': locationId,
       'country': country,
+      'birthplace': birthplace,
+      'familyIdentity': familyIdentity,
+      'familyMembers': familyMembers,
+      'characterBackground': characterBackground,
       'year': year,
       'season': season,
       'day': day,
@@ -152,10 +186,14 @@ class Player {
     int? strength,
     int? defense,
     int? agility,
-    int? charm,
+    int? magic,
     String? location,
     String? locationId,
     String? country,
+    String? birthplace,
+    String? familyIdentity,
+    List<String>? familyMembers,
+    String? characterBackground,
     int? year,
     String? season,
     int? day,
@@ -178,10 +216,14 @@ class Player {
       strength: strength ?? this.strength,
       defense: defense ?? this.defense,
       agility: agility ?? this.agility,
-      charm: charm ?? this.charm,
+      magic: magic ?? this.magic,
       location: location ?? this.location,
       locationId: locationId ?? this.locationId,
       country: country ?? this.country,
+      birthplace: birthplace ?? this.birthplace,
+      familyIdentity: familyIdentity ?? this.familyIdentity,
+      familyMembers: familyMembers ?? this.familyMembers,
+      characterBackground: characterBackground ?? this.characterBackground,
       year: year ?? this.year,
       season: season ?? this.season,
       day: day ?? this.day,
@@ -197,6 +239,11 @@ class Player {
       relationships: relationships ?? this.relationships,
       activeQuests: activeQuests ?? this.activeQuests,
     );
+  }
+
+  static List<String> _parseStringList(dynamic raw) {
+    if (raw is! List) return [];
+    return raw.whereType<String>().toList();
   }
 
   static List<InteractionRecord> _parseInteractionRecords(dynamic raw) {
