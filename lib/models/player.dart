@@ -14,7 +14,7 @@ class Player {
   final int defense;
   final int agility;
   final int magic;
-  String get charm => magic.toString();
+  int get charm => magic;
   final String location;
   final String locationId;
   final int year;
