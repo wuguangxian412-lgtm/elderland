@@ -14,6 +14,7 @@ class Player {
   final int defense;
   final int agility;
   final int magic;
+  String get charm => magic.toString();
   final String location;
   final String locationId;
   final int year;
@@ -66,7 +67,7 @@ class Player {
   /// 当前已接取但尚未完成的委托。
   final List<Quest> activeQuests;
 
-  const Player({
+  Player({
     required this.name,
     required this.gender,
     required this.age,
@@ -75,7 +76,8 @@ class Player {
     required this.strength,
     required this.defense,
     required this.agility,
-    required this.magic,
+    int? magic,
+    int? charm,
     required this.location,
     this.locationId = 'silver_leaf_village',
     required this.year,
@@ -95,7 +97,7 @@ class Player {
     this.importantEventRecords = const [],
     this.relationships = const [],
     this.activeQuests = const [],
-  });
+  }) : magic = magic ?? charm ?? 0;
 
   /// 从 JSON 创建 Player
   factory Player.fromJson(Map<String, dynamic> json) {
@@ -152,6 +154,7 @@ class Player {
       'defense': defense,
       'agility': agility,
       'magic': magic,
+      'charm': magic,
       'location': location,
       'locationId': locationId,
       'country': country,
@@ -187,6 +190,7 @@ class Player {
     int? defense,
     int? agility,
     int? magic,
+    int? charm,
     String? location,
     String? locationId,
     String? country,
@@ -216,7 +220,7 @@ class Player {
       strength: strength ?? this.strength,
       defense: defense ?? this.defense,
       agility: agility ?? this.agility,
-      magic: magic ?? this.magic,
+      magic: magic ?? charm ?? this.magic,
       location: location ?? this.location,
       locationId: locationId ?? this.locationId,
       country: country ?? this.country,
